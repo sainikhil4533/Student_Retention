@@ -1,0 +1,26 @@
+[
+  {
+    "model_name": "logistic_regression",
+    "artifact_path": "C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\models\\artifacts\\logistic_regression.joblib",
+    "metadata_path": "C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\models\\metadata\\logistic_regression_metadata.json",
+    "is_champion": false,
+    "evaluation_type": "temporal_split",
+    "training_scope": "full_dataset_after_temporal_validation"
+  },
+  {
+    "model_name": "random_forest",
+    "artifact_path": "C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\models\\artifacts\\random_forest.joblib",
+    "metadata_path": "C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\models\\metadata\\random_forest_metadata.json",
+    "is_champion": false,
+    "evaluation_type": "temporal_split",
+    "training_scope": "full_dataset_after_temporal_validation"
+  },
+  {
+    "model_name": "gradient_boosting",
+    "artifact_path": "C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\models\\artifacts\\gradient_boosting.joblib",
+    "metadata_path": "C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\models\\metadata\\gradient_boosting_metadata.json",
+    "is_champion": true,
+    "evaluation_type": "temporal_split",
+    "training_scope": "full_dataset_after_temporal_validation"
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "model_name": "gradient_boosting",
+    "is_champion": true,
+    "predicted_class": 0,
+    "predicted_risk_probability": 0.028536655122652407
+  },
+  {
+    "model_name": "logistic_regression",
+    "is_champion": false,
+    "predicted_class": 0,
+    "predicted_risk_probability": 0.030065877636740367
+  },
+  {
+    "model_name": "random_forest",
+    "is_champion": false,
+    "predicted_class": 0,
+    "predicted_risk_probability": 0.0
+  }
+]

@@ -1,0 +1,48 @@
+{
+  "model_name": "logistic_regression",
+  "training_dataset": "C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\data\\processed\\training_dataset.csv",
+  "feature_order": [
+    "gender",
+    "highest_education",
+    "age_band",
+    "disability_status",
+    "num_previous_attempts",
+    "lms_clicks_7d",
+    "lms_clicks_14d",
+    "lms_clicks_30d",
+    "lms_unique_resources_7d",
+    "days_since_last_lms_activity",
+    "lms_7d_vs_14d_percent_change",
+    "engagement_acceleration",
+    "assessment_submission_rate",
+    "weighted_assessment_score",
+    "late_submission_count",
+    "total_assessments_completed",
+    "assessment_score_trend"
+  ],
+  "categorical_features": [
+    "gender",
+    "highest_education",
+    "age_band",
+    "disability_status"
+  ],
+  "numerical_features": [
+    "num_previous_attempts",
+    "lms_clicks_7d",
+    "lms_clicks_14d",
+    "lms_clicks_30d",
+    "lms_unique_resources_7d",
+    "days_since_last_lms_activity",
+    "lms_7d_vs_14d_percent_change",
+    "engagement_acceleration",
+    "assessment_submission_rate",
+    "weighted_assessment_score",
+    "late_submission_count",
+    "total_assessments_completed",
+    "assessment_score_trend"
+  ],
+  "target_column": "risk_label",
+  "training_scope": "full_dataset_after_temporal_validation",
+  "full_training_rows": 32593,
+  "evaluation_type": "temporal_split"
+}

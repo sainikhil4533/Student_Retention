@@ -1,0 +1,32 @@
+[
+  {
+    "model_name": "gradient_boosting",
+    "accuracy": 0.9410931598825011,
+    "precision": 0.9659926470588235,
+    "recall": 0.9229193092008976,
+    "f1": 0.9439648720123747,
+    "evaluation_type": "temporal_split",
+    "train_rows": 13529,
+    "test_rows": 19064
+  },
+  {
+    "model_name": "random_forest",
+    "accuracy": 0.936634494334872,
+    "precision": 0.9601017811704835,
+    "recall": 0.920382476339155,
+    "f1": 0.939822656172163,
+    "evaluation_type": "temporal_split",
+    "train_rows": 13529,
+    "test_rows": 19064
+  },
+  {
+    "model_name": "logistic_regression",
+    "accuracy": 0.9269303399076794,
+    "precision": 0.9528533442421763,
+    "recall": 0.9090642989559957,
+    "f1": 0.9304439007340091,
+    "evaluation_type": "temporal_split",
+    "train_rows": 13529,
+    "test_rows": 19064
+  }
+]

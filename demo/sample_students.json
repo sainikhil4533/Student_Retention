@@ -1,0 +1,65 @@
+[
+  {
+    "student_id": 880001,
+    "scenario": "low_risk",
+    "demographics": {
+      "student_id": 880001,
+      "student_email": "nikhilbalasa@gmail.com",
+      "faculty_name": "Dr. Anitha Rao",
+      "faculty_email": "mentor-880001@example.edu",
+      "parent_name": "B. Ramesh",
+      "parent_relationship": "father",
+      "parent_email": null,
+      "parent_phone": "9876543210",
+      "preferred_guardian_channel": "whatsapp",
+      "guardian_contact_enabled": true,
+      "gender": "M",
+      "highest_education": "HE Qualification",
+      "age_band": "35-55",
+      "disability_status": "N",
+      "num_previous_attempts": 0
+    }
+  },
+  {
+    "student_id": 880002,
+    "scenario": "medium_risk",
+    "demographics": {
+      "student_id": 880002,
+      "student_email": "nikhilbalasa@gmail.com",
+      "faculty_name": "Prof. Kiran Kumar",
+      "faculty_email": "mentor-880002@example.edu",
+      "parent_name": "S. Meenakshi",
+      "parent_relationship": "mother",
+      "parent_email": "parent-880002@example.com",
+      "parent_phone": "8828259626",
+      "preferred_guardian_channel": "sms",
+      "guardian_contact_enabled": true,
+      "gender": "F",
+      "highest_education": "A Level or Equivalent",
+      "age_band": "0-35",
+      "disability_status": "N",
+      "num_previous_attempts": 1
+    }
+  },
+  {
+    "student_id": 880003,
+    "scenario": "high_risk",
+    "demographics": {
+      "student_id": 880003,
+      "student_email": "nikhilbalasa@gmail.com",
+      "faculty_name": "Dr. S. Lakshmi",
+      "faculty_email": "mentor-880003@example.edu",
+      "parent_name": "K. Suresh",
+      "parent_relationship": "father",
+      "parent_email": null,
+      "parent_phone": "8828259626",
+      "preferred_guardian_channel": "whatsapp",
+      "guardian_contact_enabled": true,
+      "gender": "F",
+      "highest_education": "Lower Than A Level",
+      "age_band": "0-35",
+      "disability_status": "N",
+      "num_previous_attempts": 2
+    }
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "student_id": 880001,
+    "scenario": "low_risk",
+    "finance_event": {
+      "student_id": 880001,
+      "fee_overdue_amount": 0.0,
+      "fee_delay_days": 0,
+      "payment_status": "clear",
+      "modifier_candidate": 0.0,
+      "context_fields": {
+        "scholarship": true,
+        "source_event_id": "fin-880001-001",
+        "event_timestamp": "2026-03-23T08:30:00+05:30"
+      }
+    }
+  },
+  {
+    "student_id": 880002,
+    "scenario": "medium_risk",
+    "finance_event": {
+      "student_id": 880002,
+      "fee_overdue_amount": 5000.0,
+      "fee_delay_days": 10,
+      "payment_status": "partial_due",
+      "modifier_candidate": 0.05,
+      "context_fields": {
+        "scholarship": false,
+        "source_event_id": "fin-880002-001",
+        "event_timestamp": "2026-03-23T08:45:00+05:30"
+      }
+    }
+  },
+  {
+    "student_id": 880003,
+    "scenario": "high_risk",
+    "finance_event": {
+      "student_id": 880003,
+      "fee_overdue_amount": 15000.0,
+      "fee_delay_days": 35,
+      "payment_status": "overdue",
+      "modifier_candidate": 0.1,
+      "context_fields": {
+        "scholarship": false,
+        "source_event_id": "fin-880003-001",
+        "event_timestamp": "2026-03-23T09:00:00+05:30"
+      }
+    }
+  }
+]

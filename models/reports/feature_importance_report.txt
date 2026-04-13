@@ -1,0 +1,26 @@
+Feature Importance Report
+================================================================================
+Champion artifact: C:\Users\Sai Nikhil\Desktop\Student_Retention\models\artifacts\gradient_boosting.joblib
+Champion model: gradient_boosting
+
+Top 20 feature importances:
+- numerical__assessment_submission_rate: 0.804544
+- numerical__weighted_assessment_score: 0.121474
+- numerical__days_since_last_lms_activity: 0.035350
+- numerical__assessment_score_trend: 0.016278
+- numerical__total_assessments_completed: 0.010117
+- numerical__lms_clicks_30d: 0.006448
+- numerical__late_submission_count: 0.003644
+- categorical__gender_F: 0.000579
+- categorical__gender_M: 0.000467
+- numerical__lms_clicks_14d: 0.000327
+- numerical__lms_clicks_7d: 0.000254
+- numerical__num_previous_attempts: 0.000150
+- numerical__engagement_acceleration: 0.000129
+- numerical__lms_unique_resources_7d: 0.000105
+- numerical__lms_7d_vs_14d_percent_change: 0.000078
+- categorical__highest_education_Lower Than A Level: 0.000035
+- categorical__highest_education_No Formal quals: 0.000014
+- categorical__age_band_55<=: 0.000004
+- categorical__age_band_35-55: 0.000002
+- categorical__highest_education_HE Qualification: 0.000000

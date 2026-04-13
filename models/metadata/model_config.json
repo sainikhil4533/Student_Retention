@@ -1,0 +1,5 @@
+{
+  "champion_model": "gradient_boosting",
+  "threshold": 0.55,
+  "evaluation_type": "temporal_split"
+}

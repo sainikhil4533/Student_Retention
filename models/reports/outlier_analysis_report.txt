@@ -1,0 +1,158 @@
+Outlier Analysis Report
+================================================================================
+
+Feature: num_previous_attempts
+- min: 0.0000
+- q1: 0.0000
+- median: 0.0000
+- q3: 0.0000
+- max: 6.0000
+- iqr: 0.0000
+- lower_bound: 0.0000
+- upper_bound: 0.0000
+- outlier_count: 4172
+- outlier_percentage: 12.80%
+
+Feature: lms_clicks_7d
+- min: 0.0000
+- q1: 0.0000
+- median: 0.0000
+- q3: 0.0000
+- max: 363.0000
+- iqr: 0.0000
+- lower_bound: 0.0000
+- upper_bound: 0.0000
+- outlier_count: 2396
+- outlier_percentage: 7.35%
+
+Feature: lms_clicks_14d
+- min: 0.0000
+- q1: 0.0000
+- median: 0.0000
+- q3: 0.0000
+- max: 559.0000
+- iqr: 0.0000
+- lower_bound: 0.0000
+- upper_bound: 0.0000
+- outlier_count: 4601
+- outlier_percentage: 14.12%
+
+Feature: lms_clicks_30d
+- min: 0.0000
+- q1: 0.0000
+- median: 0.0000
+- q3: 2.0000
+- max: 3990.0000
+- iqr: 2.0000
+- lower_bound: -3.0000
+- upper_bound: 5.0000
+- outlier_count: 6225
+- outlier_percentage: 19.10%
+
+Feature: lms_unique_resources_7d
+- min: 0.0000
+- q1: 0.0000
+- median: 0.0000
+- q3: 0.0000
+- max: 54.0000
+- iqr: 0.0000
+- lower_bound: 0.0000
+- upper_bound: 0.0000
+- outlier_count: 2396
+- outlier_percentage: 7.35%
+
+Feature: days_since_last_lms_activity
+- min: 0.0000
+- q1: 14.0000
+- median: 36.0000
+- q3: 154.0000
+- max: 294.0000
+- iqr: 140.0000
+- lower_bound: -196.0000
+- upper_bound: 364.0000
+- outlier_count: 0
+- outlier_percentage: 0.00%
+
+Feature: lms_7d_vs_14d_percent_change
+- min: -1.0000
+- q1: 0.0000
+- median: 0.0000
+- q3: 0.0000
+- max: 42.0000
+- iqr: 0.0000
+- lower_bound: 0.0000
+- upper_bound: 0.0000
+- outlier_count: 4413
+- outlier_percentage: 13.54%
+
+Feature: engagement_acceleration
+- min: -191.0000
+- q1: 0.0000
+- median: 0.0000
+- q3: 0.0000
+- max: 253.0000
+- iqr: 0.0000
+- lower_bound: 0.0000
+- upper_bound: 0.0000
+- outlier_count: 4413
+- outlier_percentage: 13.54%
+
+Feature: assessment_submission_rate
+- min: 0.0000
+- q1: 0.1000
+- median: 0.7143
+- q3: 0.9000
+- max: 1.0000
+- iqr: 0.8000
+- lower_bound: -1.1000
+- upper_bound: 2.1000
+- outlier_count: 0
+- outlier_percentage: 0.00%
+
+Feature: weighted_assessment_score
+- min: 0.0000
+- q1: 0.0000
+- median: 40.7000
+- q3: 80.7500
+- max: 200.0000
+- iqr: 80.7500
+- lower_bound: -121.1250
+- upper_bound: 201.8750
+- outlier_count: 0
+- outlier_percentage: 0.00%
+
+Feature: late_submission_count
+- min: 0.0000
+- q1: 0.0000
+- median: 0.0000
+- q3: 2.0000
+- max: 12.0000
+- iqr: 2.0000
+- lower_bound: -3.0000
+- upper_bound: 5.0000
+- outlier_count: 2440
+- outlier_percentage: 7.49%
+
+Feature: total_assessments_completed
+- min: 0.0000
+- q1: 1.0000
+- median: 5.0000
+- q3: 9.0000
+- max: 14.0000
+- iqr: 8.0000
+- lower_bound: -11.0000
+- upper_bound: 21.0000
+- outlier_count: 0
+- outlier_percentage: 0.00%
+
+Feature: assessment_score_trend
+- min: -100.0000
+- q1: -11.0000
+- median: 0.0000
+- q3: 4.0000
+- max: 100.0000
+- iqr: 15.0000
+- lower_bound: -33.5000
+- upper_bound: 26.5000
+- outlier_count: 4624
+- outlier_percentage: 14.19%
