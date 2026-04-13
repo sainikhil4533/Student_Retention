@@ -33,6 +33,18 @@ If you are completely new, read in this order:
 6. [CHATBOT_FRONTEND_INTEGRATION_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/CHATBOT_FRONTEND_INTEGRATION_GUIDE.md)
    - what frontend can safely depend on
 
+7. [FRONTEND_MASTER_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_MASTER_GUIDE.md)
+   - how the scratch-built frontend is structured and why
+
+8. [FRONTEND_PHASE_PLAN.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_PHASE_PLAN.md)
+   - what the frontend phases are and which ones are already implemented
+
+9. [FRONTEND_DESIGN_SYSTEM.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_DESIGN_SYSTEM.md)
+   - the visual/design reasoning behind the UI
+
+10. [FRONTEND_ROLE_FLOWS.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_ROLE_FLOWS.md)
+   - how student, counsellor, and admin flows differ in practice
+
 After that, go into specialized docs depending on your task.
 
 ## 2. Docs By Purpose
@@ -72,7 +84,21 @@ These are the best docs for understanding the product and architecture.
 - [DATA_DICTIONARY.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/DATA_DICTIONARY.md)
   - beginner-friendly data understanding for OULAD and feature mapping
 
-### D. Operational / Milestone Docs
+### D. Frontend Docs
+
+- [FRONTEND_MASTER_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_MASTER_GUIDE.md)
+  - main beginner-friendly explanation of the scratch-built frontend
+
+- [FRONTEND_PHASE_PLAN.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_PHASE_PLAN.md)
+  - frontend roadmap and phase state
+
+- [FRONTEND_DESIGN_SYSTEM.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_DESIGN_SYSTEM.md)
+  - visual system, motion rules, and gamification boundaries
+
+- [FRONTEND_ROLE_FLOWS.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_ROLE_FLOWS.md)
+  - role-by-role UX reasoning and operational flow explanation
+
+### E. Operational / Milestone Docs
 
 - [BACKEND_SIGNOFF_2026-04-12.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/BACKEND_SIGNOFF_2026-04-12.md)
   - milestone backend signoff snapshot
@@ -80,12 +106,12 @@ These are the best docs for understanding the product and architecture.
 - [REPORT_INDEX.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/REPORT_INDEX.md)
   - where model reports and project docs fit
 
-### E. Import / Institution Docs
+### F. Import / Institution Docs
 
 - [VIGNAN_IMPORT_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/VIGNAN_IMPORT_GUIDE.md)
   - production-style import guide for Vignan data
 
-### F. Guardian Notification Docs
+### G. Guardian Notification Docs
 
 - [GUARDIAN_NOTIFICATION_PHASE_A_TO_G_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/GUARDIAN_NOTIFICATION_PHASE_A_TO_G_GUIDE.md)
   - the guardian escalation subsystem from concept to implementation
@@ -110,6 +136,10 @@ Read:
 
 Read:
 
+- [FRONTEND_MASTER_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_MASTER_GUIDE.md)
+- [FRONTEND_PHASE_PLAN.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_PHASE_PLAN.md)
+- [FRONTEND_DESIGN_SYSTEM.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_DESIGN_SYSTEM.md)
+- [FRONTEND_ROLE_FLOWS.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_ROLE_FLOWS.md)
 - [CHATBOT_FRONTEND_INTEGRATION_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/CHATBOT_FRONTEND_INTEGRATION_GUIDE.md)
 - [CHATBOT.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/CHATBOT.md)
 

@@ -15,6 +15,13 @@ It explains:
 
 This document is written to help someone build the frontend without guessing hidden backend behavior.
 
+Recommended supporting frontend docs:
+
+- [FRONTEND_MASTER_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_MASTER_GUIDE.md)
+- [FRONTEND_PHASE_PLAN.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_PHASE_PLAN.md)
+- [FRONTEND_DESIGN_SYSTEM.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_DESIGN_SYSTEM.md)
+- [FRONTEND_ROLE_FLOWS.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_ROLE_FLOWS.md)
+
 ## 0. How To Use This Guide
 
 This guide is not only a list of endpoints.
@@ -386,6 +393,7 @@ Also useful:
 
 - `query_plan.clarification_question`
 - `semantic_planner.status == "clarification"` if CB19 caused it
+- `limitations` entries such as `time-window not specified for recent-entry request` as a defensive fallback when the planner response is clearly a clarification but one planner flag is still conservative
 
 Frontend behavior:
 
@@ -536,6 +544,12 @@ Important UI states:
 - clarification answer
 - refusal answer
 - server error / auth error
+
+Recommended real-world version:
+
+- keep a floating chat entry for quick use
+- also provide a dedicated full chat page for longer conversations
+- allow role-based starter prompts so users are not forced to invent the first question
 
 ### 7.4 Admin Debug Panel
 
@@ -723,6 +737,16 @@ For each UAT prompt, check these simple items:
 
 This matters because a chatbot can "return 200 OK" and still be wrong in product behavior.
 
+## 9B. What The Final Frontend Actually Uses Now
+
+After the later frontend phases, the UI now uses this contract in two chat surfaces:
+
+- floating dock for quick questions
+- dedicated role chat page for longer conversations
+
+Both use the same backend endpoints and the same metadata rules.
+This is an important design choice because it keeps the chat behavior consistent even though the visual surface changes.
+
 ## 10. Frontend Rules To Follow
 
 ### Rule 1
@@ -847,6 +871,10 @@ If you remember only one thing from this guide, remember this:
 There is now a focused verifier for this contract pass:
 
 - [tmp_frontend_contract_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_frontend_contract_verify.py)
+
+And there is also a later chat/report verification layer:
+
+- [tmp_frontend_phase8910_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_frontend_phase8910_verify.py)
 
 It checks:
 

@@ -218,7 +218,54 @@ Purpose:
 Important note:
 
 - this is the best file for phase/status tracking
+
+## 10. Frontend Build Docs
+
+### `docs/FRONTEND_MASTER_GUIDE.md`
+
+Type:
+
+- frontend architecture and implementation guide
+
+Purpose:
+
+- explains how the new frontend was built from scratch
+- explains role-wise UX separation
+- explains how chatbot, dashboards, reports, and admin imports fit into the UI
+
+### `docs/FRONTEND_PHASE_PLAN.md`
+
+Type:
+
+- frontend phase roadmap
+
+Purpose:
+
+- tracks the frontend in phased form
+- clarifies what is already implemented versus what belongs to later expansion
+
+### `docs/FRONTEND_DESIGN_SYSTEM.md`
+
+Type:
+
+- frontend visual-system guide
+
+Purpose:
+
+- explains typography, colors, motion, surface rules, and role-appropriate gamification boundaries
 - it is not the deepest beginner explanation of hidden internal chatbot behavior
+
+### `docs/FRONTEND_ROLE_FLOWS.md`
+
+Type:
+
+- role-wise frontend behavior guide
+
+Purpose:
+
+- explains how student, counsellor, and admin flows differ after login
+- explains why deeper pages like student journey, counsellor workbench, and admin operations exist
+- helps a beginner understand the product from the user's point of view instead of only from file names
 
 ## 10. Full Chatbot Implementation Guide
 

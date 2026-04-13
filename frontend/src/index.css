@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  color: #0f172a;
+  background:
+    radial-gradient(circle at top left, rgba(79, 70, 229, 0.16), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.14), transparent 24%),
+    #eef2f8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: #0f172a;
+  background:
+    radial-gradient(circle at top left, rgba(79, 70, 229, 0.1), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.1), transparent 24%),
+    linear-gradient(180deg, #eef3f9 0%, #e9eef6 100%);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Manrope", system-ui, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(14px);
+}
+
+.hero-grid {
+  background-size: 38px 38px;
+}
+
+.home-section-dark {
+  background:
+    radial-gradient(circle at top right, rgba(99, 102, 241, 0.18), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(20, 184, 166, 0.12), transparent 20%),
+    linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.88));
+}
+
+.home-section-soft {
+  background:
+    radial-gradient(circle at top left, rgba(99, 102, 241, 0.09), transparent 22%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 250, 255, 0.92));
+}
+
+.copilot-badge::before,
+.copilot-badge::after {
+  content: "";
+  position: absolute;
+  top: 46%;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #0f172a;
+}
+
+.copilot-badge::before {
+  left: 28%;
+}
+
+.copilot-badge::after {
+  right: 28%;
+}
+
+.timeline-track::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 14px;
+  bottom: -14px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(79, 70, 229, 0.3), rgba(15, 118, 110, 0.15));
+}

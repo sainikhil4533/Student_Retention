@@ -177,6 +177,83 @@ This is expected because the LMS sheet currently contains rows for only part of 
 - If `trigger_scoring=true`, the system will generate predictions and queue email/SMS/WhatsApp
   notifications as configured.
 
+## Post-Cleanup Sanity Check And Fresh Upload Readiness
+
+This section is important when you have just deleted an old imported cohort and want to make
+sure the system is clean before the next real admin upload.
+
+### Why This Step Exists
+
+When an imported institutional dataset is removed, two different questions matter:
+
+1. Did the old imported data really get cleared?
+2. Is the upload pipeline still healthy for the next file?
+
+These are not the same thing.
+
+- A cleanup may remove the old imported students correctly, but leave behind partial rows or
+  break import-aware reports.
+- The upload route may still exist, but the next admin upload could fail because of validation
+  drift, file-format issues, or unexpected route regressions.
+
+That is why we treat this as two checks done one after the other.
+
+### 1. Import Cleanup Sanity Check
+
+The cleanup sanity check confirms that the previously imported cohort is actually gone.
+
+In practical terms, we verify:
+
+- imported `student_profiles` are now zero
+- import-aware coverage reporting returns zero imported students
+- imported-only institution analytics return zero imported students
+- import-only CSV exports still respond correctly
+
+This check answers:
+
+`Did we remove the old imported cohort cleanly without breaking the reporting contract?`
+
+### 2. Fresh Admin Upload Readiness Check
+
+The readiness check confirms that the next upload path is still healthy.
+
+In practical terms, we verify:
+
+- a malformed dry-run upload fails with a validation error
+- a valid minimal dry-run upload succeeds
+- dry-run mode does not persist rows into the database
+- scoring stays off when `trigger_scoring=false`
+
+This check answers:
+
+`If the admin uploads the next real file, is the import path still behaving correctly?`
+
+### Reusable Verifier
+
+The project now includes a dedicated verification script for these two checks:
+
+- [tmp_import_reset_readiness_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_import_reset_readiness_verify.py)
+
+What this script does:
+
+- logs in as admin
+- checks that imported student profiles are zero after cleanup
+- calls `GET /reports/import-coverage`
+- calls `GET /institution/risk-overview?imported_only=true`
+- calls `GET /reports/exports/outcome-distribution?imported_only=true`
+- sends an invalid `dry_run=true` upload to confirm validation still works
+- sends a valid synthetic `dry_run=true&trigger_scoring=false` upload to confirm readiness
+- checks again that dry-run did not persist imported rows
+
+### Why Dry Run Is The Right Safety Check
+
+For a beginner, this is the most important idea:
+
+- a real upload would put student data back into the database
+- a dry run exercises the route and validation logic without storing new rows
+
+So dry run is the safest way to test whether the system is ready for the next real admin upload.
+
 ## Local Run Modes
 
 Production-style deployment should keep the API and worker as separate processes.

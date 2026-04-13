@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from src.api.auth import AuthContext, require_roles
+from src.api.auth import AuthContext, require_same_student_or_roles
 from src.api.prediction_history_serialization import resolve_prediction_intelligence_snapshot
 from src.api.student_intelligence import build_current_student_intelligence
 from src.api.schemas import StudentTimelineResponse, TimelineEventItem
@@ -37,7 +37,7 @@ def _case_reopened_prediction_ids(prediction_rows, intervention_rows) -> set[int
 def get_student_timeline(
     student_id: int,
     db: Session = Depends(get_db),
-    auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
+    auth: AuthContext = Depends(require_same_student_or_roles("counsellor", "admin", "system")),
 ) -> StudentTimelineResponse:
     repository = EventRepository(db)
     prediction_rows = repository.get_prediction_history_for_student(student_id)

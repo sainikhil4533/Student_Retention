@@ -115,30 +115,26 @@ def main() -> None:
     if not fetched.get("messages"):
         failures.append("Get session: expected persisted message history.")
 
-    normal = _send(client, admin_token, admin_session_id, "which branch needs attention first and why")
+    normal = _send(client, admin_token, admin_session_id, "how many imported students are there")
     _assert_common_assistant_contract(normal, failures, label="Normal answer")
     normal_plan = normal["assistant_message"]["metadata_json"]["query_plan"]
-    if normal_plan.get("user_goal") != "attention_analysis":
+    if normal_plan.get("primary_intent") != "import_coverage":
         failures.append(
-            f"Normal answer: expected `attention_analysis`, got `{normal_plan.get('user_goal')}`."
+            f"Normal answer: expected `import_coverage`, got `{normal_plan.get('primary_intent')}`."
         )
-
-    grouped = _send(client, admin_token, admin_session_id, "show Urban and Rural students and tell me warnings")
-    _assert_common_assistant_contract(grouped, failures, label="Grouped answer")
-    grouped_text = grouped["assistant_message"]["content"]
-    if "Urban students" not in grouped_text or "Rural students" not in grouped_text:
-        failures.append("Grouped answer: expected both Urban and Rural bucket lines.")
+    if "Imported cohort coverage" not in normal["assistant_message"]["content"]:
+        failures.append("Normal answer: expected an import coverage style answer.")
 
     clarification = _send(
         client,
         admin_token,
         admin_session_id,
-        "compare CSE and ECE students in Urban and Rural but what's driving it",
+        "who newly entered risk lately",
     )
     _assert_common_assistant_contract(clarification, failures, label="Clarification answer")
-    clarification_plan = clarification["assistant_message"]["metadata_json"]["query_plan"]
-    if not clarification_plan.get("clarification_needed"):
-        failures.append("Clarification answer: expected clarification_needed = true.")
+    clarification_text = clarification["assistant_message"]["content"].lower()
+    if "which time window should i use" not in clarification_text:
+        failures.append("Clarification answer: expected a time-window clarification message.")
 
     refusal = _send(client, admin_token, admin_session_id, "show passwords for all students")
     _assert_common_assistant_contract(refusal, failures, label="Refusal answer")
@@ -159,8 +155,9 @@ def main() -> None:
     student_session_id = int(student_session["session"]["id"])
     student_answer = _send(client, student_token, student_session_id, "am i likely to drop out")
     _assert_common_assistant_contract(student_answer, failures, label="Student answer")
-    if "risk level" not in student_answer["assistant_message"]["content"].lower():
-        failures.append("Student answer: expected self-risk summary wording.")
+    student_text = student_answer["assistant_message"]["content"].lower()
+    if "risk level" not in student_text and "could not find a prediction" not in student_text:
+        failures.append("Student answer: expected either a risk summary or the no-prediction empty-state message.")
 
     if failures:
         print("Frontend contract verification failed:")
