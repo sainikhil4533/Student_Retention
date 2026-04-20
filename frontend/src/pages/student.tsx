@@ -47,12 +47,12 @@ export function StudentDashboardPage() {
   return (
     <div className="space-y-6">
       <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <Card className="overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white shadow-lift">
+        <Card className="bg-slate-900 border-none text-white shadow-none p-8">
           <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-200">Student dashboard</p>
-              <h2 className="mt-3 text-4xl font-black tracking-tight">Your progress story stays clear, calm, and actionable.</h2>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
+            <div className="animate-rise">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-blue-400">Student dashboard</p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight">Your progress story stays clear, calm, and actionable.</h2>
+              <p className="mt-3 max-w-2xl text-[13px] leading-6 text-slate-400">
                 This dashboard is designed to feel motivating without becoming childish. It keeps the most important academic signals visible, then turns them into next-step guidance you can actually follow.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
@@ -165,20 +165,20 @@ export function StudentDashboardPage() {
           <div className="space-y-5">
             {timelineQuery.data?.timeline?.length ? (
               timelineQuery.data.timeline.slice(0, 6).map((event, index) => (
-                <div key={`${event.event_type}-${index}`} className="timeline-track relative pl-12">
-                  <div className="absolute left-0 top-1 flex h-9 w-9 items-center justify-center rounded-full border border-indigo-200 bg-white shadow-soft">
+                <div key={`${event.event_type}-${index}`} className="timeline-track relative pl-12 animate-rise" style={{ animationDelay: `${index * 50}ms` }}>
+                  <div className="absolute left-0 top-1 flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm transition-transform hover:scale-105">
                     {event.status?.toLowerCase().includes("resolved") ? (
-                      <Trophy className="h-4 w-4 text-teal-600" />
+                      <Trophy className="h-4 w-4 text-emerald-600" />
                     ) : event.event_type.includes("warning") ? (
                       <ShieldAlert className="h-4 w-4 text-amber-600" />
                     ) : (
-                      <Flame className="h-4 w-4 text-indigo-600" />
+                      <Flame className="h-4 w-4 text-blue-600" />
                     )}
                   </div>
-                  <div className="rounded-3xl border border-white/60 bg-white/85 p-4 shadow-soft">
+                  <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:bg-slate-50">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <h3 className="text-sm font-bold text-slate-900">{event.title}</h3>
-                      <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+                      <h3 className="text-[13px] font-semibold text-slate-900">{event.title}</h3>
+                      <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-600">
                         {titleCase(event.status || event.event_type)}
                       </span>
                     </div>

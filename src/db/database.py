@@ -36,7 +36,7 @@ if DATABASE_URL.startswith("postgresql+psycopg://"):
 # then degrade after a few slow requests, because long-lived chat/page requests
 # can pin the tiny local pool. Using NullPool here avoids that local bottleneck
 # and lets the remote pooler own connection reuse.
-if ".pooler.supabase.com:6543/" in DATABASE_URL:
+if ".pooler.supabase.com" in DATABASE_URL:
     engine_kwargs["poolclass"] = NullPool
 
 engine = create_engine(DATABASE_URL, **engine_kwargs)

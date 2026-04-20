@@ -36,14 +36,14 @@ export function HomePage() {
   return (
     <div className="pb-24">
       <section className="mx-auto grid max-w-7xl gap-10 px-4 pt-8 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:pt-12">
-        <div className="space-y-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white/90 px-4 py-2 text-sm font-semibold text-indigo-700 shadow-soft">
-            <Sparkles className="h-4 w-4" />
-            Institution-first retention intelligence with grounded AI
+        <div className="space-y-8 animate-rise">
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[13px] font-semibold text-slate-600 shadow-sm">
+            <Sparkles className="h-3.5 w-3.5 text-blue-600" />
+            Institution-first retention intelligence
           </div>
 
-          <div className="space-y-6">
-            <h1 className="max-w-4xl text-5xl font-black leading-[0.98] tracking-tight text-slate-950 sm:text-6xl xl:text-[4.6rem]">
+          <div className="space-y-5">
+            <h1 className="max-w-4xl text-5xl tracking-tight text-slate-900 sm:text-6xl font-bold leading-[1.1]">
               Institutional retention intelligence that feels modern, stays professional, and works like a real campus system.
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-slate-600">
@@ -51,16 +51,16 @@ export function HomePage() {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-4 mt-8">
             <NavLink to="/login/admin">
-              <Button>
+              <Button className="px-6 py-2.5 text-sm">
                 Start with admin access
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </NavLink>
             <NavLink
               to="/login/student"
-              className="inline-flex items-center rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-soft transition hover:border-slate-300 hover:bg-slate-50"
+              className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-6 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50"
             >
               View student experience
             </NavLink>
@@ -73,14 +73,13 @@ export function HomePage() {
           </div>
         </div>
 
-        <Card className="home-section-dark relative overflow-hidden border-white/10 p-8 text-white shadow-lift">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.35),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(20,184,166,0.22),transparent_26%)]" />
+        <Card className="bg-slate-50 border-slate-100 p-8 shadow-none flex flex-col justify-between">
           <div className="relative flex items-start justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-300">Closed-campus operating model</p>
-              <h2 className="mt-3 text-3xl font-extrabold leading-tight">One platform. Three roles. One institutional source of truth.</h2>
-              <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300">
-                The homepage stays concise and trustworthy. The real product begins only after authenticated sign-in, where student, counsellor, and admin experiences split cleanly.
+              <p className="text-[11px] font-bold uppercase tracking-wider text-blue-600">Closed-campus operating model</p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900">One platform. Three roles.</h2>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500">
+                The homepage stays concise and trustworthy. The real product begins only after authenticated sign-in, where experiences split cleanly.
               </p>
             </div>
             <CampusCopilotMark className="animate-floaty" />
@@ -101,23 +100,23 @@ export function HomePage() {
                 detail: "Institution analytics, imports, and operational visibility.",
               },
             ].map((item) => (
-              <div key={item.title} className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-                <p className="text-xs uppercase tracking-[0.18em] text-indigo-200">{item.title}</p>
-                <p className="mt-3 text-sm leading-6 text-slate-100">{item.detail}</p>
+              <div key={item.title} className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">{item.title}</p>
+                <p className="mt-2 text-sm leading-6 text-slate-700">{item.detail}</p>
               </div>
             ))}
           </div>
 
-          <div className="relative mt-8 rounded-[28px] border border-white/10 bg-black/10 p-5 backdrop-blur-sm">
+          <div className="mt-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
             <div className="grid gap-4 sm:grid-cols-3">
               {[
                 ["Student clarity", "Motivating journey surfaces and formal timeline guidance."],
-                ["Counsellor flow", "Priority queues and case workbench actions without dashboard clutter."],
-                ["Admin control", "Uploads, reports, and operations stay separate for cleaner decisions."],
+                ["Counsellor flow", "Priority queues and workbench actions without clutter."],
+                ["Admin control", "Uploads, reports, and operations stay separate."],
               ].map(([title, text]) => (
                 <div key={title}>
-                  <p className="text-sm font-bold text-white">{title}</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">{text}</p>
+                  <p className="text-sm font-semibold text-slate-900">{title}</p>
+                  <p className="mt-2 text-[13px] leading-5 text-slate-500">{text}</p>
                 </div>
               ))}
             </div>

@@ -130,20 +130,18 @@ export function RoleLoginPage() {
         </Card>
       </div>
 
-      <Card className="mx-auto w-full max-w-xl border-white/70 bg-white/92 p-7 shadow-lift sm:p-8">
-        <div className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Institution login</p>
-          <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950">Continue securely</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-600">
-            Use your institution-issued username and password. If your account is marked with a temporary password, the app will ask you to create a new one after sign-in.
+      <Card className="mx-auto w-full max-w-lg p-8 shadow-sm">
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Sign in to RetentionOS</h2>
+          <p className="mt-2 text-sm text-slate-500">
+            Use your institution-issued credentials.
           </p>
         </div>
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">Username</label>
-            <div className="rounded-[26px] border border-slate-200 bg-slate-50/85 p-1 focus-within:border-indigo-300 focus-within:bg-white">
-              <div className="flex items-center gap-3 rounded-[22px] bg-white px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+            <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Username</label>
+            <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 outline-none transition-all focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20">
                 <UserRound className="h-4 w-4 text-slate-400" />
                 <input
                   value={username}
@@ -152,14 +150,12 @@ export function RoleLoginPage() {
                   className="w-full border-0 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
                 />
               </div>
-            </div>
             <p className="mt-2 text-xs leading-6 text-slate-500">Examples: registration number style login, staff login ID, or institution-managed account name.</p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">Password</label>
-            <div className="rounded-[26px] border border-slate-200 bg-slate-50/85 p-1 focus-within:border-indigo-300 focus-within:bg-white">
-              <div className="flex items-center gap-3 rounded-[22px] bg-white px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+            <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Password</label>
+            <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 outline-none transition-all focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20">
                 <LockKeyhole className="h-4 w-4 text-slate-400" />
                 <input
                   type="password"
@@ -169,7 +165,6 @@ export function RoleLoginPage() {
                   className="w-full border-0 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
                 />
               </div>
-            </div>
             <div className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
               <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
               Sign-in is limited to institution-provisioned accounts only. There is no public registration flow on this product.
@@ -270,15 +265,15 @@ export function ResetPasswordPage() {
         </Button>
       </Card>
 
-      <Card className="mx-auto w-full max-w-xl border-white/70 bg-white/94 p-7 shadow-lift sm:p-8">
-        <div className="mb-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700">
-            <KeyRound className="h-4 w-4" />
-            Password update required
+      <Card className="mx-auto w-full max-w-lg p-8 shadow-sm">
+        <div className="mb-8">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-blue-700">
+            <KeyRound className="h-3.5 w-3.5" />
+            Update Required
           </div>
-          <h2 className="mt-4 text-3xl font-black tracking-tight text-slate-950">Create your private password</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-600">
-            Signed in as <span className="font-semibold text-slate-900">{auth.username}</span>. Use the current temporary password once, then replace it with a new one.
+          <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-900">Set new password</h2>
+          <p className="mt-2 text-sm text-slate-500">
+            Signed in as <span className="font-semibold text-slate-900">{auth.username}</span>.
           </p>
         </div>
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -334,9 +329,8 @@ function PasswordField({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-semibold text-slate-700">{label}</label>
-      <div className="rounded-[26px] border border-slate-200 bg-slate-50/85 p-1 focus-within:border-indigo-300 focus-within:bg-white">
-        <div className="flex items-center gap-3 rounded-[22px] bg-white px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+      <label className="mb-1.5 block text-[13px] font-medium text-slate-700">{label}</label>
+      <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 outline-none transition-all focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20">
           <LockKeyhole className="h-4 w-4 text-slate-400" />
           <input
             type="password"
@@ -346,7 +340,6 @@ function PasswordField({
             className="w-full border-0 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
           />
         </div>
-      </div>
     </div>
   );
 }

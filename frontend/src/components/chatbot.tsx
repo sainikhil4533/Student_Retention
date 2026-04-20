@@ -62,13 +62,9 @@ export function ChatbotDock() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 z-40 flex items-center gap-3 rounded-full border border-white/70 bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 px-4 py-3 text-white shadow-lift transition hover:-translate-y-1 md:bottom-6 md:right-6"
+        className="fixed bottom-4 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-transform hover:scale-105 hover:bg-blue-700 md:bottom-6 md:right-6"
       >
-        <CampusCopilotMark className="h-11 w-11 rounded-[16px] shadow-none" />
-        <div className="hidden text-left sm:block">
-          <p className="text-sm font-semibold">Campus Copilot</p>
-          <p className="text-xs text-slate-300">Ask naturally, stay grounded.</p>
-        </div>
+        <CampusCopilotMark className="h-8 w-8 shadow-none" />
       </button>
 
       {open ? (
@@ -372,9 +368,9 @@ function MessageBubble({ message }: { message: CopilotMessage }) {
 
   return (
     <div
-      className={`max-w-[92%] rounded-[28px] px-4 py-3 shadow-soft ${
+      className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
         message.role === "user"
-          ? "ml-auto bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 text-white"
+          ? "ml-auto bg-blue-600 text-white"
           : isSensitiveRefusal
             ? "border border-rose-200 bg-rose-50 text-rose-900"
             : isUnsupported

@@ -1,17 +1,31 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .animate-rise {
+    animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-pulse-slow {
+    animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes rise {
+    0% { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+}
+
 :root {
-  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   color: #0f172a;
-  background:
-    radial-gradient(circle at top left, rgba(79, 70, 229, 0.18), transparent 22%),
-    radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.16), transparent 22%),
-    linear-gradient(180deg, #edf2f9 0%, #e8eef6 100%);
+  background-color: #f8fafc;
 }
 
 * {
@@ -23,113 +37,43 @@ body {
   min-width: 320px;
   min-height: 100vh;
   color: #0f172a;
-  background:
-    radial-gradient(circle at top left, rgba(79, 70, 229, 0.12), transparent 28%),
-    radial-gradient(circle at 82% 18%, rgba(14, 165, 233, 0.1), transparent 22%),
-    radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.12), transparent 24%),
-    linear-gradient(180deg, #eff4fa 0%, #e8eef6 100%);
+  background-color: #fafafa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
   min-height: 100vh;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Manrope", system-ui, sans-serif;
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Inter", system-ui, sans-serif;
 }
 
-button,
-input,
-textarea,
-select {
+button, input, textarea, select {
   font: inherit;
 }
 
-.glass {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(14px);
-}
-
-.workspace-surface {
-  background:
-    radial-gradient(circle at top left, rgba(99, 102, 241, 0.08), transparent 18%),
-    radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.08), transparent 18%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(245, 248, 253, 0.7));
-}
-
-.hero-grid {
-  background-size: 38px 38px;
+/* Minimalist Utilities */
+.saas-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .hero-noise {
   background-image:
-    linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
-  background-size: 42px 42px;
-}
-
-.home-section-dark {
-  background:
-    radial-gradient(circle at top right, rgba(99, 102, 241, 0.22), transparent 24%),
-    radial-gradient(circle at bottom left, rgba(20, 184, 166, 0.16), transparent 20%),
-    linear-gradient(145deg, rgba(2, 6, 23, 0.98), rgba(15, 23, 42, 0.9));
-}
-
-.home-section-soft {
-  background:
-    radial-gradient(circle at top left, rgba(99, 102, 241, 0.1), transparent 22%),
-    radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.08), transparent 18%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(247, 250, 255, 0.96));
-}
-
-.home-section-slate {
-  background:
-    radial-gradient(circle at top left, rgba(99, 102, 241, 0.12), transparent 20%),
-    radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.08), transparent 18%),
-    linear-gradient(165deg, rgba(226, 232, 240, 0.66), rgba(255, 255, 255, 0.88));
-}
-
-.workspace-shell {
-  background:
-    linear-gradient(180deg, rgba(248, 250, 252, 0.78), rgba(241, 245, 249, 0.68));
-}
-
-.sidebar-panel {
-  background:
-    radial-gradient(circle at top right, rgba(99, 102, 241, 0.12), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.96));
-}
-
-.copilot-badge::before,
-.copilot-badge::after {
-  content: "";
-  position: absolute;
-  top: 46%;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #0f172a;
-}
-
-.copilot-badge::before {
-  left: 28%;
-}
-
-.copilot-badge::after {
-  right: 28%;
+    linear-gradient(#f1f5f9 1px, transparent 1px),
+    linear-gradient(90deg, #f1f5f9 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 .timeline-track::before {
   content: "";
   position: absolute;
-  left: 18px;
+  left: 19px;
   top: 14px;
   bottom: -14px;
   width: 2px;
-  background: linear-gradient(180deg, rgba(79, 70, 229, 0.3), rgba(15, 118, 110, 0.15));
+  background-color: #e2e8f0;
 }

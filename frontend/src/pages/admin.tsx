@@ -44,34 +44,34 @@ export function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <Card className="overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white shadow-lift">
+        <Card className="bg-slate-900 border-none text-white shadow-none p-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-indigo-200">Admin dashboard</p>
-              <h2 className="mt-3 text-4xl font-black tracking-tight">Institution-wide visibility with clean operational depth.</h2>
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
+            <div className="animate-rise">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-blue-400">Admin dashboard</p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight">Institution-wide visibility with clean operational depth.</h2>
+              <p className="mt-3 max-w-3xl text-[13px] leading-6 text-slate-400">
                 The admin landing experience stays executive-first. Uploads and full reports remain available, but the first screen is designed for quick institutional understanding before deeper operational work.
               </p>
             </div>
-            <NavLink to="/app/admin/imports">
+            <NavLink to="/app/admin/imports" className="animate-rise">
               <Button className="bg-white text-slate-950 hover:bg-slate-100">
                 <UploadCloud className="mr-2 h-4 w-4" />
                 Upload new cohort
               </Button>
             </NavLink>
           </div>
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-              <p className="text-xs uppercase tracking-[0.18em] text-indigo-200">Imported students</p>
-              <p className="mt-2 text-sm font-semibold text-white">{coverage.total_imported_students} currently visible in the imported cohort</p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-3 animate-rise" style={{ animationDelay: '100ms' }}>
+            <div className="rounded border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Imported students</p>
+              <p className="mt-1 text-sm font-medium text-white">{coverage.total_imported_students} currently visible in the imported cohort</p>
             </div>
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-              <p className="text-xs uppercase tracking-[0.18em] text-indigo-200">Scoring readiness</p>
-              <p className="mt-2 text-sm font-semibold text-white">{coverage.scored_students} students already have prediction output</p>
+            <div className="rounded border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Scoring readiness</p>
+              <p className="mt-1 text-sm font-medium text-white">{coverage.scored_students} students already have prediction output</p>
             </div>
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-              <p className="text-xs uppercase tracking-[0.18em] text-indigo-200">Outcome posture</p>
-              <p className="mt-2 text-sm font-semibold text-white">{overview.total_high_risk_students} students are currently high risk</p>
+            <div className="rounded border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Outcome posture</p>
+              <p className="mt-1 text-sm font-medium text-white">{overview.total_high_risk_students} students are currently high risk</p>
             </div>
           </div>
         </Card>

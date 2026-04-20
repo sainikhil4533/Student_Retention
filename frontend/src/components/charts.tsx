@@ -13,7 +13,7 @@ import {
 
 import { Card, SectionTitle } from "./ui";
 
-const palette = ["#4f46e5", "#0f766e", "#b88a44", "#e11d48", "#64748b"];
+const palette = ["#2563eb", "#64748b", "#3b82f6", "#94a3b8", "#1d4ed8"];
 
 export function BarChartCard({
   title,

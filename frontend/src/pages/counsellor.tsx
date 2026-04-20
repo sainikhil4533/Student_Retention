@@ -50,25 +50,25 @@ export function CounsellorDashboardPage() {
   return (
     <div className="space-y-6">
       <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <Card className="overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-teal-950 text-white shadow-lift">
-          <p className="text-xs uppercase tracking-[0.24em] text-teal-200">Counsellor dashboard</p>
-          <h2 className="mt-3 text-4xl font-black tracking-tight">Operational clarity for case ownership.</h2>
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
+        <Card className="bg-slate-900 border-none text-white shadow-none p-8">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-blue-400">Counsellor dashboard</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">Operational clarity for case ownership.</h2>
+          <p className="mt-3 max-w-3xl text-[13px] leading-6 text-slate-400">
             This dashboard avoids playful gamification. Instead, it uses momentum-style workflow cues that feel professional, urgent, and useful for counsellor decision-making.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-              <p className="text-xs uppercase tracking-[0.18em] text-teal-200">Signed in as</p>
-              <p className="mt-2 text-sm font-semibold text-white">{auth?.displayName || "Counsellor"}</p>
+            <div className="rounded border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Signed in as</p>
+              <p className="mt-1 text-sm font-medium text-white">{auth?.displayName || "Counsellor"}</p>
             </div>
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-              <p className="text-xs uppercase tracking-[0.18em] text-teal-200">Critical unattended</p>
-              <p className="mt-2 text-sm font-semibold text-white">{summary.total_critical_unattended_cases} students currently need urgent visibility</p>
+            <div className="rounded border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Critical unattended</p>
+              <p className="mt-1 text-sm font-medium text-white">{summary.total_critical_unattended_cases} students currently need urgent visibility</p>
             </div>
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-              <p className="text-xs uppercase tracking-[0.18em] text-teal-200">Scoped queue</p>
-              <p className="mt-2 text-sm font-semibold text-white">
-                {queue ? `${queue.total_students} students are currently visible in your queue` : "Queue preview is still loading separately"}
+            <div className="rounded border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Scoped queue</p>
+              <p className="mt-1 text-sm font-medium text-white">
+                {queue ? `${queue.total_students} students visible` : "Loading preview"}
               </p>
             </div>
           </div>
@@ -235,14 +235,14 @@ export function CounsellorReportsPage() {
         <div className="space-y-3">
           {summary.academic_burden_monitoring_students.length ? (
             summary.academic_burden_monitoring_students.slice(0, 8).map((item) => (
-              <div key={`burden-${item.student_id}`} className="rounded-3xl border border-slate-200 bg-white px-4 py-4">
+              <div key={`burden-${item.student_id}`} className="rounded border border-slate-200 bg-white px-4 py-4 shadow-sm">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="font-semibold text-slate-950">Student {item.student_id}</p>
-                  <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
+                  <p className="text-sm font-semibold text-slate-900">Student {item.student_id}</p>
+                  <span className="rounded bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-700">
                     {item.status.replace(/_/g, " ")}
                   </span>
                 </div>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{item.note || "Active academic burden monitoring is still recommended."}</p>
+                <p className="mt-2 text-[13px] leading-5 text-slate-600">{item.note || "Active academic burden monitoring is still recommended."}</p>
               </div>
             ))
           ) : (
