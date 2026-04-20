@@ -18,9 +18,9 @@ def main() -> None:
     failures: list[str] = []
     client = TestClient(app)
 
-    student = _login(client, "student_880001", "student_880001")
-    counsellor = _login(client, "counsellor_demo", "counsellor_demo")
-    admin = _login(client, "admin_demo", "admin_demo")
+    student = _login(client, "student.880001", "Student@123")
+    counsellor = _login(client, "counsellor.vignan", "Counsellor@123")
+    admin = _login(client, "admin.retention", "Admin@123")
 
     student_headers = {"Authorization": f"Bearer {student['access_token']}"}
     counsellor_headers = {"Authorization": f"Bearer {counsellor['access_token']}"}

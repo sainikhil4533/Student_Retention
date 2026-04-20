@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.api.auth import AuthContext, require_roles, require_same_student_or_roles
+from src.api.scope import ensure_student_scope_access
 from src.api.schemas import StudentProfileResponse, StudentProfileUpsertRequest
 from src.db.database import get_db
 from src.db.repository import EventRepository
@@ -56,6 +57,7 @@ def get_student_profile(
     auth: AuthContext = Depends(require_same_student_or_roles("counsellor", "admin", "system")),
 ) -> StudentProfileResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     profile = repository.get_student_profile(student_id)
 
     if profile is None:

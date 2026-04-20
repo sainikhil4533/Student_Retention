@@ -1,0 +1,403 @@
+{
+  "role_filter": "student",
+  "generated_at": "2026-04-17T17:36:51.047936+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 0,
+  "failed_conversations": 1,
+  "failure_summary": {
+    "intent_failure": 2,
+    "repetition_failure": 2
+  },
+  "conversations": [
+    {
+      "role": "student",
+      "label": "student_targeted_data_integrity",
+      "passed": false,
+      "failure_count": 4,
+      "turns": [
+        {
+          "prompt": "show my lms activity",
+          "response_type": "data",
+          "last_topic": "lms",
+          "last_intent": "student_self_attendance",
+          "answer": "Here is your current LMS activity and engagement picture.\n\nWhat I found:\n- LMS clicks in the last 7 days: 164.\n- LMS clicks in the last 14 days: 200.\n- Unique LMS resources touched in the last 7 days: 13.\n- Active LMS login days in the last 7 days: 0.\n- Active LMS login days in the last 14 days: 0.\n- Recent LMS engagement change versus the prior 7-day window: +3.56.\n- Additional grounded details were condensed to keep this answer readable (3 more).\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can next explain whether this LMS pattern is helping or hurting your current risk.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "lms_risk_explanation",
+              "last_intent": "student_self_attendance",
+              "response_type": "data",
+              "last_topic": "lms"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "show my lms activity",
+              "normalized_message": "show me my lms activity right now",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.84,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "show my lms activity",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what is my erp details",
+          "response_type": "data",
+          "last_topic": "coursework",
+          "last_intent": "student_self_attendance",
+          "answer": "Here is your current ERP academic-performance picture.\n\nWhat I found:\n- Current submission rate in ERP is 0.85.\n- Current weighted assessment score is 0.0.\n- Late submissions currently recorded in ERP: 0.\n- Completed assessments currently visible in ERP: 1.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can next explain whether this ERP pattern is helping or hurting your current risk.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "coursework_risk_explanation",
+              "last_intent": "student_self_attendance",
+              "response_type": "data",
+              "last_topic": "coursework"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what is my erp details",
+              "normalized_message": "show me my erp details right now",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.84,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what is my erp details",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what is my gpa",
+          "response_type": "data",
+          "last_topic": "coursework",
+          "last_intent": "student_self_attendance",
+          "answer": "Here is your current ERP academic-performance picture.\n\nWhat I found:\n- Current submission rate in ERP is 0.85.\n- Current weighted assessment score is 0.0.\n- Late submissions currently recorded in ERP: 0.\n- Completed assessments currently visible in ERP: 1.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can next explain whether this ERP pattern is helping or hurting your current risk.",
+          "failures": [
+            {
+              "type": "intent_failure",
+              "message": "Expected grounded fragment `gpa/cgpa` was not present in the answer.",
+              "turn_index": 3,
+              "prompt": "what is my gpa"
+            },
+            {
+              "type": "repetition_failure",
+              "message": "The chatbot repeated the same answer instead of moving the conversation forward.",
+              "turn_index": 3,
+              "prompt": "what is my gpa"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "coursework_risk_explanation",
+              "last_intent": "student_self_attendance",
+              "response_type": "data",
+              "last_topic": "coursework"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what is my gpa",
+              "normalized_message": "show me my gpa and academic performance right now",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.89,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped GPA wording to the grounded student ERP academic-performance path with GPA context."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "what is my gpa",
+              "rewritten_message": "show me my gpa and academic performance right now",
+              "rationale": "Mapped GPA wording to the grounded student ERP academic-performance path with GPA context.",
+              "confidence": 0.89
+            }
+          }
+        },
+        {
+          "prompt": "show my previous and current gpa",
+          "response_type": "data",
+          "last_topic": "coursework",
+          "last_intent": "student_self_attendance",
+          "answer": "Here is your current ERP academic-performance picture.\n\nWhat I found:\n- Current submission rate in ERP is 0.85.\n- Current weighted assessment score is 0.0.\n- Late submissions currently recorded in ERP: 0.\n- Completed assessments currently visible in ERP: 1.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can next explain whether this ERP pattern is helping or hurting your current risk.",
+          "failures": [
+            {
+              "type": "intent_failure",
+              "message": "Expected grounded fragment `previous gpa/cgpa` was not present in the answer.",
+              "turn_index": 4,
+              "prompt": "show my previous and current gpa"
+            },
+            {
+              "type": "repetition_failure",
+              "message": "The chatbot repeated the same answer instead of moving the conversation forward.",
+              "turn_index": 4,
+              "prompt": "show my previous and current gpa"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "coursework_risk_explanation",
+              "last_intent": "student_self_attendance",
+              "response_type": "data",
+              "last_topic": "coursework"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "show my previous and current gpa",
+              "normalized_message": "show me my gpa and academic performance right now",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.89,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped GPA wording to the grounded student ERP academic-performance path with GPA context."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "show my previous and current gpa",
+              "rewritten_message": "show me my gpa and academic performance right now",
+              "rationale": "Mapped GPA wording to the grounded student ERP academic-performance path with GPA context.",
+              "confidence": 0.89
+            }
+          }
+        },
+        {
+          "prompt": "how many days did i login",
+          "response_type": "data",
+          "last_topic": "lms",
+          "last_intent": "student_self_attendance",
+          "answer": "Here is your current LMS activity and engagement picture.\n\nWhat I found:\n- LMS clicks in the last 7 days: 164.\n- LMS clicks in the last 14 days: 200.\n- Unique LMS resources touched in the last 7 days: 13.\n- Active LMS login days in the last 7 days: 0.\n- Active LMS login days in the last 14 days: 0.\n- Recent LMS engagement change versus the prior 7-day window: +3.56.\n- Additional grounded details were condensed to keep this answer readable (3 more).\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can next explain whether this LMS pattern is helping or hurting your current risk.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "lms_risk_explanation",
+              "last_intent": "student_self_attendance",
+              "response_type": "data",
+              "last_topic": "lms"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "how many days did i login",
+              "normalized_message": "show me my lms activity and active login days right now",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped login-frequency wording to the grounded student LMS activity path."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "how many days did i login",
+              "rewritten_message": "show me my lms activity and active login days right now",
+              "rationale": "Mapped login-frequency wording to the grounded student LMS activity path.",
+              "confidence": 0.88
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

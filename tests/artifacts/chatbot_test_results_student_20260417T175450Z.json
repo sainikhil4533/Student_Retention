@@ -1,0 +1,1224 @@
+{
+  "role_filter": "student",
+  "generated_at": "2026-04-17T17:54:50.526543+00:00",
+  "conversation_count": 7,
+  "passed_conversations": 6,
+  "failed_conversations": 1,
+  "failure_summary": {
+    "response_type_failure": 3,
+    "repetition_failure": 1
+  },
+  "conversations": [
+    {
+      "role": "student",
+      "label": "student_emotional_01",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "am i going to fail",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the honest safety check from your current visible record.\n\nWhat I found:\n- Attendance view: overall semester status is SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- LMS snapshot: 164 clicks in 7 days, 13 unique resources, engagement change +3.56.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "am i going to fail",
+              "normalized_message": "am i safe or should i worry",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "am i going to fail",
+              "rewritten_message": "am i safe or should i worry",
+              "rationale": "Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path.",
+              "confidence": 0.88
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_emotional_02",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "can i still recover",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Yes, you can still recover from the current HIGH-risk posture, but it will need steady improvement in the signals dragging you down.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Additional grounded details were condensed to keep this answer readable (2 more).\n- The stronger current pressure is coming from coursework and broader academic-performance signals, so recovery depends more on sustained academic improvement than on one isolated attendance fix.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "can i still recover",
+              "normalized_message": "can i still recover from my current risk",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "can i still recover",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_emotional_03",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "is it too late for me",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the honest safety check from your current visible record.\n\nWhat I found:\n- Attendance view: overall semester status is SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- LMS snapshot: 164 clicks in 7 days, 13 unique resources, engagement change +3.56.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "is it too late for me",
+              "normalized_message": "am i safe or should i worry",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "is it too late for me",
+              "rewritten_message": "am i safe or should i worry",
+              "rationale": "Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path.",
+              "confidence": 0.88
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_emotional_04",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "how serious is my situation",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the honest safety check from your current visible record.\n\nWhat I found:\n- Attendance view: overall semester status is SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- LMS snapshot: 164 clicks in 7 days, 13 unique resources, engagement change +3.56.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "how serious is my situation",
+              "normalized_message": "am i safe or should i worry",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "how serious is my situation",
+              "rewritten_message": "am i safe or should i worry",
+              "rationale": "Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path.",
+              "confidence": 0.88
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_emotional_05",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "should i panic",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the honest safety check from your current visible record.\n\nWhat I found:\n- Attendance view: overall semester status is SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- LMS snapshot: 164 clicks in 7 days, 13 unique resources, engagement change +3.56.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "should i panic",
+              "normalized_message": "am i safe or should i worry",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "should i panic",
+              "rewritten_message": "am i safe or should i worry",
+              "rationale": "Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path.",
+              "confidence": 0.88
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_emotional_06",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "what happens if i don't improve",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the grounded consequence view if the current risk drivers do not improve.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Additional grounded details were condensed to keep this answer readable (2 more).\n- That can make future warning pressure, academic decline, and subject-level stress harder to recover from later.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what happens if i don't improve",
+              "normalized_message": "what happens if i do not improve my current risk drivers",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what happens if i don't improve",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_emotional_mix_chain",
+      "passed": false,
+      "failure_count": 4,
+      "turns": [
+        {
+          "prompt": "am i in danger",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the honest safety check from your current visible record.\n\nWhat I found:\n- Attendance view: overall semester status is SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- LMS snapshot: 164 clicks in 7 days, 13 unique resources, engagement change +3.56.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "am i in danger",
+              "normalized_message": "am i safe or should i worry",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "am i in danger",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "ok",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "student_recovery_focus",
+          "answer": "Here is the grounded path to reduce your current HIGH alert posture.\n\nWhat I found:\n- The HIGH label does not go away manually. It comes down when the grounded signals improve in the next scoring cycle.\n- Your fastest recovery path is to improve the non-attendance drivers that are still pushing risk upward, not only to keep attendance SAFE.\n- Main risk drivers to reduce first: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Academic-performance priority: improve assessed performance from the current weighted score of 0.0 and keep submissions timely.\n- Engagement priority: keep LMS activity consistent beyond the current 164 clicks and 13 resources in 7 days.\n- Finance priority: resolve the current payment pressure (Unpaid, overdue amount 6300.00) because finance is currently increasing your final risk.\n- Attendance should stay protected while you recover: your weakest visible subject is Engineering Chemistry at 80.40%.\n- Because you already have an active warning, treat this as a guided recovery period and clear the highest-impact academic blocker first.\n\nIf you want, I can break this into attendance, coursework, or a day-by-day weekly recovery plan.",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `action`.",
+              "turn_index": 2,
+              "prompt": "ok"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_recovery_focus",
+              "focus": "recovery",
+              "pending_student_follow_up": "day_by_day_plan",
+              "last_intent": "student_recovery_focus",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "ok",
+              "normalized_message": "what should i do first",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": [
+                "CB19 semantic planner rewrite: Continued the student action-list follow-up thread using local conversation memory."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "ok",
+              "rewritten_message": "what should i do first",
+              "rationale": "Continued the student action-list follow-up thread using local conversation memory.",
+              "confidence": 0.87
+            }
+          }
+        },
+        {
+          "prompt": "how serious is it",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to a student intent yet.\n\nWhat I found:\n- latest risk or warning status\n- current attendance and subject-wise status\n- profile and assigned support contacts\n- Did you mean: your latest risk, your attendance and subject-wise attendance, your I-grade, R-grade, or end-sem eligibility status?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 3,
+              "prompt": "how serious is it"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "unsupported",
+              "last_follow_up": false,
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "how serious is it",
+              "normalized_message": "how serious is it",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "how serious is it",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what caused this",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is what is currently driving your risk most strongly.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- LMS snapshot: 164 clicks in 7 days, 13 unique resources, engagement change +3.56.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what caused this",
+              "normalized_message": "what is causing my current risk",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what caused this",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "can i fix it",
+          "response_type": "action",
+          "last_topic": "recovery_actions",
+          "last_intent": "student_recovery_focus",
+          "answer": "Here is the grounded path to reduce your current HIGH alert posture.\n\nWhat I found:\n- The HIGH label does not go away manually. It comes down when the grounded signals improve in the next scoring cycle.\n- Your fastest recovery path is to improve the non-attendance drivers that are still pushing risk upward, not only to keep attendance SAFE.\n- Main risk drivers to reduce first: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Academic-performance priority: improve assessed performance from the current weighted score of 0.0 and keep submissions timely.\n- Engagement priority: keep LMS activity consistent beyond the current 164 clicks and 13 resources in 7 days.\n- Finance priority: resolve the current payment pressure (Unpaid, overdue amount 6300.00) because finance is currently increasing your final risk.\n- Attendance should stay protected while you recover: your weakest visible subject is Engineering Chemistry at 80.40%.\n- Because you already have an active warning, treat this as a guided recovery period and clear the highest-impact academic blocker first.\n\nIf you want, I can break this into attendance, coursework, or a day-by-day weekly recovery plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_recovery_focus",
+              "focus": "recovery",
+              "pending_student_follow_up": "day_by_day_plan",
+              "last_intent": "student_recovery_focus",
+              "response_type": "action",
+              "last_topic": "recovery_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "can i fix it",
+              "normalized_message": "show me my overall recovery priorities",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "can i fix it",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "how long will it take",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the grounded time-and-recovery view from your current record.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Additional grounded details were condensed to keep this answer readable (2 more).\n- The HIGH label should come down only after the weaker academic and submission signals start improving consistently.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "how long will it take",
+              "normalized_message": "how long might recovery take from my current risk",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how long will it take",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what if i don't improve",
+          "response_type": "data",
+          "last_topic": "risk",
+          "last_intent": "student_self_risk",
+          "answer": "Your latest risk level is HIGH.\n\nWhat I found:\n- Final risk probability: 0.5976\n- Prediction timestamp available in score history for student_id 880001\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- LMS snapshot: 164 clicks in 7 days, 13 unique resources, engagement change +3.56.\n- ERP snapshot: submission rate 0.85, weighted score 0.0, late submissions 0.\n\nIf you want, I can next turn this into a practical action list to help reduce that risk.",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 7,
+              "prompt": "what if i don't improve"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_risk",
+              "response_type": "data",
+              "last_topic": "risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what if i don't improve",
+              "normalized_message": "what happens if i do not improve my current risk drivers",
+              "primary_intent": "student_self_risk",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.85,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped a short student consequence follow-up to the grounded current-risk consequence path."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "what if i don't improve",
+              "rewritten_message": "what happens if i do not improve my current risk drivers",
+              "rationale": "Mapped a short student consequence follow-up to the grounded current-risk consequence path.",
+              "confidence": 0.85
+            }
+          }
+        },
+        {
+          "prompt": "will i fail",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the grounded consequence view if the current risk drivers do not improve.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Additional grounded details were condensed to keep this answer readable (2 more).\n- That can make future warning pressure, academic decline, and subject-level stress harder to recover from later.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "will i fail",
+              "normalized_message": "what happens if i do not improve my current risk drivers",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewrite_rejected",
+              "source_message": "will i fail",
+              "rewritten_message": "what exactly is hurting me most right now",
+              "rationale": "Mapped broad student explanation and mixed-signal wording to the grounded weakest-driver explanation path.",
+              "confidence": 0.86
+            }
+          }
+        },
+        {
+          "prompt": "what is worst case",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the grounded consequence view if the current risk drivers do not improve.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Additional grounded details were condensed to keep this answer readable (2 more).\n- That can make future warning pressure, academic decline, and subject-level stress harder to recover from later.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [
+            {
+              "type": "repetition_failure",
+              "message": "The chatbot repeated the same answer instead of moving the conversation forward.",
+              "turn_index": 9,
+              "prompt": "what is worst case"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what is worst case",
+              "normalized_message": "what happens if i do not improve my current risk drivers",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what is worst case",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what should i do right now",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "student_recovery_focus",
+          "answer": "Here is the grounded path to reduce your current HIGH alert posture.\n\nWhat I found:\n- The HIGH label does not go away manually. It comes down when the grounded signals improve in the next scoring cycle.\n- Your fastest recovery path is to improve the non-attendance drivers that are still pushing risk upward, not only to keep attendance SAFE.\n- Main risk drivers to reduce first: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Academic-performance priority: improve assessed performance from the current weighted score of 0.0 and keep submissions timely.\n- Engagement priority: keep LMS activity consistent beyond the current 164 clicks and 13 resources in 7 days.\n- Finance priority: resolve the current payment pressure (Unpaid, overdue amount 6300.00) because finance is currently increasing your final risk.\n- Attendance should stay protected while you recover: your weakest visible subject is Engineering Chemistry at 80.40%.\n- Because you already have an active warning, treat this as a guided recovery period and clear the highest-impact academic blocker first.\n\nIf you want, I can break this into attendance, coursework, or a day-by-day weekly recovery plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_recovery_focus",
+              "focus": "recovery",
+              "pending_student_follow_up": "day_by_day_plan",
+              "last_intent": "student_recovery_focus",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what should i do right now",
+              "normalized_message": "what should i do right now",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.86,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what should i do right now",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -44,13 +44,14 @@ export function PublicLayout() {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <div className="hero-grid absolute inset-0 bg-hero-grid opacity-60" />
+      <div className="hero-grid hero-noise absolute inset-0 opacity-70" />
+      <div className="absolute inset-x-0 top-0 h-56 bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.12),transparent_62%)]" />
       <header className="relative z-40 mx-auto flex max-w-7xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
         <BrandLockup />
         <div className="relative">
-          <Button onClick={() => setOpen((value) => !value)}>Sign in</Button>
+          <Button className="rounded-full px-5 py-3" onClick={() => setOpen((value) => !value)}>Sign in</Button>
           {open ? (
-            <div className="absolute right-0 z-50 mt-3 w-56 rounded-3xl border border-slate-200 bg-white p-2 shadow-lift">
+            <div className="absolute right-0 z-50 mt-3 w-64 rounded-[28px] border border-white/80 bg-white/95 p-2 shadow-lift backdrop-blur">
               {[
                 ["Student", "/login/student"],
                 ["Counsellor", "/login/counsellor"],
@@ -83,97 +84,105 @@ export function AppShell() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = useMemo(() => roleNav(auth?.role ?? "student"), [auth?.role]);
+  const isResetRoute = location.pathname === "/app/reset-password";
+  const workspaceTitle = isResetRoute
+    ? "Password Reset"
+    : location.pathname.includes("reports")
+      ? "Reports"
+      : location.pathname.includes("chat")
+        ? "Copilot"
+      : location.pathname.includes("imports")
+        ? "Data Imports"
+      : location.pathname.includes("operations")
+        ? "Operations"
+      : location.pathname.includes("journey")
+        ? "Journey"
+      : location.pathname.includes("cases")
+        ? "Cases"
+      : "Dashboard";
 
   return (
-    <div className="min-h-screen">
-      {mobileOpen ? <button type="button" className="fixed inset-0 z-20 bg-slate-950/25 lg:hidden" onClick={() => setMobileOpen(false)} aria-label="Close navigation" /> : null}
+    <div className="workspace-shell min-h-screen">
+      {mobileOpen && !isResetRoute ? <button type="button" className="fixed inset-0 z-20 bg-slate-950/25 lg:hidden" onClick={() => setMobileOpen(false)} aria-label="Close navigation" /> : null}
       <div className="mx-auto flex min-h-screen max-w-[1800px]">
-        <aside
-          className={`fixed inset-y-0 left-0 z-30 flex w-72 flex-col border-r border-slate-200 bg-white/85 p-5 shadow-soft transition lg:static lg:translate-x-0 ${
-            mobileOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <BrandLockup compact />
-          <div className="mt-10 rounded-[28px] bg-slate-950 p-5 text-white">
-            <p className="text-xs uppercase tracking-[0.22em] text-slate-300">Signed in</p>
-            <p className="mt-2 text-lg font-bold">{auth?.displayName ?? "User"}</p>
-            <p className="text-sm capitalize text-slate-300">{auth?.role ?? "role"}</p>
-          </div>
+        {!isResetRoute ? (
+          <aside
+            className={`sidebar-panel fixed inset-y-0 left-0 z-30 flex w-72 flex-col border-r border-white/70 p-5 shadow-soft transition lg:static lg:translate-x-0 ${
+              mobileOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+          >
+            <BrandLockup compact />
+            <div className="mt-10 rounded-[28px] bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-5 text-white shadow-lift">
+              <p className="text-xs uppercase tracking-[0.22em] text-slate-300">Signed in</p>
+              <p className="mt-2 text-lg font-bold">{auth?.displayName ?? "User"}</p>
+              <div className="mt-3 inline-flex rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">
+                {auth?.role ?? "role"}
+              </div>
+            </div>
 
-          <nav className="mt-8 space-y-2">
-            {navItems.map(({ label, to, icon: Icon }) => (
-              <NavLink
-                key={to}
-                to={to}
-                onClick={() => setMobileOpen(false)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition ${
-                    isActive
-                      ? "bg-indigo-50 text-indigo-700"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                  }`
-                }
+            <nav className="mt-8 space-y-2">
+              {navItems.map(({ label, to, icon: Icon }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  onClick={() => setMobileOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition ${
+                      isActive
+                        ? "bg-gradient-to-r from-indigo-50 to-white text-indigo-700 shadow-[0_8px_24px_rgba(79,70,229,0.08)]"
+                        : "text-slate-600 hover:bg-white hover:text-slate-900"
+                    }`
+                  }
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </NavLink>
+              ))}
+            </nav>
+
+            <div className="mt-auto pt-10">
+              <Button
+                variant="secondary"
+                className="w-full justify-center"
+                onClick={() => {
+                  logout();
+                  navigate("/");
+                }}
               >
-                <Icon className="h-4 w-4" />
-                {label}
-              </NavLink>
-            ))}
-          </nav>
-
-          <div className="mt-auto pt-10">
-            <Button
-              variant="secondary"
-              className="w-full justify-center"
-              onClick={() => {
-                logout();
-                navigate("/");
-              }}
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Sign out
-            </Button>
-          </div>
-        </aside>
+                <LogOut className="mr-2 h-4 w-4" />
+                Sign out
+              </Button>
+            </div>
+          </aside>
+        ) : null}
 
         <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-20 border-b border-white/60 bg-slate-50/85 backdrop-blur">
+          <header className="sticky top-0 z-20 border-b border-white/60 bg-slate-50/88 backdrop-blur">
             <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
               <div className="flex items-center gap-3">
-                <Button variant="secondary" className="lg:hidden" onClick={() => setMobileOpen((value) => !value)}>
-                  <Menu className="h-4 w-4" />
-                </Button>
+                {!isResetRoute ? (
+                  <Button variant="secondary" className="lg:hidden" onClick={() => setMobileOpen((value) => !value)}>
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                ) : null}
                 <div>
                   <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Workspace</p>
-                  <h1 className="text-xl font-extrabold text-slate-950">
-                  {location.pathname.includes("reports")
-                      ? "Reports"
-                      : location.pathname.includes("chat")
-                        ? "Copilot"
-                      : location.pathname.includes("imports")
-                        ? "Data Imports"
-                        : location.pathname.includes("operations")
-                          ? "Operations"
-                          : location.pathname.includes("journey")
-                            ? "Journey"
-                            : location.pathname.includes("cases")
-                              ? "Cases"
-                        : "Dashboard"}
-                  </h1>
+                  <h1 className="text-xl font-extrabold text-slate-950">{workspaceTitle}</h1>
                 </div>
               </div>
-              <div className="hidden items-center gap-3 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-500 md:flex">
+              <div className="hidden items-center gap-3 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-sm text-slate-500 shadow-soft md:flex">
                 <Bot className="h-4 w-4 text-indigo-600" />
-                Copilot stays available across the full app.
+                {isResetRoute ? "Security step before workspace access." : "Copilot stays available across the full app."}
               </div>
             </div>
           </header>
 
-          <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+          <main className="workspace-surface flex-1 px-4 py-6 sm:px-6 lg:px-8">
             <Outlet />
           </main>
         </div>
       </div>
-      {!location.pathname.includes("/chat") ? <ChatbotDock /> : null}
+      {!isResetRoute && !location.pathname.includes("/chat") ? <ChatbotDock /> : null}
     </div>
   );
 }

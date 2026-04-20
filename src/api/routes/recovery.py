@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.api.auth import AuthContext, require_roles
+from src.api.scope import ensure_student_scope_access
 from src.api.attendance_engine import build_attendance_summary
 from src.api.schemas import RecoveryScorecardResponse
 from src.api.time_utils import to_ist
@@ -133,6 +134,7 @@ def get_recovery_scorecard(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> RecoveryScorecardResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     warning_rows = repository.get_student_warning_history_for_student(student_id)
     latest_prediction = repository.get_latest_prediction_for_student(student_id)
     alert_rows = repository.get_alert_history_for_student(student_id)

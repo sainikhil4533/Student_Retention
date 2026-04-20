@@ -1,0 +1,764 @@
+{
+  "role_filter": "counsellor",
+  "generated_at": "2026-04-18T15:05:52.861300+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 0,
+  "failed_conversations": 1,
+  "failure_summary": {
+    "repetition_failure": 2,
+    "response_type_failure": 3
+  },
+  "conversations": [
+    {
+      "role": "counsellor",
+      "label": "counsellor_chain_filtering_reasoning",
+      "passed": false,
+      "failure_count": 5,
+      "turns": [
+        {
+          "prompt": "show risky students",
+          "response_type": "data",
+          "last_topic": "high_risk_students",
+          "last_intent": "counsellor_high_risk_students",
+          "answer": "Here is the current high-risk student view inside your counsellor scope (3 matched).\n\nWhat I found:\n- student_id 880001 (STU001): CSE, current prediction HIGH at 0.5976\n- student_id 880073 (STU073): CSE, current prediction HIGH at 0.5976\n- student_id 880082 (STU082): CSE, current prediction HIGH at 0.5976\n- I-grade risk in the same scope: 21.\n- R-grade risk in the same scope: 1.\n\nIf you want, I can next explain one student, show only one bucket like CSE, or turn this into a counsellor action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "counsellor_high_risk_students",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "counsellor_high_risk_students",
+              "response_type": "data",
+              "last_topic": "high_risk_students"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "show risky students",
+              "normalized_message": "which students are high risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "show risky students",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "only CSE",
+          "response_type": "data",
+          "last_topic": "imported_subset_follow_up",
+          "last_intent": "imported_subset_follow_up",
+          "answer": "I kept the same imported subset in focus and kept the same imported subset in focus.\n\nWhat I found:\n- Matching students: 3\n- 880001 (STU001)\n- 880073 (STU073)\n- 880082 (STU082)",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "imported_subset_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "outcome_status": null,
+              "role_scope": "counsellor",
+              "last_intent": "imported_subset_follow_up",
+              "response_type": "data",
+              "last_topic": "imported_subset_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "only CSE",
+              "normalized_message": "only CSE",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [
+                  "CSE"
+                ],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "only CSE",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "ok",
+          "response_type": "action",
+          "last_topic": "counsellor_subset_action_follow_up",
+          "last_intent": "counsellor_subset_action_follow_up",
+          "answer": "Here is the grounded counsellor action plan for the same subset already in focus.\n\nWhat I found:\n- First move the highest-pressure students in this order: student_id 880001; student_id 880073; student_id 880082\n- Turn each student contact into one concrete blocker-removal step: attendance recovery, coursework catch-up, or burden-clearance follow-up.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "counsellor_subset_action_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "response_type": "action",
+              "last_topic": "counsellor_subset_action_follow_up",
+              "last_intent": "counsellor_subset_action_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "ok",
+              "normalized_message": "ok",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "ok",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "why are CSE students risky",
+          "response_type": "explanation",
+          "last_topic": "cohort_summary",
+          "last_intent": "cohort_summary",
+          "answer": "There are currently 3 students in the latest high-risk cohort assigned to your counsellor scope, along with 21 students showing I-grade attendance risk and 1 showing R-grade risk.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_summary",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "scope": "latest_high_risk_predictions_assigned",
+              "last_intent": "cohort_summary",
+              "response_type": "explanation",
+              "last_topic": "cohort_summary"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "why are CSE students risky",
+              "normalized_message": "why are cse students risky",
+              "primary_intent": "cohort_summary",
+              "user_goal": "cohort_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [
+                  "CSE"
+                ],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "cohort_reasoning",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_prediction_and_attendance_pressure",
+                "load_scoped_burden_and_subject_hotspots",
+                "compose_grounded_cohort_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.85,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "why are CSE students risky",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what is main problem",
+          "response_type": "explanation",
+          "last_topic": "cohort_summary",
+          "last_intent": "cohort_summary",
+          "answer": "There are currently 3 students in the latest high-risk cohort assigned to your counsellor scope, along with 21 students showing I-grade attendance risk and 1 showing R-grade risk.",
+          "failures": [
+            {
+              "type": "repetition_failure",
+              "message": "The chatbot repeated the same answer instead of moving the conversation forward.",
+              "turn_index": 5,
+              "prompt": "what is main problem"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_summary",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "scope": "latest_high_risk_predictions_assigned",
+              "last_intent": "cohort_summary",
+              "response_type": "explanation",
+              "last_topic": "cohort_summary"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "what is main problem",
+              "normalized_message": "what is main problem",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "what is main problem",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "how to fix it",
+          "response_type": "data",
+          "last_topic": "cohort_summary",
+          "last_intent": "cohort_summary",
+          "answer": "There are currently 3 students in the latest high-risk cohort assigned to your counsellor scope, along with 21 students showing I-grade attendance risk and 1 showing R-grade risk.",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `action` but got `data`.",
+              "turn_index": 6,
+              "prompt": "how to fix it"
+            },
+            {
+              "type": "repetition_failure",
+              "message": "The chatbot repeated the same answer instead of moving the conversation forward.",
+              "turn_index": 6,
+              "prompt": "how to fix it"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_summary",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "scope": "latest_high_risk_predictions_assigned",
+              "last_intent": "cohort_summary",
+              "response_type": "data",
+              "last_topic": "cohort_summary"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "how to fix it",
+              "normalized_message": "how to fix it",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "how to fix it",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which students need immediate help",
+          "response_type": "data",
+          "last_topic": "help",
+          "last_intent": "help",
+          "answer": "I can currently help with a focused counsellor question set.\n\nWhat I found:\n- high-risk cohort counts\n- student drilldowns by student_id\n- urgent follow-up and priority-queue visibility\n- attendance shortage, I-grade risk, and R-grade risk inside your assigned cohort\n- subjects that are pulling the most students below policy\n\nTry asking: 'which students have R-grade risk?', 'which subjects are causing most attendance issues?', or 'show details for student 880001'.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "help",
+              "intent": "help",
+              "last_intent": "help",
+              "response_type": "data",
+              "last_topic": "help"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "which students need immediate help",
+              "normalized_message": "which students need immediate help",
+              "primary_intent": "help",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which students need immediate help",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what if I only focus on top 3",
+          "response_type": "data",
+          "last_topic": "high_risk_students",
+          "last_intent": "counsellor_high_risk_students",
+          "answer": "Here are the top 3 current risk-priority students in your counsellor scope (3 matched right now).\n\nWhat I found:\n- Top 3 view:\n- student_id 880001 (STU001): CSE, current prediction HIGH at 0.5976\n- student_id 880073 (STU073): CSE, current prediction HIGH at 0.5976\n- student_id 880082 (STU082): CSE, current prediction HIGH at 0.5976\n- I-grade risk in the same scope: 21.\n- R-grade risk in the same scope: 1.\n\nIf you want, I can next explain one student or turn this ranking into a counsellor action list.",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 8,
+              "prompt": "what if I only focus on top 3"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "counsellor_high_risk_students",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "counsellor_high_risk_students",
+              "response_type": "data",
+              "last_topic": "high_risk_students"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "what if I only focus on top 3",
+              "normalized_message": "what if I only focus on top 3",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "what if I only focus on top 3",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "is that enough",
+          "response_type": "data",
+          "last_topic": "imported_subset_follow_up",
+          "last_intent": "imported_subset_follow_up",
+          "answer": "I kept the same imported subset in focus and kept the same imported subset in focus.\n\nWhat I found:\n- Matching students: 3\n- 880001 (STU001)\n- 880073 (STU073)\n- 880082 (STU082)",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 9,
+              "prompt": "is that enough"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "imported_subset_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "outcome_status": null,
+              "role_scope": "counsellor",
+              "last_intent": "imported_subset_follow_up",
+              "response_type": "data",
+              "last_topic": "imported_subset_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "is that enough",
+              "normalized_message": "is that enough",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "is that enough",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what else should I do",
+          "response_type": "action",
+          "last_topic": "counsellor_subset_action_follow_up",
+          "last_intent": "counsellor_subset_action_follow_up",
+          "answer": "Here is the grounded counsellor action plan for the same subset already in focus.\n\nWhat I found:\n- First move the highest-pressure students in this order: student_id 880001; student_id 880073; student_id 880082\n- Turn each student contact into one concrete blocker-removal step: attendance recovery, coursework catch-up, or burden-clearance follow-up.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "counsellor_subset_action_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "response_type": "action",
+              "last_topic": "counsellor_subset_action_follow_up",
+              "last_intent": "counsellor_subset_action_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "what else should I do",
+              "normalized_message": "what else should I do",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "what else should I do",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

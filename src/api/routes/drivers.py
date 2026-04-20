@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.api.auth import AuthContext, require_roles
+from src.api.scope import ensure_student_scope_access
 from src.api.schemas import (
     RecommendedActionItem,
     RiskDriverItem,
@@ -27,6 +28,7 @@ def get_risk_drivers(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> RiskDriverResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     latest_prediction = repository.get_latest_prediction_for_student(student_id)
     prediction_rows = repository.get_prediction_history_for_student(student_id)
     lms_events = repository.get_lms_events_for_student(student_id)

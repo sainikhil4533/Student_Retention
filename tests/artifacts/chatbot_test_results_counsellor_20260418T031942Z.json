@@ -1,0 +1,15 @@
+{
+  "role_filter": "counsellor",
+  "label_filter": "counsellor_direct_query_variations",
+  "generated_at": "2026-04-18T03:19:42.039570+00:00",
+  "status": "infrastructure_failure",
+  "conversation_count": 0,
+  "passed_conversations": 0,
+  "failed_conversations": 0,
+  "failure_summary": {
+    "infrastructure_failure": 1
+  },
+  "error_type": "OSError",
+  "error_message": "[Errno 22] Invalid argument",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\tests\\chatbot_test_runner.py\", line 1238, in main\n    summary = run_conversation_suite(\n        role=args.role,\n        label=args.label,\n        deterministic_planner_only=args.deterministic,\n    )\n  File \"C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\tests\\chatbot_test_runner.py\", line 1118, in run_conversation_suite\n    print(\n    ~~~~~^\n        json.dumps(\n        ^^^^^^^^^^^\n    ...<8 lines>...\n        flush=True,\n        ^^^^^^^^^^^\n    )\n    ^\nOSError: [Errno 22] Invalid argument\n"
+}

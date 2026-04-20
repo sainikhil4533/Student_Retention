@@ -242,3 +242,49 @@ Every visual choice should answer this question:
 `Does this make the product feel more trustworthy and more useful?`
 
 If the answer is no, it should not be added just because it looks fancy.
+
+## Later Visual Polish Notes
+
+This document was written before the later visual polish pass, so it is important to record what we corrected afterward.
+
+### 1. Homepage contrast needed to be stronger
+
+We found that too many white sections in a row made the product feel unfinished.
+
+So the public homepage now follows a stronger contrast rhythm:
+
+- darker premium sections for hero and final CTA
+- softer light sections for explanation and trust blocks
+- clearer alternation between heavy and light surfaces
+
+Why:
+
+- professional does not mean pale
+- a real product needs hierarchy, not just cleanliness
+
+### 2. The authenticated shell needed more depth
+
+The first version of the app shell was structurally correct, but it still felt flatter than the homepage.
+
+So we strengthened:
+
+- the sidebar surface
+- the signed-in identity card
+- active navigation styling
+- the workspace backdrop
+
+That makes the internal product feel more intentionally designed.
+
+### 3. The chatbot needed to feel like a real product surface
+
+The chat already worked, but visual polish still mattered.
+
+So the later polish pass improved:
+
+- the dock launcher
+- selected thread states
+- the full chat background
+- user/assistant bubble distinction
+
+The goal was not to make chat flashy.
+The goal was to make it feel integrated, premium, and trustworthy.

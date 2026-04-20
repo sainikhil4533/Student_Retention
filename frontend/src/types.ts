@@ -68,6 +68,91 @@ export type StudentOverview = {
     key_points: string[];
     recommended_followup: string[];
   };
+  academic_progress: {
+    institution_name?: string | null;
+    branch?: string | null;
+    batch?: string | null;
+    current_year?: number | null;
+    current_semester?: number | null;
+    current_academic_status?: string | null;
+    semester_mode?: string | null;
+    expected_graduation_year?: number | null;
+    standing_label?: string | null;
+    total_backlogs?: number | null;
+    current_overall_attendance_percent?: number | null;
+    current_overall_status?: string | null;
+    current_subjects_below_75_count: number;
+    current_subjects_below_65_count: number;
+    has_i_grade_risk: boolean;
+    has_r_grade_risk: boolean;
+    academic_risk_band?: string | null;
+    active_burden_count: number;
+    has_active_i_grade_burden: boolean;
+    has_active_r_grade_burden: boolean;
+    monitoring_cadence?: string | null;
+    academic_burden_summary?: string | null;
+    weakest_subject_name?: string | null;
+    weakest_subject_percent?: number | null;
+    attendance_summary: string;
+    active_i_grade_subjects: Array<{
+      subject_code?: string | null;
+      subject_name?: string | null;
+      year?: number | null;
+      semester?: number | null;
+      raw_result_status?: string | null;
+      raw_grade?: string | null;
+      attendance_linked_status?: string | null;
+      effective_result_status?: string | null;
+      effective_grade?: string | null;
+      subject_attendance_percent?: number | null;
+    }>;
+    active_r_grade_subjects: Array<{
+      subject_code?: string | null;
+      subject_name?: string | null;
+      year?: number | null;
+      semester?: number | null;
+      raw_result_status?: string | null;
+      raw_grade?: string | null;
+      attendance_linked_status?: string | null;
+      effective_result_status?: string | null;
+      effective_grade?: string | null;
+      subject_attendance_percent?: number | null;
+    }>;
+    subject_attendance: Array<{
+      year?: number | null;
+      semester?: number | null;
+      subject_code?: string | null;
+      subject_name: string;
+      subject_type?: string | null;
+      overall_attendance_percent?: number | null;
+      subject_attendance_percent?: number | null;
+      required_percent?: number | null;
+      overall_status?: string | null;
+      subject_status?: string | null;
+      grade_consequence?: string | null;
+      condonation_required: boolean;
+      summer_repeat_required: boolean;
+      internals_repeat_required: boolean;
+      end_sem_eligible: boolean;
+      classes_conducted?: number | null;
+      classes_attended?: number | null;
+      consecutive_absences?: number | null;
+      missed_days?: number | null;
+      trend?: string | null;
+    }>;
+    semester_progress: Array<{
+      year?: number | null;
+      semester?: number | null;
+      overall_attendance_percent?: number | null;
+      overall_status?: string | null;
+      subjects_below_75_count?: number | null;
+      subjects_below_65_count?: number | null;
+      has_i_grade_risk: boolean;
+      has_r_grade_risk: boolean;
+      current_eligibility?: string | null;
+      semester_mode?: string | null;
+    }>;
+  };
 };
 
 export type TimelineEvent = {
@@ -88,6 +173,8 @@ export type StudentTimeline = {
 export type StudentCaseState = {
   student_id: number;
   current_case_state: string;
+  priority_score?: number | null;
+  priority_label?: string | null;
   risk_level?: string | null;
   final_risk_probability?: number | null;
   latest_prediction_created_at?: string | null;
@@ -136,6 +223,63 @@ export type StudentOperationalContext = {
     followup_overdue: boolean;
     summary: string;
   };
+  academic_context?: {
+    institution_name?: string | null;
+    branch?: string | null;
+    current_year?: number | null;
+    current_semester?: number | null;
+    semester_mode?: string | null;
+    current_academic_status?: string | null;
+    standing_label?: string | null;
+    overall_attendance_percent?: number | null;
+    overall_status?: string | null;
+    subjects_below_75_count?: number | null;
+    subjects_below_65_count?: number | null;
+    has_i_grade_risk?: boolean;
+    has_r_grade_risk?: boolean;
+    current_eligibility?: string | null;
+    academic_risk_band?: string | null;
+    active_burden_count?: number | null;
+    has_active_i_grade_burden?: boolean;
+    has_active_r_grade_burden?: boolean;
+    monitoring_cadence?: string | null;
+    academic_burden_summary?: string | null;
+    active_i_grade_subjects?: Array<{
+      subject_code?: string | null;
+      subject_name?: string | null;
+      year?: number | null;
+      semester?: number | null;
+      raw_result_status?: string | null;
+      raw_grade?: string | null;
+      attendance_linked_status?: string | null;
+      effective_result_status?: string | null;
+      effective_grade?: string | null;
+      subject_attendance_percent?: number | null;
+    }>;
+    active_r_grade_subjects?: Array<{
+      subject_code?: string | null;
+      subject_name?: string | null;
+      year?: number | null;
+      semester?: number | null;
+      raw_result_status?: string | null;
+      raw_grade?: string | null;
+      attendance_linked_status?: string | null;
+      effective_result_status?: string | null;
+      effective_grade?: string | null;
+      subject_attendance_percent?: number | null;
+    }>;
+    weakest_subject_name?: string | null;
+    weakest_subject_percent?: number | null;
+    weakest_subject_status?: string | null;
+    cgpa?: number | null;
+    backlogs?: number | null;
+    subject_risk_summary?: Array<{
+      subject_name: string;
+      subject_attendance_percent?: number | null;
+      subject_status?: string | null;
+      grade_consequence?: string | null;
+    }>;
+  } | null;
 };
 
 export type InterventionHistory = {
@@ -170,6 +314,85 @@ export type FacultySummary = {
   total_critical_unattended_cases: number;
   total_repeated_risk_students: number;
   total_unhandled_escalations: number;
+  total_students_with_overall_shortage: number;
+  total_students_with_i_grade_risk: number;
+  total_students_with_r_grade_risk: number;
+  total_students_with_active_academic_burden: number;
+  total_students_with_active_i_grade_burden: number;
+  total_students_with_active_r_grade_burden: number;
+  top_subject_pressure: Array<{
+    subject_name: string;
+    total_students: number;
+    students_below_threshold: number;
+    i_grade_students: number;
+    r_grade_students: number;
+    average_attendance_percent?: number | null;
+    summary: string;
+  }>;
+  branch_pressure: Array<{
+    bucket_label: string;
+    total_students: number;
+    students_with_overall_shortage: number;
+    students_with_i_grade_risk: number;
+    students_with_r_grade_risk: number;
+    average_overall_attendance_percent?: number | null;
+    summary: string;
+  }>;
+  semester_pressure: Array<{
+    bucket_label: string;
+    total_students: number;
+    students_with_overall_shortage: number;
+    students_with_i_grade_risk: number;
+    students_with_r_grade_risk: number;
+    average_overall_attendance_percent?: number | null;
+    summary: string;
+  }>;
+  academic_burden_monitoring_students: Array<{
+    student_id: number;
+    risk_level?: string | null;
+    final_risk_probability?: number | null;
+    status: string;
+    event_time?: string | null;
+    note?: string | null;
+  }>;
+};
+
+export type FacultyDashboardSummary = {
+  total_active_high_risk_students: number;
+  total_critical_unattended_cases: number;
+  total_students_with_overall_shortage: number;
+  total_students_with_i_grade_risk: number;
+  total_students_with_r_grade_risk: number;
+  total_students_with_active_academic_burden: number;
+  total_students_with_active_i_grade_burden: number;
+  total_students_with_active_r_grade_burden: number;
+  top_subject_pressure: Array<{
+    subject_name: string;
+    total_students: number;
+    students_below_threshold: number;
+    i_grade_students: number;
+    r_grade_students: number;
+    average_attendance_percent?: number | null;
+    summary: string;
+  }>;
+  branch_pressure: Array<{
+    bucket_label: string;
+    total_students: number;
+    students_with_overall_shortage: number;
+    students_with_i_grade_risk: number;
+    students_with_r_grade_risk: number;
+    average_overall_attendance_percent?: number | null;
+    summary: string;
+  }>;
+  semester_pressure: Array<{
+    bucket_label: string;
+    total_students: number;
+    students_with_overall_shortage: number;
+    students_with_i_grade_risk: number;
+    students_with_r_grade_risk: number;
+    average_overall_attendance_percent?: number | null;
+    summary: string;
+  }>;
 };
 
 export type FacultyPriorityQueue = {
@@ -183,6 +406,10 @@ export type FacultyPriorityQueue = {
     final_risk_probability?: number | null;
     recommended_next_action?: string | null;
     risk_type?: string | null;
+    has_active_academic_burden: boolean;
+    academic_risk_band?: string | null;
+    monitoring_cadence?: string | null;
+    active_burden_count: number;
   }>;
 };
 
@@ -194,9 +421,39 @@ export type InstitutionOverview = {
   total_graduated_students: number;
   total_followup_overdue_students: number;
   total_guardian_escalation_students: number;
+  total_students_with_overall_shortage: number;
+  total_students_with_i_grade_risk: number;
+  total_students_with_r_grade_risk: number;
   department_buckets: Array<{ bucket_label: string; total_students: number; high_risk_students: number }>;
   category_buckets: Array<{ bucket_label: string; total_students: number; high_risk_students: number }>;
   region_buckets: Array<{ bucket_label: string; total_students: number; high_risk_students: number }>;
+  top_subject_pressure: Array<{
+    subject_name: string;
+    total_students: number;
+    students_below_threshold: number;
+    i_grade_students: number;
+    r_grade_students: number;
+    average_attendance_percent?: number | null;
+    summary: string;
+  }>;
+  branch_pressure: Array<{
+    bucket_label: string;
+    total_students: number;
+    students_with_overall_shortage: number;
+    students_with_i_grade_risk: number;
+    students_with_r_grade_risk: number;
+    average_overall_attendance_percent?: number | null;
+    summary: string;
+  }>;
+  semester_pressure: Array<{
+    bucket_label: string;
+    total_students: number;
+    students_with_overall_shortage: number;
+    students_with_i_grade_risk: number;
+    students_with_r_grade_risk: number;
+    average_overall_attendance_percent?: number | null;
+    summary: string;
+  }>;
   outcome_distribution: Array<{ outcome_status: string; student_count: number }>;
   summary: string;
 };

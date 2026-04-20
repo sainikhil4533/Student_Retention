@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from src.api.academic_burden import build_academic_burden_summary
 from src.api.auth import AuthContext, require_same_student_or_roles
+from src.api.scope import ensure_student_scope_access
 from src.api.prediction_history_serialization import resolve_prediction_intelligence_snapshot
 from src.api.student_intelligence import build_current_student_intelligence
 from src.api.schemas import StudentTimelineResponse, TimelineEventItem
@@ -40,6 +42,7 @@ def get_student_timeline(
     auth: AuthContext = Depends(require_same_student_or_roles("counsellor", "admin", "system")),
 ) -> StudentTimelineResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     prediction_rows = repository.get_prediction_history_for_student(student_id)
     warning_rows = repository.get_student_warning_history_for_student(student_id)
     alert_rows = repository.get_alert_history_for_student(student_id)
@@ -50,6 +53,9 @@ def get_student_timeline(
     erp_history = repository.get_erp_event_history_for_student(student_id)
     latest_finance_event = repository.get_latest_finance_event(student_id)
     finance_history = repository.get_finance_event_history_for_student(student_id)
+    subject_attendance_rows = repository.get_student_subject_attendance_records(student_id)
+    semester_progress_rows = repository.get_student_semester_progress_records(student_id)
+    academic_rows = repository.get_student_academic_records(student_id)
     reopened_prediction_ids = _case_reopened_prediction_ids(
         prediction_rows=prediction_rows,
         intervention_rows=intervention_rows,
@@ -240,6 +246,83 @@ def get_student_timeline(
                 details={
                     "actor_name": row.actor_name,
                     "notes": row.notes,
+                },
+            )
+        )
+
+    for row in subject_attendance_rows:
+        subject_status = str(row.subject_status or "").upper()
+        if subject_status not in {"I_GRADE", "R_GRADE"}:
+            continue
+        timeline.append(
+            TimelineEventItem(
+                event_time=to_ist(row.updated_at),
+                event_type="attendance_policy_triggered",
+                title=f"{row.subject_name} entered {subject_status.replace('_', ' ')} status",
+                status=subject_status.lower(),
+                student_id=row.student_id,
+                details={
+                    "semester": row.semester,
+                    "year": row.year,
+                    "subject_code": row.subject_code,
+                    "subject_attendance_percent": row.subject_attendance_percent,
+                    "required_percent": row.required_percent,
+                    "grade_consequence": row.grade_consequence,
+                    "condonation_required": bool(row.condonation_required),
+                    "summer_repeat_required": bool(row.summer_repeat_required),
+                    "end_sem_eligible": bool(row.end_sem_eligible),
+                },
+            )
+        )
+
+    for row in semester_progress_rows:
+        if row.overall_status != "SHORTAGE":
+            continue
+        timeline.append(
+            TimelineEventItem(
+                event_time=to_ist(row.updated_at),
+                event_type="semester_attendance_shortage",
+                title=f"Semester {row.semester} attendance fell below the required overall threshold",
+                status="shortage",
+                student_id=row.student_id,
+                details={
+                    "year": row.year,
+                    "overall_attendance_percent": row.overall_attendance_percent,
+                    "subjects_below_75_count": row.subjects_below_75_count,
+                    "subjects_below_65_count": row.subjects_below_65_count,
+                    "current_eligibility": row.current_eligibility,
+                    "semester_mode": row.semester_mode,
+                },
+            )
+        )
+
+    academic_burden = build_academic_burden_summary(
+        academic_rows=academic_rows,
+        attendance_rows=subject_attendance_rows,
+    )
+    attendance_time_index: dict[tuple[int | None, str], object] = {}
+    for row in subject_attendance_rows:
+        attendance_time_index[(row.semester, str(row.subject_name or ""))] = row
+    for item in academic_burden["active_r_grade_subjects"] + academic_burden["active_i_grade_subjects"]:
+        matched_attendance = attendance_time_index.get((item.get("semester"), str(item.get("subject_name") or "")))
+        cadence = "weekly" if item.get("effective_grade") == "R" else "monthly"
+        timeline.append(
+            TimelineEventItem(
+                event_time=to_ist(getattr(matched_attendance, "updated_at", None)),
+                event_type="active_academic_burden",
+                title=f"{item.get('subject_name') or 'Subject'} still remains uncleared",
+                status=str(item.get("effective_grade") or "pending").lower(),
+                student_id=student_id,
+                details={
+                    "semester": item.get("semester"),
+                    "year": item.get("year"),
+                    "effective_result_status": item.get("effective_result_status"),
+                    "effective_grade": item.get("effective_grade"),
+                    "subject_attendance_percent": item.get("subject_attendance_percent"),
+                    "monitoring_cadence": cadence,
+                    "reason": (
+                        f"This subject should remain visible as uncleared until the {item.get('effective_grade')} grade is actually cleared."
+                    ),
                 },
             )
         )

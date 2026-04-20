@@ -1,0 +1,1193 @@
+INFO:     Started server process [3188]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3317, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 175, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg\connection.py", line 130, in connect
+    raise new_ex.with_traceback(None)
+psycopg.OperationalError: connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+Multiple connection attempts failed. All failures were:
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.109.171.244': connection failed: connection to server at "3.109.171.244", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '13.200.110.68': connection failed: connection to server at "13.200.110.68", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.111.225.200': connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\applications.py", line 1160, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\cors.py", line 87, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 130, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 116, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 670, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 326, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 2470, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 75, in get_faculty_dashboard_summary
+    scoped_student_ids = _scoped_student_ids(repository, auth)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 162, in _scoped_student_ids
+    profiles = repository.get_imported_student_profiles_for_counsellor_identity(
+        subject=auth.subject,
+        display_name=auth.display_name,
+    )
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\db\repository.py", line 742, in get_imported_student_profiles_for_counsellor_identity
+    .all()
+     ~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3293, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 145, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, dialect, engine
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 2448, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3317, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 175, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg\connection.py", line 130, in connect
+    raise new_ex.with_traceback(None)
+sqlalchemy.exc.OperationalError: (psycopg.OperationalError) connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+Multiple connection attempts failed. All failures were:
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.109.171.244': connection failed: connection to server at "3.109.171.244", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '13.200.110.68': connection failed: connection to server at "13.200.110.68", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.111.225.200': connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3317, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 175, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg\connection.py", line 130, in connect
+    raise new_ex.with_traceback(None)
+psycopg.OperationalError: connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+Multiple connection attempts failed. All failures were:
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.109.171.244': connection failed: connection to server at "3.109.171.244", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '13.200.110.68': connection failed: connection to server at "13.200.110.68", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.111.225.200': connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\applications.py", line 1160, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\cors.py", line 87, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 130, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 116, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 670, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 326, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 2470, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 643, in get_faculty_priority_queue
+    queue = _build_faculty_priority_queue_items(repository, auth)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 510, in _build_faculty_priority_queue_items
+    scoped_student_ids = _scoped_student_ids(repository, auth)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 162, in _scoped_student_ids
+    profiles = repository.get_imported_student_profiles_for_counsellor_identity(
+        subject=auth.subject,
+        display_name=auth.display_name,
+    )
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\db\repository.py", line 742, in get_imported_student_profiles_for_counsellor_identity
+    .all()
+     ~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3293, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 145, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, dialect, engine
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 2448, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3317, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 175, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg\connection.py", line 130, in connect
+    raise new_ex.with_traceback(None)
+sqlalchemy.exc.OperationalError: (psycopg.OperationalError) connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+Multiple connection attempts failed. All failures were:
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.109.171.244': connection failed: connection to server at "3.109.171.244", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '13.200.110.68': connection failed: connection to server at "13.200.110.68", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.111.225.200': connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3317, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 175, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg\connection.py", line 130, in connect
+    raise new_ex.with_traceback(None)
+psycopg.OperationalError: connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+Multiple connection attempts failed. All failures were:
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.109.171.244': connection failed: connection to server at "3.109.171.244", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '13.200.110.68': connection failed: connection to server at "13.200.110.68", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.111.225.200': connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\applications.py", line 1160, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\cors.py", line 87, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 130, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 116, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 670, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 326, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 2470, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 657, in get_faculty_summary
+    dashboard = get_faculty_dashboard_summary(db=db, auth=auth)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 75, in get_faculty_dashboard_summary
+    scoped_student_ids = _scoped_student_ids(repository, auth)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 162, in _scoped_student_ids
+    profiles = repository.get_imported_student_profiles_for_counsellor_identity(
+        subject=auth.subject,
+        display_name=auth.display_name,
+    )
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\db\repository.py", line 742, in get_imported_student_profiles_for_counsellor_identity
+    .all()
+     ~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3293, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 145, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, dialect, engine
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 2448, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3317, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 175, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg\connection.py", line 130, in connect
+    raise new_ex.with_traceback(None)
+sqlalchemy.exc.OperationalError: (psycopg.OperationalError) connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+Multiple connection attempts failed. All failures were:
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.109.171.244': connection failed: connection to server at "3.109.171.244", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '13.200.110.68': connection failed: connection to server at "13.200.110.68", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.111.225.200': connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3317, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 175, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg\connection.py", line 130, in connect
+    raise new_ex.with_traceback(None)
+psycopg.OperationalError: connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+Multiple connection attempts failed. All failures were:
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.109.171.244': connection failed: connection to server at "3.109.171.244", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '13.200.110.68': connection failed: connection to server at "13.200.110.68", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.111.225.200': connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\applications.py", line 1160, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\cors.py", line 87, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 130, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 116, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 670, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 326, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 2470, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\cases.py", line 376, in get_active_cases
+    queue_items = get_faculty_priority_queue(db=db, auth=auth).queue
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 643, in get_faculty_priority_queue
+    queue = _build_faculty_priority_queue_items(repository, auth)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 510, in _build_faculty_priority_queue_items
+    scoped_student_ids = _scoped_student_ids(repository, auth)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\faculty.py", line 162, in _scoped_student_ids
+    profiles = repository.get_imported_student_profiles_for_counsellor_identity(
+        subject=auth.subject,
+        display_name=auth.display_name,
+    )
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\db\repository.py", line 742, in get_imported_student_profiles_for_counsellor_identity
+    .all()
+     ~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\query.py", line 2857, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+        params,
+        ^^^^^^^
+        execution_options={"_sa_orm_load_options": self.load_options},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3293, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 145, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, dialect, engine
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 2448, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3317, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 175, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg\connection.py", line 130, in connect
+    raise new_ex.with_traceback(None)
+sqlalchemy.exc.OperationalError: (psycopg.OperationalError) connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+Multiple connection attempts failed. All failures were:
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.109.171.244': connection failed: connection to server at "3.109.171.244", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '13.200.110.68': connection failed: connection to server at "13.200.110.68", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.111.225.200': connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3317, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 175, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg\connection.py", line 130, in connect
+    raise new_ex.with_traceback(None)
+psycopg.OperationalError: connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+Multiple connection attempts failed. All failures were:
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.109.171.244': connection failed: connection to server at "3.109.171.244", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '13.200.110.68': connection failed: connection to server at "13.200.110.68", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.111.225.200': connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\applications.py", line 1160, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\cors.py", line 87, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 130, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 116, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 670, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 326, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 2470, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\copilot.py", line 41, in create_copilot_session
+    session = repository.create_copilot_chat_session(
+        {
+    ...<9 lines>...
+        commit=False,
+    )
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\db\repository.py", line 767, in create_copilot_chat_session
+    self.db.flush()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 4331, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 4466, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 4427, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\persistence.py", line 68, in save_obj
+    ) in _organize_states_for_save(base_mapper, states, uowtransaction):
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\persistence.py", line 223, in _organize_states_for_save
+    for state, dict_, mapper, connection in _connections_for_states(
+                                            ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper, uowtransaction, states
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1759, in _connections_for_states
+    connection = uowtransaction.transaction.connection(base_mapper)
+  File "<string>", line 2, in connection
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 1037, in connection
+    return self._connection_for_bind(bind, execution_options)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 1173, in _connection_for_bind
+    conn = self._parent._connection_for_bind(
+        bind, execution_options
+    )
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3293, in connect
+    return self._connection_cls(self)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 145, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        err, dialect, engine
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 2448, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\base.py", line 3317, in raw_connection
+    return self.pool.connect()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 177, in _do_get
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\impl.py", line 175, in _do_get
+    return self._create_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\psycopg\connection.py", line 130, in connect
+    raise new_ex.with_traceback(None)
+sqlalchemy.exc.OperationalError: (psycopg.OperationalError) connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+Multiple connection attempts failed. All failures were:
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.109.171.244': connection failed: connection to server at "3.109.171.244", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '13.200.110.68': connection failed: connection to server at "13.200.110.68", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+- host: 'aws-1-ap-south-1.pooler.supabase.com', port: 6543, hostaddr: '3.111.225.200': connection failed: connection to server at "3.111.225.200", port 6543 failed: Permission denied (0x0000271D/10013)
+	Is the server running on that host and accepting TCP/IP connections?
+(Background on this error at: https://sqlalche.me/e/20/e3q8)

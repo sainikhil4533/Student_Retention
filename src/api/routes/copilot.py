@@ -22,7 +22,7 @@ from src.api.schemas import (
     CopilotChatSessionListResponse,
     CopilotChatSessionResponse,
 )
-from src.db.database import get_db
+from src.db.database import SessionLocal, get_db
 from src.db.repository import EventRepository
 
 
@@ -37,43 +37,52 @@ def create_copilot_session(
 ) -> CopilotChatSessionResponse:
     repository = EventRepository(db)
     now = datetime.now(UTC)
-    session = repository.create_copilot_chat_session(
-        {
-            "owner_subject": auth.subject,
-            "owner_role": auth.role,
-            "owner_student_id": auth.student_id,
-            "display_name": auth.display_name,
-            "title": _resolved_session_title(payload.title, auth.role),
-            "status": "active",
-            "system_prompt_version": COPILOT_SYSTEM_PROMPT_VERSION,
-            "last_message_at": now,
-        }
-    )
-    assistant_message = repository.add_copilot_chat_message(
-        {
-            "session_id": int(session.id),
-            "role": "assistant",
-            "message_type": "text",
-            "content": _opening_message_for_role(
-                role=auth.role,
-                display_name=auth.display_name,
-                opening_message=payload.opening_message,
-            ),
-            "metadata_json": {
-                "phase": COPILOT_PHASE_LABEL,
-                "response_mode": "foundation",
+    try:
+        session = repository.create_copilot_chat_session(
+            {
+                "owner_subject": auth.subject,
+                "owner_role": auth.role,
+                "owner_student_id": auth.student_id,
+                "display_name": auth.display_name,
+                "title": _resolved_session_title(payload.title, auth.role),
+                "status": "active",
+                "system_prompt_version": COPILOT_SYSTEM_PROMPT_VERSION,
+                "last_message_at": now,
             },
-        }
-    )
-    repository.update_copilot_chat_session(
-        int(session.id),
-        {"last_message_at": assistant_message.created_at or now},
-    )
-    session = repository.get_copilot_chat_session(int(session.id))
-    messages = repository.list_copilot_chat_messages(int(assistant_message.session_id))
+            commit=False,
+        )
+        assistant_message = repository.add_copilot_chat_message(
+            {
+                "session_id": int(session.id),
+                "role": "assistant",
+                "message_type": "text",
+                "content": _opening_message_for_role(
+                    role=auth.role,
+                    display_name=auth.display_name,
+                    opening_message=payload.opening_message,
+                ),
+                "metadata_json": {
+                    "phase": COPILOT_PHASE_LABEL,
+                    "response_mode": "foundation",
+                },
+            },
+            commit=False,
+        )
+        repository.update_copilot_chat_session(
+            int(session.id),
+            {"last_message_at": assistant_message.created_at or now},
+            commit=False,
+            refresh=False,
+        )
+        db.commit()
+        db.refresh(session)
+        db.refresh(assistant_message)
+    except Exception:
+        db.rollback()
+        raise
     return CopilotChatSessionResponse(
         session=_serialize_copilot_session(session),
-        messages=[_serialize_copilot_message(message) for message in messages],
+        messages=[_serialize_copilot_message(assistant_message)],
     )
 
 
@@ -130,32 +139,37 @@ def send_copilot_message(
     db: Session = Depends(get_db),
     auth: AuthContext = Depends(require_roles("student", "counsellor", "admin", "system")),
 ) -> CopilotChatReplyResponse:
-    repository = EventRepository(db)
-    session = _get_authorized_session(repository, session_id, auth)
     content = str(payload.content or "").strip()
     if not content:
         raise HTTPException(status_code=400, detail="Message content cannot be empty.")
 
-    session_messages = repository.list_copilot_chat_messages(session_id)
+    with SessionLocal() as planner_db:
+        planner_repository = EventRepository(planner_db)
+        _get_authorized_session(planner_repository, session_id, auth)
+        session_messages = planner_repository.list_copilot_chat_messages(session_id)
+        if auth.role == "admin":
+            profiles = planner_repository.get_imported_student_profiles()
+        elif auth.role == "counsellor":
+            profiles = planner_repository.get_imported_student_profiles_for_counsellor_identity(
+                subject=auth.subject,
+                display_name=auth.display_name,
+            )
+        else:
+            profiles = []
+
     memory = resolve_copilot_memory_context(
         message=content,
         session_messages=session_messages,
     )
-    if auth.role == "admin":
-        profiles = repository.get_imported_student_profiles()
-    elif auth.role == "counsellor":
-        profiles = repository.get_imported_student_profiles_for_counsellor_identity(
-            subject=auth.subject,
-            display_name=auth.display_name,
-        )
-    else:
-        profiles = []
     query_plan, semantic_planner = plan_copilot_query_with_semantic_assist(
         role=auth.role,
         message=content,
         session_messages=session_messages,
         profiles=profiles,
     )
+
+    repository = EventRepository(db)
+    session = _get_authorized_session(repository, session_id, auth)
     grounded_answer, tools_used, limitations, memory_context = generate_grounded_copilot_answer(
         auth=auth,
         repository=repository,
@@ -168,76 +182,81 @@ def send_copilot_message(
     resolved_intent = str(memory_context.get("intent") or query_plan.primary_intent or detected_intent)
     memory_applied = bool(memory.get("is_follow_up")) or resolved_intent != detected_intent
     refusal_reason = _resolve_copilot_refusal_reason(resolved_intent, limitations)
-    user_message = repository.add_copilot_chat_message(
-        {
-            "session_id": session_id,
-            "role": "user",
-            "message_type": "text",
-            "content": content,
-            "metadata_json": {
-                "owner_role": auth.role,
-                "owner_student_id": auth.student_id,
-                "memory_resolution": {
-                    "is_follow_up": bool(memory.get("is_follow_up")),
-                    "requested_outcome_status": memory.get("requested_outcome_status"),
-                    "explicit_student_id": memory.get("explicit_student_id"),
+    try:
+        user_message = repository.add_copilot_chat_message(
+            {
+                "session_id": session_id,
+                "role": "user",
+                "message_type": "text",
+                "content": content,
+                "metadata_json": {
+                    "owner_role": auth.role,
+                    "owner_student_id": auth.student_id,
+                    "memory_resolution": {
+                        "is_follow_up": bool(memory.get("is_follow_up")),
+                        "requested_outcome_status": memory.get("requested_outcome_status"),
+                        "explicit_student_id": memory.get("explicit_student_id"),
+                    },
                 },
             },
-        }
-    )
-    assistant_message = repository.add_copilot_chat_message(
-        {
-            "session_id": session_id,
-            "role": "assistant",
-            "message_type": "text",
-            "content": grounded_answer,
-            "metadata_json": {
-                "phase": COPILOT_PHASE_LABEL,
-                "response_mode": "grounded_tool_answer",
+            commit=False,
+        )
+        assistant_message = repository.add_copilot_chat_message(
+            {
+                "session_id": session_id,
+                "role": "assistant",
+                "message_type": "text",
+                "content": grounded_answer,
+                "metadata_json": {
+                    "phase": COPILOT_PHASE_LABEL,
+                    "response_mode": "grounded_tool_answer",
+                    "detected_intent": detected_intent,
+                    "resolved_intent": resolved_intent,
+                    "memory_applied": memory_applied,
+                    "query_plan": query_plan.to_dict(),
+                    "semantic_planner": semantic_planner,
+                    "planner_execution": {
+                        "planner_version": query_plan.version,
+                        "analysis_mode": query_plan.analysis_mode,
+                        "orchestration_steps": list(query_plan.orchestration_steps),
+                        "confidence": query_plan.confidence,
+                        "notes": list(query_plan.notes),
+                    },
+                    "grounded_tools_used": tools_used,
+                    "limitations": limitations,
+                    "memory_context": memory_context,
+                    "safety_marker": {
+                        "role_scope": auth.role,
+                        "refusal_reason": refusal_reason,
+                    },
+                },
+            },
+            commit=False,
+        )
+        repository.add_copilot_audit_event(
+            {
+                "session_id": session_id,
+                "message_id": int(assistant_message.id),
+                "owner_subject": auth.subject,
+                "owner_role": auth.role,
+                "owner_student_id": auth.student_id,
                 "detected_intent": detected_intent,
                 "resolved_intent": resolved_intent,
                 "memory_applied": memory_applied,
-                "query_plan": query_plan.to_dict(),
-                "semantic_planner": semantic_planner,
-                "planner_execution": {
-                    "planner_version": query_plan.version,
-                    "analysis_mode": query_plan.analysis_mode,
-                    "orchestration_steps": list(query_plan.orchestration_steps),
-                    "confidence": query_plan.confidence,
-                    "notes": list(query_plan.notes),
-                },
-                "grounded_tools_used": tools_used,
-                "limitations": limitations,
-                "memory_context": memory_context,
-                "safety_marker": {
-                    "role_scope": auth.role,
-                    "refusal_reason": refusal_reason,
-                },
+                "tool_summaries": tools_used,
+                "refusal_reason": refusal_reason,
             },
-        }
-    )
-    repository.add_copilot_audit_event(
-        {
-            "session_id": session_id,
-            "message_id": int(assistant_message.id),
-            "owner_subject": auth.subject,
-            "owner_role": auth.role,
-            "owner_student_id": auth.student_id,
-            "detected_intent": detected_intent,
-            "resolved_intent": resolved_intent,
-            "memory_applied": memory_applied,
-            "tool_summaries": tools_used,
-            "refusal_reason": refusal_reason,
-        }
-    )
-    repository.update_copilot_chat_session(
-        session_id,
-        {
-            "last_message_at": assistant_message.created_at or datetime.now(UTC),
-            "updated_at": assistant_message.created_at or datetime.now(UTC),
-        },
-    )
-    session = repository.get_copilot_chat_session(session_id)
+            commit=False,
+        )
+        session.last_message_at = assistant_message.created_at or datetime.now(UTC)
+        session.updated_at = assistant_message.created_at or datetime.now(UTC)
+        db.commit()
+        db.refresh(session)
+        db.refresh(user_message)
+        db.refresh(assistant_message)
+    except Exception:
+        db.rollback()
+        raise
     return CopilotChatReplyResponse(
         session=_serialize_copilot_session(session),
         user_message=_serialize_copilot_message(user_message),

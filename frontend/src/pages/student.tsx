@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Flag, Flame, ShieldAlert, Trophy, UserCircle2 } from "lucide-react";
 
 import { BarChartCard, PieChartCard } from "../components/charts";
-import { Button, Card, EmptyState, LoadingCard, SectionTitle, StatCard } from "../components/ui";
+import { Card, EmptyState, LoadingCard, SectionTitle, StatCard } from "../components/ui";
 import { apiRequest } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { formatDate, formatPercent, titleCase } from "../lib/format";
@@ -40,16 +40,84 @@ export function StudentDashboardPage() {
 
   const overview = overviewQuery.data;
   const latestPrediction = overview.latest_prediction;
+  const academic = overview.academic_progress;
   const warningCount = overview.warning_history.warnings.length;
   const criticalTrigger = latestPrediction.trigger_alerts?.has_critical_trigger;
 
   return (
     <div className="space-y-6">
-      <SectionTitle
-        eyebrow="Student dashboard"
-        title="Your next best actions, made visible"
-        description="This dashboard is designed to feel motivating without becoming childish. The most important information stays in front of you, while the rest stays clean and readable."
-      />
+      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+        <Card className="overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white shadow-lift">
+          <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-200">Student dashboard</p>
+              <h2 className="mt-3 text-4xl font-black tracking-tight">Your progress story stays clear, calm, and actionable.</h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
+                This dashboard is designed to feel motivating without becoming childish. It keeps the most important academic signals visible, then turns them into next-step guidance you can actually follow.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur-sm">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-300">Signed in as</p>
+                  <p className="mt-2 text-sm font-semibold text-white">{auth?.displayName || `Student ${overview.student_id}`}</p>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur-sm">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-300">Current posture</p>
+                  <p className="mt-2 text-sm font-semibold text-white">
+                    {latestPrediction.final_predicted_class === 1 ? "Attention needed" : "Stable for now"}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur-sm">
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-300">Academic position</p>
+                  <p className="mt-2 text-sm font-semibold text-white">
+                    Year {academic.current_year || "--"}, Semester {academic.current_semester || "--"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-4">
+              <div className="rounded-[28px] border border-white/10 bg-white/10 p-5 backdrop-blur-sm">
+                <p className="text-xs uppercase tracking-[0.18em] text-indigo-200">Recovery guidance</p>
+                <p className="mt-3 text-lg font-bold text-white">{overview.recovery_plan.summary}</p>
+                <p className="mt-3 text-sm leading-7 text-slate-300">
+                  {latestPrediction.ai_insights?.student_guidance?.motivation ||
+                    "Keep showing up consistently. Each logged action helps the system reflect your progress more accurately."}
+                </p>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="space-y-4 bg-white/92">
+          <SectionTitle
+            eyebrow="Immediate reading"
+            title="What the system is seeing right now"
+            description="A cleaner summary block for students who want clarity first before reading the full timeline."
+          />
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+            <JourneyInfo
+              label="Risk trend"
+              value={latestPrediction.risk_trend?.summary || "Latest trend summary not available"}
+            />
+            <JourneyInfo
+              label="Primary risk type"
+              value={latestPrediction.risk_type?.summary || "No visible primary risk type summary"}
+            />
+            <JourneyInfo
+              label="Warning count"
+              value={warningCount ? `${warningCount} warning record(s)` : "No active warning history visible"}
+            />
+            <JourneyInfo
+              label="Attendance posture"
+              value={academic.attendance_summary}
+            />
+            <JourneyInfo
+              label="Critical trigger status"
+              value={criticalTrigger ? "At least one critical trigger is active" : "No critical trigger is currently active"}
+            />
+          </div>
+        </Card>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard
@@ -70,10 +138,20 @@ export function StudentDashboardPage() {
           accent="gold"
         />
         <StatCard
-          label="Critical triggers"
-          value={criticalTrigger ? "Yes" : "No"}
-          note={latestPrediction.trigger_alerts?.summary || "Critical trigger logic from the backend alerts layer."}
-          accent="teal"
+          label="Attendance status"
+          value={academic.current_overall_status ? titleCase(academic.current_overall_status) : "--"}
+          note={academic.current_overall_attendance_percent != null ? `${formatPercent((academic.current_overall_attendance_percent || 0) / 100)} overall in the current visible semester.` : "Current attendance summary is not available."}
+          accent={academic.has_r_grade_risk ? "rose" : academic.has_i_grade_risk ? "gold" : "teal"}
+        />
+        <StatCard
+          label="Carry-forward burden"
+          value={academic.active_burden_count ? String(academic.active_burden_count) : "None"}
+          note={
+            academic.active_burden_count
+              ? `${titleCase(academic.academic_risk_band || "watchlist")} burden with ${titleCase((academic.monitoring_cadence || "none").replace(/_/g, " "))} monitoring until clearance.`
+              : "No uncleared I-grade or R-grade subject burden is currently active."
+          }
+          accent={academic.has_active_r_grade_burden ? "rose" : academic.has_active_i_grade_burden ? "gold" : "teal"}
         />
       </div>
 
@@ -146,15 +224,86 @@ export function StudentDashboardPage() {
               <EmptyState title="No recommended actions found" description="The current prediction did not return a visible action bundle." />
             )}
           </div>
-          <Card className="bg-slate-950 text-white">
-            <p className="text-xs uppercase tracking-[0.22em] text-slate-300">Recovery guidance</p>
-            <p className="mt-3 text-lg font-bold">{overview.recovery_plan.summary}</p>
-            <p className="mt-3 text-sm leading-7 text-slate-300">
-              {latestPrediction.ai_insights?.student_guidance?.motivation || "Keep showing up consistently. Each logged action helps the system reflect your progress more accurately."}
+          <Card className="bg-white/95">
+            <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Professional note</p>
+            <p className="mt-3 text-lg font-bold text-slate-950">
+              The student side stays formal, but still encouraging.
+            </p>
+            <p className="mt-3 text-sm leading-7 text-slate-600">
+              We are intentionally using motivation as guidance, not as childish gamification. That keeps the experience institution-appropriate while still helping the student return and act.
             </p>
           </Card>
         </Card>
       </div>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <BarChartCard
+          title="Current subject attendance"
+          description="Uses the new generalized academic foundation instead of only prediction metadata."
+          data={academic.subject_attendance.slice(0, 6).map((item) => ({
+            label: item.subject_code || item.subject_name,
+            value: Math.round(item.subject_attendance_percent || 0),
+          }))}
+          xKey="label"
+          dataKey="value"
+        />
+        <PieChartCard
+          title="Attendance policy posture"
+          description="Shows how the current visible subjects split across safe and risk states."
+          data={[
+            { label: "Safe", value: academic.subject_attendance.filter((item) => item.subject_status === "SAFE").length },
+            { label: "I Grade", value: academic.subject_attendance.filter((item) => item.subject_status === "I_GRADE").length },
+            { label: "R Grade", value: academic.subject_attendance.filter((item) => item.subject_status === "R_GRADE").length },
+          ]}
+          nameKey="label"
+          dataKey="value"
+        />
+      </div>
+
+      {academic.active_burden_count ? (
+        <Card className="space-y-4 border-rose-100 bg-gradient-to-br from-white to-rose-50/60">
+          <SectionTitle
+            eyebrow="Uncleared burden"
+            title="Subjects that still remain academically active"
+            description="These subjects should not be treated as fully cleared just because the current semester is going well. They stay active until the I-grade or R-grade is actually cleared."
+          />
+          <div className="rounded-3xl border border-rose-100 bg-white px-4 py-4 text-sm leading-7 text-slate-700">
+            {academic.academic_burden_summary || "An unresolved academic burden is still active on your record."}
+          </div>
+          <div className="grid gap-4 xl:grid-cols-2">
+            {academic.active_r_grade_subjects.map((item) => (
+              <div key={`r-${item.subject_code || item.subject_name}`} className="rounded-3xl border border-rose-200 bg-white px-4 py-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="font-semibold text-slate-950">{item.subject_name || item.subject_code || "Unknown subject"}</p>
+                  <span className="rounded-full bg-rose-600 px-3 py-1 text-xs font-semibold text-white">R Grade Active</span>
+                </div>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Semester {item.semester || "--"}, year {item.year || "--"}.
+                  {item.subject_attendance_percent != null ? ` Previous attendance: ${item.subject_attendance_percent.toFixed(2)}%.` : ""}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Effective status: {item.effective_result_status || "Pending clearance"}.
+                </p>
+              </div>
+            ))}
+            {academic.active_i_grade_subjects.map((item) => (
+              <div key={`i-${item.subject_code || item.subject_name}`} className="rounded-3xl border border-amber-200 bg-white px-4 py-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="font-semibold text-slate-950">{item.subject_name || item.subject_code || "Unknown subject"}</p>
+                  <span className="rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white">I Grade Active</span>
+                </div>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Semester {item.semester || "--"}, year {item.year || "--"}.
+                  {item.subject_attendance_percent != null ? ` Previous attendance: ${item.subject_attendance_percent.toFixed(2)}%.` : ""}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Effective status: {item.effective_result_status || "Pending clearance"}.
+                </p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      ) : null}
     </div>
   );
 }
@@ -162,7 +311,7 @@ export function StudentDashboardPage() {
 export function StudentReportsPage() {
   const { auth } = useAuth();
   const overviewQuery = useQuery({
-    queryKey: ["student-overview-report", auth?.accessToken],
+    queryKey: ["student-overview", auth?.accessToken],
     queryFn: () => apiRequest<StudentOverview>("/student/me/overview", { token: auth?.accessToken }),
   });
 
@@ -174,6 +323,7 @@ export function StudentReportsPage() {
   }
 
   const latestPrediction = overviewQuery.data.latest_prediction;
+  const academic = overviewQuery.data.academic_progress;
 
   return (
     <div className="space-y-6">
@@ -184,22 +334,23 @@ export function StudentReportsPage() {
       />
       <div className="grid gap-6 xl:grid-cols-2">
         <BarChartCard
-          title="Current student risk indicators"
-          description="A compact view of the latest backend-generated indicators that influence the student experience."
+          title="Current student attendance indicators"
+          description="A compact view of the current academic attendance posture from the generalized foundation."
           data={[
-            { label: "Probability", value: Math.round((latestPrediction.final_risk_probability || 0) * 100) },
-            { label: "Triggers", value: latestPrediction.trigger_alerts?.trigger_count || 0 },
-            { label: "Warnings", value: overviewQuery.data.warning_history.warnings.length },
+            { label: "Overall %", value: Math.round(academic.current_overall_attendance_percent || 0) },
+            { label: "Below 75", value: academic.current_subjects_below_75_count || 0 },
+            { label: "Below 65", value: academic.current_subjects_below_65_count || 0 },
           ]}
           xKey="label"
           dataKey="value"
         />
         <PieChartCard
-          title="Warning cycle posture"
+          title="Risk and guidance posture"
           description="Shows how much of the student’s current state is driven by direct warnings versus ongoing recommendation work."
           data={[
             { label: "Warnings", value: overviewQuery.data.warning_history.warnings.length },
             { label: "Recommended actions", value: overviewQuery.data.latest_prediction.recommended_actions?.length || 0 },
+            { label: "R Grade", value: academic.subject_attendance.filter((item) => item.subject_status === "R_GRADE").length },
           ]}
           nameKey="label"
           dataKey="value"
@@ -212,11 +363,11 @@ export function StudentReportsPage() {
 export function StudentJourneyPage() {
   const { auth } = useAuth();
   const overviewQuery = useQuery({
-    queryKey: ["student-overview-journey", auth?.accessToken],
+    queryKey: ["student-overview", auth?.accessToken],
     queryFn: () => apiRequest<StudentOverview>("/student/me/overview", { token: auth?.accessToken }),
   });
   const timelineQuery = useQuery({
-    queryKey: ["student-full-timeline", auth?.studentId, auth?.accessToken],
+    queryKey: ["student-timeline", auth?.studentId, auth?.accessToken],
     queryFn: () => apiRequest<StudentTimeline>(`/timeline/${auth?.studentId}`, { token: auth?.accessToken }),
     enabled: Boolean(auth?.studentId),
   });
@@ -232,6 +383,7 @@ export function StudentJourneyPage() {
   const profileContext = overview.profile.profile_context || {};
   const registration = (profileContext.registration as Record<string, unknown> | undefined) || {};
   const timeline = timelineQuery.data?.timeline || [];
+  const academic = overview.academic_progress;
 
   return (
     <div className="space-y-6">
@@ -258,6 +410,16 @@ export function StudentJourneyPage() {
             <JourneyInfo label="Current outcome" value={String(registration.final_status || "Unknown")} />
             <JourneyInfo label="Branch" value={String((profileContext.branch as string) || "Unknown")} />
             <JourneyInfo label="Region" value={String((profileContext.region as string) || "Unknown")} />
+            <JourneyInfo label="Semester mode" value={String(academic.semester_mode || "regular coursework")} />
+            <JourneyInfo label="Weakest subject" value={academic.weakest_subject_name ? `${academic.weakest_subject_name} (${academic.weakest_subject_percent?.toFixed(2) || "--"}%)` : "Not available"} />
+            <JourneyInfo
+              label="Active burden"
+              value={
+                academic.active_burden_count
+                  ? `${academic.active_burden_count} uncleared subject(s), ${titleCase(academic.monitoring_cadence || "none")} monitoring`
+                  : "No active I/R grade burden"
+              }
+            />
           </div>
           <Card className="bg-slate-950 text-white">
             <p className="text-xs uppercase tracking-[0.22em] text-slate-300">Motivation</p>

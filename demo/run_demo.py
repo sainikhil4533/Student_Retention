@@ -15,8 +15,8 @@ if str(PROJECT_ROOT) not in sys.path:
 BASE_URL = "http://127.0.0.1:8000"
 DEMO_DIR = PROJECT_ROOT / "demo"
 REQUEST_TIMEOUT_SECONDS = 90
-DEMO_ADMIN_USERNAME = "admin_demo"
-DEMO_ADMIN_PASSWORD = "admin_demo"
+DEMO_ADMIN_USERNAME = "admin.retention"
+DEMO_ADMIN_PASSWORD = "Admin@123"
 
 
 def get_auth_headers() -> dict[str, str]:

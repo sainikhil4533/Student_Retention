@@ -159,6 +159,42 @@ This means:
 - temporal reports are used for model and threshold selection
 - final saved artifacts are trained on the full dataset after temporal validation
 
+## 6. Data Template Docs
+
+These are not ML reports, but they are now important source documents for the next generalized institutional-data phase.
+
+### `docs/GENERALIZED_ACADEMIC_DATA_TEMPLATE_GUIDE.md`
+
+Type:
+
+- implementation-facing data contract guide
+
+Purpose:
+
+- explains the richer academic CSV design needed for realistic attendance policy, subject catalogs, semester history, and generalized institution support
+
+### `docs/DATA_TEMPLATE_INDEX.md`
+
+Type:
+
+- template navigation doc
+
+Purpose:
+
+- points to the generalized academic data-contract docs
+- explains that the temporary in-repo sample pack was removed after handoff so the repo does not permanently carry institution-specific sample data
+
+### `docs/GENERALIZED_INSTITUTION_IMPORT_GUIDE.md`
+
+Type:
+
+- backend implementation guide
+
+Purpose:
+
+- explains the generalized institution import route and its new database foundation
+- documents how policy, curriculum, semester progress, attendance, and academic records are now persisted
+
 ## 6. Current System Workflow Document
 
 ### `docs/LIVE_SYSTEM_WORKFLOW.md`
@@ -266,6 +302,52 @@ Purpose:
 - explains how student, counsellor, and admin flows differ after login
 - explains why deeper pages like student journey, counsellor workbench, and admin operations exist
 - helps a beginner understand the product from the user's point of view instead of only from file names
+
+### `docs/FRONTEND_UAT_GUIDE.md`
+
+Type:
+
+- frontend manual verification guide
+
+Purpose:
+
+- explains how to test the frontend in the browser after automated verifiers pass
+- includes homepage, login, student, counsellor, admin, chat, password-reset, and mobile checks
+- helps a beginner understand the difference between automated verification and product-feel validation
+
+### `docs/LOCAL_STARTUP_AND_READINESS_GUIDE.md`
+
+Type:
+
+- local startup and readiness guide
+
+Purpose:
+
+- explains the simplest way to start backend, worker, and frontend together
+- documents lighter startup modes for backend-only or frontend-focused testing
+- gives a beginner-friendly readiness checklist before browser UAT
+
+### `docs/DEPLOYMENT_READINESS_CHECKLIST.md`
+
+Type:
+
+- deployment and launch-readiness guide
+
+Purpose:
+
+- explains what must be true before calling the system demo-ready, staging-ready, or production-style ready
+- covers secrets, worker readiness, chatbot safety, scope safety, and final launch questions
+
+### `.env.example`
+
+Type:
+
+- environment template
+
+Purpose:
+
+- provides a safe placeholder-based starting point for local setup and deployment configuration
+- helps avoid copying old live secrets into new machines or deployment targets
 
 ## 10. Full Chatbot Implementation Guide
 

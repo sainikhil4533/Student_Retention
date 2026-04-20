@@ -1,0 +1,15 @@
+{
+  "role_filter": "counsellor",
+  "label_filter": "counsellor_edge_and_mixed_queries",
+  "generated_at": "2026-04-18T18:33:31.375202+00:00",
+  "status": "infrastructure_failure",
+  "conversation_count": 0,
+  "passed_conversations": 0,
+  "failed_conversations": 0,
+  "failure_summary": {
+    "infrastructure_failure": 1
+  },
+  "error_type": "NameError",
+  "error_message": "name 'role' is not defined",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\tests\\chatbot_test_runner.py\", line 1538, in main\n    summary = run_conversation_suite_with_retries(\n        role=args.role,\n        label=args.label,\n        deterministic_planner_only=args.deterministic,\n    )\n  File \"C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\tests\\chatbot_test_runner.py\", line 1463, in run_conversation_suite_with_retries\n    return run_conversation_suite(\n        role=role,\n        label=label,\n        deterministic_planner_only=deterministic_planner_only,\n    )\n  File \"C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\tests\\chatbot_test_runner.py\", line 1387, in run_conversation_suite\n    raw_result = client.send(turn.prompt)\n  File \"C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\tests\\chatbot_test_runner.py\", line 207, in send\n    grounded_answer, tools_used, limitations, memory_context = generate_grounded_copilot_answer(\n                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        auth=self.auth,\n        ^^^^^^^^^^^^^^^\n    ...<4 lines>...\n        query_plan=query_plan.to_dict(),\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\src\\api\\copilot_tools.py\", line 192, in generate_grounded_copilot_answer\n    answer, tools_used, limitations, memory_context = _answer_counsellor_question(\n                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        auth=auth,\n        ^^^^^^^^^^\n    ...<4 lines>...\n        query_plan=planner,\n        ^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\src\\api\\copilot_tools.py\", line 5028, in _answer_counsellor_question\n    \"role_scope\": role,\n                  ^^^^\nNameError: name 'role' is not defined\n"
+}

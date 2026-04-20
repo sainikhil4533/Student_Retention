@@ -1,0 +1,638 @@
+{
+  "role_filter": "admin",
+  "generated_at": "2026-04-18T06:08:12.721692+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 0,
+  "failed_conversations": 1,
+  "failure_summary": {
+    "response_type_failure": 6
+  },
+  "conversations": [
+    {
+      "role": "admin",
+      "label": "admin_natural_and_ambiguous_queries",
+      "passed": false,
+      "failure_count": 6,
+      "turns": [
+        {
+          "prompt": "how is overall performance",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to an admin intent yet.\n\nWhat I found:\n- import coverage\n- cohort summaries\n- attendance policy pressure, including I-grade and R-grade risk\n- branch and subject hotspot summaries\n- basic governance summaries\n- student drilldowns by student_id\n- Did you mean: cohort or risk summaries, governance summaries, student drilldown by student_id?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 1,
+              "prompt": "how is overall performance"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "how is overall performance",
+              "normalized_message": "how is overall performance",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "how is overall performance",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "is everything going well",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to an admin intent yet.\n\nWhat I found:\n- import coverage\n- cohort summaries\n- attendance policy pressure, including I-grade and R-grade risk\n- branch and subject hotspot summaries\n- basic governance summaries\n- student drilldowns by student_id\n- Did you mean: cohort or risk summaries, governance summaries, import coverage?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 2,
+              "prompt": "is everything going well"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "is everything going well",
+              "normalized_message": "is everything going well",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "is everything going well",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which area is problematic",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to an admin intent yet.\n\nWhat I found:\n- import coverage\n- cohort summaries\n- attendance policy pressure, including I-grade and R-grade risk\n- branch and subject hotspot summaries\n- basic governance summaries\n- student drilldowns by student_id\n- Did you mean: governance summaries, cohort or risk summaries, import coverage?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 3,
+              "prompt": "which area is problematic"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which area is problematic",
+              "normalized_message": "which area is problematic",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "which area is problematic",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "are students doing okay",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to an admin intent yet.\n\nWhat I found:\n- import coverage\n- cohort summaries\n- attendance policy pressure, including I-grade and R-grade risk\n- branch and subject hotspot summaries\n- basic governance summaries\n- student drilldowns by student_id\n- Did you mean: student drilldown by student_id, import coverage, cohort or risk summaries?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 4,
+              "prompt": "are students doing okay"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "are students doing okay",
+              "normalized_message": "are students doing okay",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "are students doing okay",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "is the situation under control",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to an admin intent yet.\n\nWhat I found:\n- import coverage\n- cohort summaries\n- attendance policy pressure, including I-grade and R-grade risk\n- branch and subject hotspot summaries\n- basic governance summaries\n- student drilldowns by student_id\n- Did you mean: governance summaries, student drilldown by student_id, import coverage?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 5,
+              "prompt": "is the situation under control"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "is the situation under control",
+              "normalized_message": "is the situation under control",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "is the situation under control",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "analysis",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to an admin intent yet.\n\nWhat I found:\n- import coverage\n- cohort summaries\n- attendance policy pressure, including I-grade and R-grade risk\n- branch and subject hotspot summaries\n- basic governance summaries\n- student drilldowns by student_id\n- Did you mean: cohort or risk summaries, governance summaries, import coverage?",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "analysis",
+              "normalized_message": "analysis",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "analysis",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "report",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to an admin intent yet.\n\nWhat I found:\n- import coverage\n- cohort summaries\n- attendance policy pressure, including I-grade and R-grade risk\n- branch and subject hotspot summaries\n- basic governance summaries\n- student drilldowns by student_id\n- Did you mean: import coverage, cohort or risk summaries, governance summaries?",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "report",
+              "normalized_message": "report",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "report",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "risk",
+          "response_type": "data",
+          "last_topic": "institution_risk",
+          "last_intent": "cohort_summary",
+          "answer": "There are 3 currently high-risk students, 63 students with I-grade attendance risk, and 6 with R-grade attendance risk across the institution.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "cohort_summary",
+              "last_intent": "cohort_summary",
+              "response_type": "data",
+              "last_topic": "institution_risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "risk",
+              "normalized_message": "how many students are high risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "performance",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to an admin intent yet.\n\nWhat I found:\n- import coverage\n- cohort summaries\n- attendance policy pressure, including I-grade and R-grade risk\n- branch and subject hotspot summaries\n- basic governance summaries\n- student drilldowns by student_id\n- Did you mean: cohort or risk summaries, import coverage, governance summaries?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 9,
+              "prompt": "performance"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "performance",
+              "normalized_message": "performance",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "performance",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

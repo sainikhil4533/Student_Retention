@@ -1,0 +1,181 @@
+{
+  "role_filter": "counsellor",
+  "generated_at": "2026-04-18T04:26:36.101851+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 0,
+  "failed_conversations": 1,
+  "failure_summary": {
+    "repetition_failure": 1
+  },
+  "conversations": [
+    {
+      "role": "counsellor",
+      "label": "counsellor_action_queries_a2",
+      "passed": false,
+      "failure_count": 1,
+      "turns": [
+        {
+          "prompt": "how can I help them",
+          "response_type": "action",
+          "last_topic": "cohort_actions",
+          "last_intent": "counsellor_operational_actions",
+          "answer": "Here is the grounded operational action list for your current counsellor scope.\n\nWhat I found:\n- Start with the most pressured branch in your scoped cohort: `CSE`.\n- This week, review the top queue students first: student_id 880082 (high priority, within_monitoring SLA); student_id 880073 (high priority, within_monitoring SLA); student_id 880001 (high priority, within_monitoring SLA)\n- Keep unresolved R-grade cases on weekly monitoring. Right now that affects 5 students in your scope.\n- Keep unresolved I-grade cases on at least monthly review. Right now that affects 26 students in your scope.\n- Coordinate attendance recovery around `Big Data Analytics` first, because it is currently pulling 3 students below threshold.\n- Turn each contacted student into one concrete next action: attendance recovery, coursework completion, or burden-clearance follow-up. Avoid generic check-ins without a named blocker.\n\nIf you want, I can narrow this into a bucket-specific counsellor action list or list the exact students to contact first.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_operational_actions",
+              "role_scope": "counsellor",
+              "grouped_by": "",
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "counsellor_operational_actions",
+              "response_type": "action",
+              "last_topic": "cohort_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "how can I help them",
+              "normalized_message": "show counsellor operational priorities",
+              "primary_intent": "cohort_summary",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_priority_queue",
+                "load_scoped_attendance_pressure_and_subject_hotspots",
+                "load_scoped_carry_forward_burden_counts",
+                "compose_grounded_counsellor_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": [
+                "Planner mapped a counsellor action-style question to a grounded scoped operational advisory response."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how can I help them",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what intervention should I take",
+          "response_type": "action",
+          "last_topic": "cohort_actions",
+          "last_intent": "counsellor_operational_actions",
+          "answer": "Here is the grounded operational action list for your current counsellor scope.\n\nWhat I found:\n- Start with the most pressured branch in your scoped cohort: `CSE`.\n- This week, review the top queue students first: student_id 880082 (high priority, within_monitoring SLA); student_id 880073 (high priority, within_monitoring SLA); student_id 880001 (high priority, within_monitoring SLA)\n- Keep unresolved R-grade cases on weekly monitoring. Right now that affects 5 students in your scope.\n- Keep unresolved I-grade cases on at least monthly review. Right now that affects 26 students in your scope.\n- Coordinate attendance recovery around `Big Data Analytics` first, because it is currently pulling 3 students below threshold.\n- Turn each contacted student into one concrete next action: attendance recovery, coursework completion, or burden-clearance follow-up. Avoid generic check-ins without a named blocker.\n\nIf you want, I can narrow this into a bucket-specific counsellor action list or list the exact students to contact first.",
+          "failures": [
+            {
+              "type": "repetition_failure",
+              "message": "The chatbot repeated the same answer instead of moving the conversation forward.",
+              "turn_index": 2,
+              "prompt": "what intervention should I take"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_operational_actions",
+              "role_scope": "counsellor",
+              "grouped_by": "",
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "counsellor_operational_actions",
+              "response_type": "action",
+              "last_topic": "cohort_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "what intervention should I take",
+              "normalized_message": "show counsellor operational priorities",
+              "primary_intent": "cohort_summary",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_priority_queue",
+                "load_scoped_attendance_pressure_and_subject_hotspots",
+                "load_scoped_carry_forward_burden_counts",
+                "compose_grounded_counsellor_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": [
+                "Planner mapped a counsellor action-style question to a grounded scoped operational advisory response."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what intervention should I take",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -107,6 +107,21 @@ export function HomePage() {
               </div>
             ))}
           </div>
+
+          <div className="relative mt-8 rounded-[28px] border border-white/10 bg-black/10 p-5 backdrop-blur-sm">
+            <div className="grid gap-4 sm:grid-cols-3">
+              {[
+                ["Student clarity", "Motivating journey surfaces and formal timeline guidance."],
+                ["Counsellor flow", "Priority queues and case workbench actions without dashboard clutter."],
+                ["Admin control", "Uploads, reports, and operations stay separate for cleaner decisions."],
+              ].map(([title, text]) => (
+                <div key={title}>
+                  <p className="text-sm font-bold text-white">{title}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-300">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </Card>
       </section>
 
@@ -169,7 +184,30 @@ export function HomePage() {
       </section>
 
       <section className="mx-auto mt-20 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <Card className="home-section-slate border-white/70">
+            <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Operational design choice</p>
+            <h3 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-950">
+              The homepage builds trust. The dashboards handle the real work.
+            </h3>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
+              We intentionally stopped the public page from becoming a fake analytics dashboard. Public visitors should understand the platform model quickly, then sign in into the real role-specific experience.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              {[
+                ["Shorter scroll", "The public page stays concise so the product feels confident instead of over-explained."],
+                ["Better contrast", "Dark and light sections now alternate more clearly, so the page feels designed instead of washed out."],
+                ["Role-first entry", "Each module gets its own path before any protected functionality appears."],
+                ["Institution tone", "The page avoids startup-style AI noise and keeps a campus-trust posture."],
+              ].map(([title, text]) => (
+                <div key={title} className="rounded-3xl border border-white/80 bg-white/86 p-5 shadow-soft">
+                  <p className="text-base font-bold text-slate-950">{title}</p>
+                  <p className="mt-2 text-sm leading-7 text-slate-600">{text}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
           <Card className="home-section-soft bg-white/95">
             <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Why institutions use it</p>
             <h3 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-950">
@@ -185,38 +223,6 @@ export function HomePage() {
                 <div key={point} className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white/90 px-4 py-4">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-teal-600" />
                   <p className="text-sm leading-7 text-slate-700">{point}</p>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          <Card className="home-section-dark border-white/10 text-white">
-            <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Homepage design decision</p>
-            <h3 className="mt-3 text-3xl font-extrabold tracking-tight text-white">
-              Attractive, but still serious enough for an academic institution.
-            </h3>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {[
-                {
-                  title: "Formal visual tone",
-                  text: "We keep the surface premium and calm instead of using loud startup-style hero noise.",
-                },
-                {
-                  title: "Shorter scrolling path",
-                  text: "The homepage should explain the system, not become a long analytics page before login.",
-                },
-                {
-                  title: "Role clarity",
-                  text: "Students, counsellors, and admins should understand their route immediately without generic copy blocks.",
-                },
-                {
-                  title: "Professional CTA flow",
-                  text: "Sign-in stays the primary action because this is an institution-owned workflow, not a public consumer app.",
-                },
-              ].map((item) => (
-                <div key={item.title} className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur-sm">
-                  <p className="text-base font-bold text-white">{item.title}</p>
-                  <p className="mt-2 text-sm leading-7 text-slate-200">{item.text}</p>
                 </div>
               ))}
             </div>

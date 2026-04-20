@@ -1,0 +1,82 @@
+{
+  "role_filter": "admin",
+  "generated_at": "2026-04-18T08:51:54.545903+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 1,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "admin",
+      "label": "admin_direct_query_01",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "how many students are high risk",
+          "response_type": "data",
+          "last_topic": "institution_risk",
+          "last_intent": "cohort_summary",
+          "answer": "There are 3 currently high-risk students, 63 students with I-grade attendance risk, and 6 with R-grade attendance risk across the institution.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "cohort_summary",
+              "last_intent": "cohort_summary",
+              "response_type": "data",
+              "last_topic": "institution_risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "how many students are high risk",
+              "normalized_message": "how many students are high risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "how many students are high risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

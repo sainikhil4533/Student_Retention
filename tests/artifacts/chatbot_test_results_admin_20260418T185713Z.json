@@ -1,0 +1,370 @@
+{
+  "role_filter": "admin",
+  "generated_at": "2026-04-18T18:57:13.441108+00:00",
+  "conversation_count": 5,
+  "passed_conversations": 5,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "admin",
+      "label": "admin_cross_feature_query_01",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "which branch has good attendance but high risk",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded hidden-risk explanation across the currently visible institution scope.\n\nWhat I found:\n- There are 3 currently high-risk students whose latest semester attendance posture still looks SAFE, so this is not only an attendance problem.\n- That is the hidden-risk pattern: students can look stable on visible attendance while ERP, LMS, or finance signals still keep prediction risk elevated.\n- The most visible branch carrying that pattern right now is CSE.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which branch has good attendance but high risk",
+              "normalized_message": "which branch has good attendance but high risk",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which branch has good attendance but high risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_cross_feature_query_02",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "compare lms vs erp impact",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded comparison between LMS and ERP impact in the current institution risk picture.\n\nWhat I found:\n- Among the current high-risk students I could evaluate in detail, ERP and coursework pressure is visible in 3 cases, while LMS-engagement pressure is visible in 0 cases.\n- That means ERP-side academic performance is currently the stronger institution-level drag than LMS alone.\n- In practice, weak weighted scores and submission consistency are showing up more often than pure LMS inactivity in the current high-risk cohort.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "compare lms vs erp impact",
+              "normalized_message": "compare lms vs erp impact",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "compare lms vs erp impact",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_cross_feature_query_03",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "how finance is affecting risk",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded finance-to-risk explanation at the institution level.\n\nWhat I found:\n- Finance pressure is still visible inside the current high-risk cohort: 3 of the evaluated high-risk students show a finance drag through modifier pressure, overdue amount, or unresolved payment status.\n- So finance is not the whole story institution-wide, but it is clearly amplifying risk for a meaningful subset of already vulnerable students.\n- The grounded operational meaning is that finance support should be treated as a risk-reduction lever, not only as an administrative side issue.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "how finance is affecting risk",
+              "normalized_message": "how finance is affecting risk",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how finance is affecting risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_cross_feature_query_04",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "which factor impacts performance most",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded view of the strongest institution-level factor affecting student performance right now.\n\nWhat I found:\n- The most common dominant driver inside the current high-risk cohort is academic decline.\n- ERP-side academic-performance pressure is visible in 3 of the evaluated high-risk cases, which is why coursework quality and submission consistency are still the main institutional weakness.\n- Finance pressure is contributing in 3 cases, while LMS pressure is visible in 0 cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which factor impacts performance most",
+              "normalized_message": "which factor impacts performance most",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which factor impacts performance most",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_cross_feature_query_05",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "hidden risk across departments",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded hidden-risk explanation across the currently visible institution scope.\n\nWhat I found:\n- There are 3 currently high-risk students whose latest semester attendance posture still looks SAFE, so this is not only an attendance problem.\n- That is the hidden-risk pattern: students can look stable on visible attendance while ERP, LMS, or finance signals still keep prediction risk elevated.\n- The most visible branch carrying that pattern right now is CSE.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "hidden risk across departments",
+              "normalized_message": "hidden risk across departments",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "hidden risk across departments",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

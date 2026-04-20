@@ -1,0 +1,793 @@
+{
+  "role_filter": "student",
+  "generated_at": "2026-04-18T08:35:35.920325+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 1,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "student",
+      "label": "student_assignments_followup_chain",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "what is my assignment rate",
+          "response_type": "data",
+          "last_topic": "coursework",
+          "last_intent": "student_self_attendance",
+          "answer": "Here is your current assignment and submission position.\n\nWhat I found:\n- Your current assignment submission rate is 0.85.\n- Current weighted assessment score is 0.0.\n- Late submissions currently recorded: 0.\n- Completed assessments currently visible: 1.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can next explain whether this coursework pattern is helping or hurting your current risk.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "coursework_risk_explanation",
+              "last_intent": "student_self_attendance",
+              "response_type": "data",
+              "last_topic": "coursework"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what is my assignment rate",
+              "normalized_message": "what is my assignment submission rate right now",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.84,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what is my assignment rate",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "ok",
+          "response_type": "explanation",
+          "last_topic": "risk",
+          "last_intent": "student_self_risk",
+          "answer": "Here is how your current coursework pattern is affecting your risk.\n\nWhat I found:\n- Final risk probability: 0.5976\n- Prediction timestamp available in score history for student_id 880001\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- LMS snapshot: 164 clicks in 7 days, 13 unique resources, engagement change +3.56.\n- ERP snapshot: submission rate 0.85, weighted score 0.0, late submissions 0.\n\nIf you want, I can next turn this into a practical action list based on that coursework pattern.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_risk",
+              "pending_student_follow_up": "coursework_quality_evaluation",
+              "last_intent": "student_self_risk",
+              "response_type": "explanation",
+              "last_topic": "risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "ok",
+              "normalized_message": "how is my current coursework pattern affecting my risk",
+              "primary_intent": "student_self_risk",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "CB19 semantic planner rewrite: Continued the student coursework-to-risk follow-up thread using local conversation memory."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "ok",
+              "rewritten_message": "how is my current coursework pattern affecting my risk",
+              "rationale": "Continued the student coursework-to-risk follow-up thread using local conversation memory.",
+              "confidence": 0.88
+            }
+          }
+        },
+        {
+          "prompt": "is it good or bad",
+          "response_type": "explanation",
+          "last_topic": "coursework",
+          "last_intent": "student_self_attendance",
+          "answer": "Here is your current assignment and submission position.\n\nWhat I found:\n- Your current assignment submission rate is 0.85.\n- Current weighted assessment score is 0.0.\n- Late submissions currently recorded: 0.\n- Completed assessments currently visible: 1.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can next explain whether this coursework pattern is helping or hurting your current risk.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "coursework_risk_explanation",
+              "last_intent": "student_self_attendance",
+              "response_type": "explanation",
+              "last_topic": "coursework"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "is it good or bad",
+              "normalized_message": "is my current assignment submission rate helping or hurting my current risk",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": [
+                "CB19 semantic planner rewrite: Continued the coursework-evaluation thread by converting a vague quality judgement follow-up into a grounded coursework-versus-risk explanation."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "is it good or bad",
+              "rewritten_message": "is my current assignment submission rate helping or hurting my current risk",
+              "rationale": "Continued the coursework-evaluation thread by converting a vague quality judgement follow-up into a grounded coursework-versus-risk explanation.",
+              "confidence": 0.87
+            }
+          }
+        },
+        {
+          "prompt": "why is it low",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is how your current coursework pattern is affecting your risk.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- LMS snapshot: 164 clicks in 7 days, 13 unique resources, engagement change +3.56.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "why is it low",
+              "normalized_message": "what is causing my current risk",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "why is it low",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "how can i improve it",
+          "response_type": "action",
+          "last_topic": "recovery_actions",
+          "last_intent": "student_recovery_focus",
+          "answer": "Here is the grounded path to reduce your current HIGH alert posture.\n\nWhat I found:\n- The HIGH label does not go away manually. It comes down when the grounded signals improve in the next scoring cycle.\n- Your fastest recovery path is to improve the non-attendance drivers that are still pushing risk upward, not only to keep attendance SAFE.\n- Main risk drivers to reduce first: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Academic-performance priority: improve assessed performance from the current weighted score of 0.0 and keep submissions timely.\n- Engagement priority: keep LMS activity consistent beyond the current 164 clicks and 13 resources in 7 days.\n- Finance priority: resolve the current payment pressure (Unpaid, overdue amount 6300.00) because finance is currently increasing your final risk.\n- Attendance should stay protected while you recover: your weakest visible subject is Engineering Chemistry at 80.40%.\n- Because you already have an active warning, treat this as a guided recovery period and clear the highest-impact academic blocker first.\n\nIf you want, I can break this into attendance, coursework, or a day-by-day weekly recovery plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_recovery_focus",
+              "focus": "recovery",
+              "pending_student_follow_up": "day_by_day_plan",
+              "last_intent": "student_recovery_focus",
+              "response_type": "action",
+              "last_topic": "recovery_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "how can i improve it",
+              "normalized_message": "how can i improve it",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.86,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how can i improve it",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "how many assignments should i complete",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "student_recovery_focus",
+          "answer": "Here is the coursework-focused priority plan from your current grounded record.\n\nWhat I found:\n- Your current submission rate is 0.85, so the first coursework priority is to stop any further missed or delayed submissions.\n- Your weighted assessment score is 0.0, so improving assessed coursework quality is one of the fastest ways to improve the model view of your record.\n- Current coursework-related drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.\n- Finish the highest-impact pending academic task first before spreading effort across many smaller tasks.\n\nIf you want, I can turn this into a simple day-by-day plan for the week.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_recovery_focus",
+              "focus": "coursework",
+              "pending_student_follow_up": "day_by_day_plan",
+              "last_intent": "student_recovery_focus",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "how many assignments should i complete",
+              "normalized_message": "coursework priorities",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_coursework_and_prediction_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how many assignments should i complete",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what if i miss next one",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the grounded consequence view if the current risk drivers do not improve.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Additional grounded details were condensed to keep this answer readable (3 more).\n- Missing the next assignment would usually make the coursework picture weaker because submission consistency is already one of the visible pressure areas.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "coursework_consequence_follow_up",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what if i miss next one",
+              "normalized_message": "what happens if i miss my next assignment submission",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": [
+                "CB19 semantic planner rewrite: Continued the coursework-focused action thread with a grounded coursework consequence or prioritization follow-up."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "what if i miss next one",
+              "rewritten_message": "what happens if i miss my next assignment submission",
+              "rationale": "Continued the coursework-focused action thread with a grounded coursework consequence or prioritization follow-up.",
+              "confidence": 0.86
+            }
+          }
+        },
+        {
+          "prompt": "will my risk increase",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Yes, weaker coursework would likely push your current risk upward.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Directionally, yes: missing coursework would push the risk upward because coursework and academic performance are already visible pressure areas in your record.\n- I cannot promise an exact numeric jump from one missed submission alone, but it would move the signal in the wrong direction rather than the right one.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "coursework_consequence_follow_up",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "will my risk increase",
+              "normalized_message": "will my risk increase",
+              "primary_intent": "student_self_risk",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "will my risk increase",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "by how much",
+          "response_type": "explanation",
+          "last_topic": "attendance_territory",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is the grounded consequence view if the current risk drivers do not improve.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- Current eligibility view: Eligible.\n- Latest prediction risk view: HIGH at probability 0.5976.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Additional grounded details were condensed to keep this answer readable (3 more).\n- I cannot promise an exact numeric jump from one missed submission alone, but directionally it would push the risk upward rather than downward.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "coursework_consequence_follow_up",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "attendance_territory"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "by how much",
+              "normalized_message": "how much could missing coursework raise my current risk",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": [
+                "CB19 semantic planner rewrite: Continued the coursework consequence thread by asking for the grounded magnitude of a missed-submission impact."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "by how much",
+              "rewritten_message": "how much could missing coursework raise my current risk",
+              "rationale": "Continued the coursework consequence thread by asking for the grounded magnitude of a missed-submission impact.",
+              "confidence": 0.85
+            }
+          }
+        },
+        {
+          "prompt": "what should i prioritize now",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "student_weekly_focus",
+          "answer": "For this week, your first focus should be: Create a short academic recovery plan.\n\nWhat I found:\n- Academic decline is the main risk source, so the student needs targeted support on marks, submissions, and deadlines.\n- You also have an active warning, so this should be treated as your first priority.\n- After that, the next useful step would be: Refer to remedial or tutoring support.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can also break this into attendance, coursework, or overall recovery priorities.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_weekly_focus",
+              "pending_student_follow_up": "weekly_focus_breakdown",
+              "last_intent": "student_weekly_focus",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what should i prioritize now",
+              "normalized_message": "what should i prioritize now",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.86,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what should i prioritize now",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "give me a step by step plan",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "student_recovery_focus",
+          "answer": "Here is the coursework-focused priority plan from your current grounded record.\n\nWhat I found:\n- Your current submission rate is 0.85, so the first coursework priority is to stop any further missed or delayed submissions.\n- Your weighted assessment score is 0.0, so improving assessed coursework quality is one of the fastest ways to improve the model view of your record.\n- Current coursework-related drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.\n- Finish the highest-impact pending academic task first before spreading effort across many smaller tasks.\n\nIf you want, I can turn this into a simple day-by-day plan for the week.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_recovery_focus",
+              "focus": "coursework",
+              "pending_student_follow_up": "day_by_day_plan",
+              "last_intent": "student_recovery_focus",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "give me a step by step plan",
+              "normalized_message": "show me my coursework priorities",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped coursework and GPA-improvement phrasing to the grounded student coursework-priority action path."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "give me a step by step plan",
+              "rewritten_message": "show me my coursework priorities",
+              "rationale": "Mapped coursework and GPA-improvement phrasing to the grounded student coursework-priority action path.",
+              "confidence": 0.87
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

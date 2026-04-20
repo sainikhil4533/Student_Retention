@@ -1,3 +1,3 @@
 @echo off
 cd /d "%~dp0"
-python run_all.py
+python run_all.py --with-frontend

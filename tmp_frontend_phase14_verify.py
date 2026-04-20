@@ -15,9 +15,9 @@ def main() -> None:
     failures: list[str] = []
     client = TestClient(app)
 
-    student = _login(client, "student_880001", "student_880001")
-    counsellor = _login(client, "counsellor_demo", "counsellor_demo")
-    admin = _login(client, "admin_demo", "admin_demo")
+    student = _login(client, "student.880001", "Student@123")
+    counsellor = _login(client, "counsellor.vignan", "Counsellor@123")
+    admin = _login(client, "admin.retention", "Admin@123")
 
     if student.get("role") != "student":
         failures.append("Student login did not return role `student`.")
@@ -25,6 +25,8 @@ def main() -> None:
         failures.append("Counsellor login did not return role `counsellor`.")
     if admin.get("role") != "admin":
         failures.append("Admin login did not return role `admin`.")
+    if student.get("password_reset_required") is not False:
+        failures.append("Starter student account should not require an immediate password reset.")
 
     student_headers = {"Authorization": f"Bearer {student['access_token']}"}
     counsellor_headers = {"Authorization": f"Bearer {counsellor['access_token']}"}

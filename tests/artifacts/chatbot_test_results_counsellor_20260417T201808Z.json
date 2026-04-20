@@ -1,0 +1,15 @@
+{
+  "role_filter": "counsellor",
+  "label_filter": "counsellor_student_drilldown_chain",
+  "generated_at": "2026-04-17T20:18:08.191694+00:00",
+  "status": "infrastructure_failure",
+  "conversation_count": 0,
+  "passed_conversations": 0,
+  "failed_conversations": 0,
+  "failure_summary": {
+    "infrastructure_failure": 1
+  },
+  "error_type": "SystemExit",
+  "error_message": "1",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\tests\\chatbot_test_runner.py\", line 1053, in main\n    raise SystemExit(1)\nSystemExit: 1\n"
+}

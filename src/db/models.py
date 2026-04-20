@@ -35,6 +35,41 @@ class StudentProfile(Base):
     num_previous_attempts: Mapped[float] = mapped_column(Float)
 
 
+class AuthAccount(Base):
+    __tablename__ = "auth_accounts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    username: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    role: Mapped[str] = mapped_column(String(30), nullable=False, index=True)
+    student_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    display_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    institution_email: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    must_reset_password: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
+
+
 class LMSEvent(Base):
     __tablename__ = "lms_events"
 
@@ -73,6 +108,251 @@ class FinanceEvent(Base):
     payment_status: Mapped[str | None] = mapped_column(String(50), nullable=True)
     modifier_candidate: Mapped[float | None] = mapped_column(Float, nullable=True)
     context_fields: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+
+
+class InstitutionAttendancePolicy(Base):
+    __tablename__ = "institution_attendance_policies"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    institution_name: Mapped[str] = mapped_column(String(255), index=True)
+    policy_year: Mapped[str | None] = mapped_column(String(20), nullable=True, index=True)
+    overall_min_percent: Mapped[float] = mapped_column(Float, nullable=False)
+    subject_min_percent: Mapped[float] = mapped_column(Float, nullable=False)
+    r_grade_below_percent: Mapped[float] = mapped_column(Float, nullable=False)
+    i_grade_min_percent: Mapped[float] = mapped_column(Float, nullable=False)
+    i_grade_max_percent: Mapped[float] = mapped_column(Float, nullable=False)
+    condonation_allowed: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    summer_repeat_for_r: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    repeat_internals_for_r: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    end_sem_allowed_for_i: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    end_sem_allowed_for_r: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+    )
+    policy_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    context_fields: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
+
+
+class SubjectCatalogEntry(Base):
+    __tablename__ = "subject_catalog_entries"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    institution_name: Mapped[str] = mapped_column(String(255), index=True)
+    program_type: Mapped[str | None] = mapped_column(String(50), nullable=True, index=True)
+    branch: Mapped[str] = mapped_column(String(100), index=True)
+    regulation: Mapped[str | None] = mapped_column(String(50), nullable=True, index=True)
+    year: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    semester: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    subject_code: Mapped[str] = mapped_column(String(80), index=True)
+    subject_name: Mapped[str] = mapped_column(String(255))
+    subject_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    credits: Mapped[float | None] = mapped_column(Float, nullable=True)
+    is_elective: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+    )
+    active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    context_fields: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
+
+
+class StudentAcademicProgressRecord(Base):
+    __tablename__ = "student_academic_progress_records"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    student_id: Mapped[int] = mapped_column(Integer, index=True)
+    external_student_ref: Mapped[str | None] = mapped_column(String(80), nullable=True, index=True)
+    institution_name: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
+    program_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    branch: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
+    batch: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    current_year: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    current_semester: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    current_academic_status: Mapped[str | None] = mapped_column(String(80), nullable=True, index=True)
+    semester_mode: Mapped[str | None] = mapped_column(String(50), nullable=True, index=True)
+    expected_graduation_year: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    standing_label: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    total_backlogs: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    context_fields: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
+
+
+class StudentSemesterProgressRecord(Base):
+    __tablename__ = "student_semester_progress_records"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    student_id: Mapped[int] = mapped_column(Integer, index=True)
+    external_student_ref: Mapped[str | None] = mapped_column(String(80), nullable=True, index=True)
+    year: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    semester: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    overall_attendance_percent: Mapped[float | None] = mapped_column(Float, nullable=True)
+    overall_status: Mapped[str | None] = mapped_column(String(40), nullable=True, index=True)
+    subjects_below_75_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    subjects_below_65_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    has_i_grade_risk: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+    )
+    has_r_grade_risk: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+    )
+    current_eligibility: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    semester_mode: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    context_fields: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
+
+
+class StudentSubjectAttendanceRecord(Base):
+    __tablename__ = "student_subject_attendance_records"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    student_id: Mapped[int] = mapped_column(Integer, index=True)
+    external_student_ref: Mapped[str | None] = mapped_column(String(80), nullable=True, index=True)
+    institution_name: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
+    branch: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
+    year: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    semester: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    subject_code: Mapped[str | None] = mapped_column(String(80), nullable=True, index=True)
+    subject_name: Mapped[str] = mapped_column(String(255), index=True)
+    subject_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    overall_attendance_percent: Mapped[float | None] = mapped_column(Float, nullable=True)
+    subject_attendance_percent: Mapped[float | None] = mapped_column(Float, nullable=True)
+    required_percent: Mapped[float | None] = mapped_column(Float, nullable=True)
+    overall_status: Mapped[str | None] = mapped_column(String(40), nullable=True, index=True)
+    subject_status: Mapped[str | None] = mapped_column(String(40), nullable=True, index=True)
+    grade_consequence: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    condonation_required: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+    )
+    summer_repeat_required: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+    )
+    internals_repeat_required: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+    )
+    end_sem_eligible: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default="true",
+    )
+    classes_conducted: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    classes_attended: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    consecutive_absences: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    missed_days: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    trend: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    context_fields: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
+
+
+class StudentAcademicRecord(Base):
+    __tablename__ = "student_academic_records"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    student_id: Mapped[int] = mapped_column(Integer, index=True)
+    external_student_ref: Mapped[str | None] = mapped_column(String(80), nullable=True, index=True)
+    institution_name: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
+    branch: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
+    year: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    semester: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    subject_code: Mapped[str | None] = mapped_column(String(80), nullable=True, index=True)
+    subject_name: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
+    credits: Mapped[float | None] = mapped_column(Float, nullable=True)
+    internal_marks: Mapped[float | None] = mapped_column(Float, nullable=True)
+    external_marks: Mapped[float | None] = mapped_column(Float, nullable=True)
+    total_marks: Mapped[float | None] = mapped_column(Float, nullable=True)
+    marks: Mapped[float | None] = mapped_column(Float, nullable=True)
+    grade: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    result_status: Mapped[str | None] = mapped_column(String(40), nullable=True, index=True)
+    attendance_linked_status: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    cgpa: Mapped[float | None] = mapped_column(Float, nullable=True)
+    backlogs: Mapped[float | None] = mapped_column(Float, nullable=True)
+    context_fields: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
 
 
 class PredictionHistory(Base):

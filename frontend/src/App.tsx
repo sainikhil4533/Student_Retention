@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import { AppShell, PublicLayout } from "./components/layout";
 import { useAuth } from "./lib/auth";
@@ -6,7 +6,7 @@ import { AdminDashboardPage, AdminImportsPage, AdminOperationsPage, AdminReports
 import { RoleChatPage } from "./pages/chat";
 import { CounsellorCasesPage, CounsellorDashboardPage, CounsellorReportsPage } from "./pages/counsellor";
 import { HomePage } from "./pages/home";
-import { RoleLoginPage } from "./pages/login";
+import { ResetPasswordPage, RoleLoginPage } from "./pages/login";
 import { StudentDashboardPage, StudentJourneyPage, StudentReportsPage } from "./pages/student";
 
 export function App() {
@@ -25,6 +25,7 @@ export function App() {
           </ProtectedRoute>
         }
       >
+        <Route path="reset-password" element={<ResetPasswordPage />} />
         <Route path="student/dashboard" element={<RoleGuard allowed={["student"]}><StudentDashboardPage /></RoleGuard>} />
         <Route path="student/chat" element={<RoleGuard allowed={["student"]}><RoleChatPage /></RoleGuard>} />
         <Route path="student/journey" element={<RoleGuard allowed={["student"]}><StudentJourneyPage /></RoleGuard>} />
@@ -47,8 +48,12 @@ export function App() {
 
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { isAuthenticated, auth } = useAuth();
+  const location = useLocation();
   if (!isAuthenticated || !auth) {
     return <Navigate to="/login/student" replace />;
+  }
+  if (auth.passwordResetRequired && location.pathname !== "/app/reset-password") {
+    return <Navigate to="/app/reset-password" replace />;
   }
   return children;
 }
@@ -63,6 +68,9 @@ function RoleGuard({
   const { auth } = useAuth();
   if (!auth) {
     return <Navigate to="/login/student" replace />;
+  }
+  if (auth.passwordResetRequired) {
+    return <Navigate to="/app/reset-password" replace />;
   }
   if (!allowed.includes(auth.role)) {
     return <Navigate to={defaultRoute(auth.role)} replace />;

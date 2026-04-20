@@ -8,6 +8,7 @@ from src.alerts.guardian_alert_service import (
     queue_guardian_escalation_if_eligible,
 )
 from src.api.auth import AuthContext, require_roles
+from src.api.scope import ensure_student_scope_access
 from src.api.schemas import (
     GuardianAlertEventItem,
     GuardianAlertHistoryResponse,
@@ -73,6 +74,7 @@ def get_guardian_escalation_evaluation(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> GuardianEscalationEvaluationResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     return _build_evaluation_response(student_id, repository)
 
 
@@ -83,6 +85,7 @@ def get_guardian_alert_history(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> GuardianAlertHistoryResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     rows = repository.get_guardian_alert_history_for_student(student_id)
     return GuardianAlertHistoryResponse(
         student_id=student_id,
@@ -97,6 +100,7 @@ def queue_guardian_escalation(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> GuardianAlertQueueResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     result = queue_guardian_escalation_if_eligible(
         repository,
         student_id=student_id,

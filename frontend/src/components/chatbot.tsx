@@ -62,7 +62,7 @@ export function ChatbotDock() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 z-40 flex items-center gap-3 rounded-full border border-white/70 bg-slate-950 px-4 py-3 text-white shadow-lift transition hover:-translate-y-1 md:bottom-6 md:right-6"
+        className="fixed bottom-4 right-4 z-40 flex items-center gap-3 rounded-full border border-white/70 bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 px-4 py-3 text-white shadow-lift transition hover:-translate-y-1 md:bottom-6 md:right-6"
       >
         <CampusCopilotMark className="h-11 w-11 rounded-[16px] shadow-none" />
         <div className="hidden text-left sm:block">
@@ -147,6 +147,7 @@ function CopilotWorkspace({
         method: "POST",
         token: auth?.accessToken,
         body: { content },
+        timeoutMs: 30000,
       }),
     onSuccess: () => {
       if (selectedSessionId) {
@@ -177,7 +178,7 @@ function CopilotWorkspace({
     <div className={surfaceClassName}>
       <aside
         className={clsx(
-          "border-slate-200 bg-white/90",
+          "border-slate-200 bg-white/92",
           mode === "dock"
             ? clsx(
                 "absolute inset-y-0 left-0 z-10 w-[86%] max-w-[320px] border-r p-5 shadow-xl transition lg:static lg:flex lg:w-80 lg:translate-x-0 lg:flex-col lg:shadow-none",
@@ -207,9 +208,9 @@ function CopilotWorkspace({
                   setSelectedSessionId(session.id);
                   setMobileHistoryOpen(false);
                 }}
-                className={`w-full rounded-2xl border px-4 py-3 text-left transition ${
+              className={`w-full rounded-2xl border px-4 py-3 text-left transition ${
                   selectedSessionId === session.id
-                    ? "border-indigo-200 bg-indigo-50"
+                    ? "border-indigo-200 bg-gradient-to-r from-indigo-50 to-white shadow-[0_10px_24px_rgba(79,70,229,0.08)]"
                     : "border-slate-200 bg-white hover:border-slate-300"
                 }`}
               >
@@ -243,7 +244,9 @@ function CopilotWorkspace({
       <section
         className={clsx(
           "relative z-20 flex min-w-0 flex-col",
-          mode === "dock" ? "ml-0 flex-1 bg-slate-50 lg:ml-0" : "rounded-[32px] border border-white/70 bg-white/70 shadow-soft",
+          mode === "dock"
+            ? "ml-0 flex-1 bg-[linear-gradient(180deg,rgba(248,250,252,0.94),rgba(241,245,249,0.94))] lg:ml-0"
+            : "rounded-[32px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.8),rgba(248,250,252,0.72))] shadow-soft",
         )}
       >
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white/80 px-4 py-4 sm:px-5">
@@ -277,7 +280,7 @@ function CopilotWorkspace({
             {messages.length ? (
               messages.map((message) => <MessageBubble key={message.id} message={message} />)
             ) : (
-              <Card className="mx-auto max-w-2xl text-center">
+              <Card className="mx-auto max-w-2xl border-white/80 bg-white/92 text-center">
                 <Sparkles className="mx-auto h-9 w-9 text-indigo-600" />
                 <h3 className="mt-4 text-xl font-bold text-slate-950">Start a grounded conversation</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-600">
@@ -292,6 +295,13 @@ function CopilotWorkspace({
                   <span className="inline-flex h-2.5 w-2.5 animate-pulse rounded-full bg-indigo-500" />
                   Copilot is grounding your request...
                 </div>
+              </div>
+            ) : null}
+            {sendMessage.isError ? (
+              <div className="max-w-[92%] rounded-[28px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900 shadow-soft">
+                {sendMessage.error instanceof Error
+                  ? sendMessage.error.message
+                  : "The last Copilot reply did not complete. Please try again."}
               </div>
             ) : null}
           </div>
@@ -354,6 +364,8 @@ function MessageBubble({ message }: { message: CopilotMessage }) {
   const responseMode = message.metadata_json?.response_mode;
   const refusalReason = message.metadata_json?.safety_marker?.refusal_reason;
   const limitations = message.metadata_json?.limitations ?? [];
+  const isSensitiveRefusal = refusalReason === "sensitive_request" || refusalReason === "role_scope_violation";
+  const isUnsupported = refusalReason === "unsupported_request";
   const clarificationNeeded =
     Boolean(message.metadata_json?.query_plan?.clarification_needed) ||
     limitations.some((item) => item.toLowerCase().includes("time-window not specified"));
@@ -362,13 +374,15 @@ function MessageBubble({ message }: { message: CopilotMessage }) {
     <div
       className={`max-w-[92%] rounded-[28px] px-4 py-3 shadow-soft ${
         message.role === "user"
-          ? "ml-auto bg-slate-950 text-white"
-          : refusalReason
+          ? "ml-auto bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 text-white"
+          : isSensitiveRefusal
             ? "border border-rose-200 bg-rose-50 text-rose-900"
+            : isUnsupported
+              ? "border border-slate-200 bg-slate-50 text-slate-900"
             : clarificationNeeded
               ? "border border-amber-200 bg-amber-50 text-slate-900"
               : responseMode === "grounded_tool_answer"
-                ? "bg-white text-slate-900"
+                ? "border border-white/80 bg-white text-slate-900"
                 : "border border-indigo-100 bg-indigo-50/70 text-slate-900"
       }`}
     >
@@ -376,10 +390,13 @@ function MessageBubble({ message }: { message: CopilotMessage }) {
         {message.role === "assistant" && clarificationNeeded ? (
           <StatusPill tone="clarification" label="Clarification needed" />
         ) : null}
-        {message.role === "assistant" && refusalReason ? (
+        {message.role === "assistant" && isSensitiveRefusal ? (
           <StatusPill tone="refusal" label="Safe refusal" />
         ) : null}
-        {message.role === "assistant" && !clarificationNeeded && !refusalReason ? (
+        {message.role === "assistant" && isUnsupported ? (
+          <StatusPill tone="unsupported" label="Not supported yet" />
+        ) : null}
+        {message.role === "assistant" && !clarificationNeeded && !isSensitiveRefusal && !isUnsupported ? (
           <StatusPill tone="grounded" label="Grounded answer" />
         ) : null}
       </div>
@@ -397,7 +414,7 @@ function StatusPill({
   tone,
   label,
 }: {
-  tone: "grounded" | "clarification" | "refusal";
+  tone: "grounded" | "clarification" | "refusal" | "unsupported";
   label: string;
 }) {
   const icon =
@@ -405,6 +422,8 @@ function StatusPill({
       <CheckCircle2 className="h-3.5 w-3.5" />
     ) : tone === "clarification" ? (
       <Sparkles className="h-3.5 w-3.5" />
+    ) : tone === "unsupported" ? (
+      <MessageSquareMore className="h-3.5 w-3.5" />
     ) : (
       <AlertTriangle className="h-3.5 w-3.5" />
     );
@@ -416,6 +435,7 @@ function StatusPill({
         tone === "grounded" && "bg-teal-50 text-teal-700",
         tone === "clarification" && "bg-amber-50 text-amber-700",
         tone === "refusal" && "bg-rose-50 text-rose-700",
+        tone === "unsupported" && "bg-slate-100 text-slate-700",
       )}
     >
       {icon}

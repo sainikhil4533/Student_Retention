@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from src.api.auth import AuthContext, require_roles
+from src.api.scope import ensure_student_scope_access
 from src.api.schemas import AlertEventItem, AlertHistoryResponse
 from src.api.time_utils import to_ist
 from src.db.database import get_db
@@ -18,6 +19,7 @@ def get_student_alert_history(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> AlertHistoryResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     alert_rows = repository.get_alert_history_for_student(student_id)
 
     return AlertHistoryResponse(

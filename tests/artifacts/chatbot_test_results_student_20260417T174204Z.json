@@ -1,0 +1,578 @@
+{
+  "role_filter": "student",
+  "generated_at": "2026-04-17T17:42:04.067920+00:00",
+  "conversation_count": 7,
+  "passed_conversations": 5,
+  "failed_conversations": 2,
+  "failure_summary": {
+    "response_type_failure": 2
+  },
+  "conversations": [
+    {
+      "role": "student",
+      "label": "student_action_query_01",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "what should i do",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "student_weekly_focus",
+          "answer": "For this week, your first focus should be: Create a short academic recovery plan.\n\nWhat I found:\n- Academic decline is the main risk source, so the student needs targeted support on marks, submissions, and deadlines.\n- You also have an active warning, so this should be treated as your first priority.\n- After that, the next useful step would be: Refer to remedial or tutoring support.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can also break this into attendance, coursework, or overall recovery priorities.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_weekly_focus",
+              "pending_student_follow_up": "weekly_focus_breakdown",
+              "last_intent": "student_weekly_focus",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what should i do",
+              "normalized_message": "what should i do",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.86,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what should i do",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_action_query_02",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "how can i improve",
+          "response_type": "action",
+          "last_topic": "recovery_actions",
+          "last_intent": "student_weekly_focus",
+          "answer": "For this week, your first focus should be: Create a short academic recovery plan.\n\nWhat I found:\n- Academic decline is the main risk source, so the student needs targeted support on marks, submissions, and deadlines.\n- You also have an active warning, so this should be treated as your first priority.\n- After that, the next useful step would be: Refer to remedial or tutoring support.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can also break this into attendance, coursework, or overall recovery priorities.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_weekly_focus",
+              "pending_student_follow_up": "weekly_focus_breakdown",
+              "last_intent": "student_weekly_focus",
+              "response_type": "action",
+              "last_topic": "recovery_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "how can i improve",
+              "normalized_message": "how can i improve",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.86,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how can i improve",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_action_query_03",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "how to reduce my risk",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "student_recovery_focus",
+          "answer": "Here is the grounded path to reduce your current HIGH alert posture.\n\nWhat I found:\n- The HIGH label does not go away manually. It comes down when the grounded signals improve in the next scoring cycle.\n- Your fastest recovery path is to improve the non-attendance drivers that are still pushing risk upward, not only to keep attendance SAFE.\n- Main risk drivers to reduce first: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Academic-performance priority: improve assessed performance from the current weighted score of 0.0 and keep submissions timely.\n- Engagement priority: keep LMS activity consistent beyond the current 164 clicks and 13 resources in 7 days.\n- Finance priority: resolve the current payment pressure (Unpaid, overdue amount 6300.00) because finance is currently increasing your final risk.\n- Attendance should stay protected while you recover: your weakest visible subject is Engineering Chemistry at 80.40%.\n- Because you already have an active warning, treat this as a guided recovery period and clear the highest-impact academic blocker first.\n\nIf you want, I can break this into attendance, coursework, or a day-by-day weekly recovery plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_recovery_focus",
+              "focus": "recovery",
+              "pending_student_follow_up": "day_by_day_plan",
+              "last_intent": "student_recovery_focus",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "how to reduce my risk",
+              "normalized_message": "how to reduce my risk",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.86,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how to reduce my risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_action_query_04",
+      "passed": false,
+      "failure_count": 1,
+      "turns": [
+        {
+          "prompt": "how to increase my gpa",
+          "response_type": "data",
+          "last_topic": "coursework",
+          "last_intent": "student_self_attendance",
+          "answer": "I do not have enough GPA/CGPA detail on your record yet.\n\nWhat I found:\n- Current submission rate in ERP is 0.85.\n- Current weighted assessment score is 0.0.\n- The current imported ERP snapshot does not expose a GPA/CGPA value for this student yet.",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `action` but got `data`.",
+              "turn_index": 1,
+              "prompt": "how to increase my gpa"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "coursework_risk_explanation",
+              "last_intent": "student_self_attendance",
+              "response_type": "data",
+              "last_topic": "coursework"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "how to increase my gpa",
+              "normalized_message": "show me my gpa and academic performance right now",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.89,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped GPA wording to the grounded student ERP academic-performance path with GPA context."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "how to increase my gpa",
+              "rewritten_message": "show me my gpa and academic performance right now",
+              "rationale": "Mapped GPA wording to the grounded student ERP academic-performance path with GPA context.",
+              "confidence": 0.89
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_action_query_05",
+      "passed": false,
+      "failure_count": 1,
+      "turns": [
+        {
+          "prompt": "how to improve assignments",
+          "response_type": "data",
+          "last_topic": "coursework",
+          "last_intent": "student_self_attendance",
+          "answer": "Here is your current assignment and submission position.\n\nWhat I found:\n- Your current assignment submission rate is 0.85.\n- Current weighted assessment score is 0.0.\n- Late submissions currently recorded: 0.\n- Completed assessments currently visible: 1.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can next explain whether this coursework pattern is helping or hurting your current risk.",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `action` but got `data`.",
+              "turn_index": 1,
+              "prompt": "how to improve assignments"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "coursework_risk_explanation",
+              "last_intent": "student_self_attendance",
+              "response_type": "data",
+              "last_topic": "coursework"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "how to improve assignments",
+              "normalized_message": "how to improve assignments",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.84,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how to improve assignments",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_action_query_06",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "what is the best way to recover",
+          "response_type": "action",
+          "last_topic": "recovery_actions",
+          "last_intent": "student_weekly_focus",
+          "answer": "For this week, your first focus should be: Create a short academic recovery plan.\n\nWhat I found:\n- Academic decline is the main risk source, so the student needs targeted support on marks, submissions, and deadlines.\n- You also have an active warning, so this should be treated as your first priority.\n- After that, the next useful step would be: Refer to remedial or tutoring support.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can also break this into attendance, coursework, or overall recovery priorities.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_weekly_focus",
+              "pending_student_follow_up": "weekly_focus_breakdown",
+              "last_intent": "student_weekly_focus",
+              "response_type": "action",
+              "last_topic": "recovery_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what is the best way to recover",
+              "normalized_message": "what is the best way to recover",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.86,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what is the best way to recover",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_action_query_07",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "give me steps to improve",
+          "response_type": "action",
+          "last_topic": "recovery_actions",
+          "last_intent": "student_recovery_focus",
+          "answer": "Here is the grounded path to reduce your current HIGH alert posture.\n\nWhat I found:\n- The HIGH label does not go away manually. It comes down when the grounded signals improve in the next scoring cycle.\n- Your fastest recovery path is to improve the non-attendance drivers that are still pushing risk upward, not only to keep attendance SAFE.\n- Main risk drivers to reduce first: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Academic-performance priority: improve assessed performance from the current weighted score of 0.0 and keep submissions timely.\n- Engagement priority: keep LMS activity consistent beyond the current 164 clicks and 13 resources in 7 days.\n- Finance priority: resolve the current payment pressure (Unpaid, overdue amount 6300.00) because finance is currently increasing your final risk.\n- Attendance should stay protected while you recover: your weakest visible subject is Engineering Chemistry at 80.40%.\n- Because you already have an active warning, treat this as a guided recovery period and clear the highest-impact academic blocker first.\n\nIf you want, I can break this into attendance, coursework, or a day-by-day weekly recovery plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_recovery_focus",
+              "focus": "recovery",
+              "pending_student_follow_up": "day_by_day_plan",
+              "last_intent": "student_recovery_focus",
+              "response_type": "action",
+              "last_topic": "recovery_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "give me steps to improve",
+              "normalized_message": "show me my overall recovery priorities",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.86,
+              "notes": [
+                "CB19 semantic planner rewrite: Mapped broad student action phrasing to the grounded student recovery-priority path."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "give me steps to improve",
+              "rewritten_message": "show me my overall recovery priorities",
+              "rationale": "Mapped broad student action phrasing to the grounded student recovery-priority path.",
+              "confidence": 0.85
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

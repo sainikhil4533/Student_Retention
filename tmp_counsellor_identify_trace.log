@@ -1,0 +1,18 @@
+start
+start:1:which students are high risk
+done:1:data:counsellor_high_risk_students
+start:2:ok
+done:2:action:counsellor_subset_action_follow_up
+start:3:show top 3
+done:3:data:counsellor_high_risk_students
+start:4:why are they high risk
+done:4:explanation:counsellor_subset_reasoning_follow_up
+start:5:what is common issue
+done:5:explanation:counsellor_subset_reasoning_follow_up
+start:6:what should I do first
+done:6:action:counsellor_subset_action_follow_up
+start:7:which student is most critical
+done:7:data:counsellor_subset_priority_follow_up
+start:8:what happens if I delay
+done:8:explanation:counsellor_subset_reasoning_follow_up
+start:9:how fast should I act

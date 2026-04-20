@@ -1,0 +1,456 @@
+{
+  "role_filter": "counsellor",
+  "generated_at": "2026-04-18T10:38:54.299580+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 1,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "counsellor",
+      "label": "counsellor_grouped_followup_chain",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "show my students high risk branch wise",
+          "response_type": "explanation",
+          "last_topic": "grouped_risk",
+          "last_intent": "grouped_risk_breakdown",
+          "answer": "I am separating two different layers for your current counsellor scope. Prediction high risk is currently 3 students from the risk model, while the attendance-policy layer shows 9 overall-shortage students, 21 with I-grade risk, and 1 with R-grade risk.\n\nWhat I found:\n- Generic 'high risk' can mean either the prediction model or the attendance-policy risk layer, so I am showing both separately.\n- Branch-wise breakdown:\n- CSE: prediction high risk 3, overall shortage 9, I-grade 21, R-grade 1.\n\nIf you want, I can next list the exact students inside any one grouped bucket or turn this into an operational action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "grouped_risk_breakdown",
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "grouped_risk_breakdown",
+              "response_type": "explanation",
+              "last_topic": "grouped_risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "show my students high risk branch wise",
+              "normalized_message": "show grouped counsellor risk breakdown",
+              "primary_intent": "cohort_summary",
+              "user_goal": "grouped_risk_breakdown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [
+                "branch"
+              ],
+              "metrics": [
+                "prediction_high_risk",
+                "overall_shortage",
+                "i_grade_risk",
+                "r_grade_risk"
+              ],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grouped_breakdown",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "group_scoped_students_by_requested_academic_dimensions",
+                "compute_prediction_and_attendance_risk_layers",
+                "compose_grounded_grouped_breakdown"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.93,
+              "notes": [
+                "Planner recognized that generic high-risk phrasing should separate prediction risk from attendance-policy risk inside counsellor scope."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "show my students high risk branch wise",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "show only CSE",
+          "response_type": "data",
+          "last_topic": "grouped_bucket_focus_follow_up",
+          "last_intent": "grouped_bucket_focus_follow_up",
+          "answer": "Kept only the `CSE` bucket from the previous grouped result.\n\nWhat I found:\n- focused the previous grouped result on the `CSE` bucket\n- Matching students: 34\n- 880001 (STU001)\n- 880004 (STU004)\n- 880007 (STU007)\n- 880010 (STU010)\n- Additional grounded details were condensed to keep this answer readable (5 more).\n- 880028 (STU028)",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "grouped_bucket_focus_follow_up",
+              "student_ids": [
+                880001,
+                880004,
+                880007,
+                880010,
+                880013,
+                880016,
+                880019,
+                880022,
+                880025,
+                880028,
+                880031,
+                880034,
+                880037,
+                880040,
+                880043,
+                880046,
+                880049,
+                880052,
+                880055,
+                880058,
+                880061,
+                880064,
+                880067,
+                880070,
+                880073,
+                880076,
+                880079,
+                880082,
+                880085,
+                880088,
+                880091,
+                880094,
+                880097,
+                880100
+              ],
+              "outcome_status": null,
+              "branch": null,
+              "category": null,
+              "region": null,
+              "income": null,
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "grouped_bucket_focus_follow_up",
+              "response_type": "data",
+              "last_topic": "grouped_bucket_focus_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "show only CSE",
+              "normalized_message": "only CSE",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [
+                  "CSE"
+                ],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.83,
+              "notes": [
+                "CB19 semantic planner rewrite: Normalized a bucket-specific grouped follow-up using local conversation memory."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "show only CSE",
+              "rewritten_message": "only CSE",
+              "rationale": "Normalized a bucket-specific grouped follow-up using local conversation memory.",
+              "confidence": 0.83
+            }
+          }
+        },
+        {
+          "prompt": "what about top 5",
+          "response_type": "data",
+          "last_topic": "imported_subset_top_n_follow_up",
+          "last_intent": "imported_subset_top_n_follow_up",
+          "answer": "I kept the same subset and reduced it to the top 5 students by current visible prediction risk.\n\nWhat I found:\n- Matching students after the top-5 cut: 5\n- student_id 880001 (STU001): prediction probability 0.5976\n- student_id 880073 (STU073): prediction probability 0.5976\n- student_id 880082 (STU082): prediction probability 0.5976\n- student_id 880091 (STU091): prediction probability 0.5168\n- student_id 880007 (STU007): prediction probability 0.4983",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "imported_subset_top_n_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082,
+                880091,
+                880007
+              ],
+              "outcome_status": null,
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "imported_subset_top_n_follow_up",
+              "response_type": "data",
+              "last_topic": "imported_subset_top_n_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "what about top 5",
+              "normalized_message": "show my assigned students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.85,
+              "notes": [
+                "CB19 semantic planner rewrite: Preserved a top-N subset follow-up so the grounded memory-follow-up layer can answer it locally instead of reopening clarification."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "what about top 5",
+              "rewritten_message": "show my assigned students",
+              "rationale": "Preserved a top-N subset follow-up so the grounded memory-follow-up layer can answer it locally instead of reopening clarification.",
+              "confidence": 0.85
+            }
+          }
+        },
+        {
+          "prompt": "continue",
+          "response_type": "action",
+          "last_topic": "cohort_actions",
+          "last_intent": "counsellor_operational_actions",
+          "answer": "Here is the grounded operational action list for your current counsellor scope.\n\nWhat I found:\n- Start with the most pressured `branch` bucket in your current view: `CSE`. It currently shows prediction high risk 3, overall shortage 9, I-grade risk 21, and R-grade risk 1.\n- This week, review the top queue students first: student_id 880082 (high priority, within_monitoring SLA); student_id 880073 (high priority, within_monitoring SLA); student_id 880001 (high priority, within_monitoring SLA)\n- Keep unresolved R-grade cases on weekly monitoring. Right now that affects 5 students in your scope.\n- Keep unresolved I-grade cases on at least monthly review. Right now that affects 26 students in your scope.\n- Coordinate attendance recovery around `Big Data Analytics` first, because it is currently pulling 3 students below threshold.\n- Turn each contacted student into one concrete next action: attendance recovery, coursework completion, or burden-clearance follow-up. Avoid generic check-ins without a named blocker.\n\nIf you want, I can narrow this into a bucket-specific counsellor action list or list the exact students to contact first.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_operational_actions",
+              "role_scope": "counsellor",
+              "student_ids": [
+                880001,
+                880073,
+                880082,
+                880091,
+                880007
+              ],
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "focus_bucket": "CSE",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "counsellor_operational_actions",
+              "response_type": "action",
+              "last_topic": "cohort_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "continue",
+              "normalized_message": "what should i do first for my students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_priority_queue",
+                "load_scoped_attendance_pressure_and_subject_hotspots",
+                "load_scoped_carry_forward_burden_counts",
+                "compose_grounded_counsellor_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": [
+                "Planner mapped a counsellor action-style question to a grounded scoped operational advisory response.",
+                "CB19 semantic planner rewrite: Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "continue",
+              "rewritten_message": "what should i do first for my students",
+              "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+              "confidence": 0.87
+            }
+          }
+        },
+        {
+          "prompt": "risk",
+          "response_type": "data",
+          "last_topic": "high_risk_students",
+          "last_intent": "counsellor_high_risk_students",
+          "answer": "There are currently 3 students in the latest prediction high-risk cohort inside your counsellor scope.\n\nWhat I found:\n- student_id 880001 (STU001): CSE, current prediction HIGH at 0.5976\n- student_id 880073 (STU073): CSE, current prediction HIGH at 0.5976\n- student_id 880082 (STU082): CSE, current prediction HIGH at 0.5976\n- I-grade risk in the same scope: 21.\n- R-grade risk in the same scope: 1.\n\nIf you want, I can next explain one student, show only one bucket like CSE, or turn this into a counsellor action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "counsellor_high_risk_students",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "counsellor_high_risk_students",
+              "response_type": "data",
+              "last_topic": "high_risk_students"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "risk",
+              "normalized_message": "which students are high risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

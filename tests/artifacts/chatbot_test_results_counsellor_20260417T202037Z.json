@@ -1,0 +1,362 @@
+{
+  "role_filter": "counsellor",
+  "generated_at": "2026-04-17T20:20:37.017020+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 0,
+  "failed_conversations": 1,
+  "failure_summary": {
+    "intent_failure": 1
+  },
+  "conversations": [
+    {
+      "role": "counsellor",
+      "label": "counsellor_student_drilldown_chain",
+      "passed": false,
+      "failure_count": 1,
+      "turns": [
+        {
+          "prompt": "why is student 880001 high risk",
+          "response_type": "explanation",
+          "last_topic": "student_reasoning",
+          "last_intent": "counsellor_student_reasoning",
+          "answer": "Here is the grounded risk explanation for student_id 880001 inside your counsellor scope.\n\nWhat I found:\n- Latest prediction view: HIGH at probability 0.5976.\n- Attendance view: overall semester status is SAFE at 85.40%.\n- Weakest visible subject: Engineering Chemistry at 80.40%.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Additional grounded details were condensed to keep this answer readable (2 more).\n- Academic position: year 1, semester 1, branch CSE.\n\nIf you want, I can next turn this into a specific action plan for this same student.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_drilldown",
+              "student_id": 880001,
+              "intent": "counsellor_student_reasoning",
+              "pending_role_follow_up": "student_specific_action",
+              "default_follow_up_rewrite": "what action should i take for student 880001",
+              "last_intent": "counsellor_student_reasoning",
+              "response_type": "explanation",
+              "last_topic": "student_reasoning"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "why is student 880001 high risk",
+              "normalized_message": "why is student 880001 high risk",
+              "primary_intent": "student_drilldown",
+              "user_goal": "student_drilldown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "individual_reasoning",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.94,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "why is student 880001 high risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "ok",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "counsellor_student_action_plan",
+          "answer": "Here is the next grounded follow-up plan for student_id 880001 inside your counsellor scope.\n\nWhat I found:\n- Next monitoring focus: keep checking Engineering Chemistry because it remains the weakest visible subject at 80.40%.\n- Escalation follow-up: coordinate support around the current payment pressure (Unpaid) so finance does not keep pulling the student backward.\n- Academic checkpoint: review whether assessed work has improved from the current weighted score of 0.0 and whether submission consistency is holding.\n- Close the loop on the active warning with one named checkpoint rather than an open-ended reminder.\n- Attendance posture to keep protected during follow-up: SAFE.",
+          "failures": [
+            {
+              "type": "intent_failure",
+              "message": "Expected grounded fragment `first grounded action plan` was not present in the answer.",
+              "turn_index": 2,
+              "prompt": "ok"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_drilldown",
+              "student_id": 880001,
+              "intent": "counsellor_student_action_plan",
+              "pending_role_follow_up": "student_specific_action",
+              "default_follow_up_rewrite": "what action should i take for student 880001",
+              "last_intent": "counsellor_student_action_plan",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "ok",
+              "normalized_message": "ok",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "ok",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "attendance is good but why is student 880001 risky",
+          "response_type": "explanation",
+          "last_topic": "student_reasoning",
+          "last_intent": "counsellor_student_reasoning",
+          "answer": "Here is the grounded risk explanation for student_id 880001 inside your counsellor scope.\n\nWhat I found:\n- Latest prediction view: HIGH at probability 0.5976.\n- Attendance view: overall semester status is SAFE at 85.40%.\n- Weakest visible subject: Engineering Chemistry at 80.40%.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Additional grounded details were condensed to keep this answer readable (2 more).\n- Academic position: year 1, semester 1, branch CSE.\n\nIf you want, I can next turn this into a specific action plan for this same student.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_drilldown",
+              "student_id": 880001,
+              "intent": "counsellor_student_reasoning",
+              "pending_role_follow_up": "student_specific_action",
+              "default_follow_up_rewrite": "what action should i take for student 880001",
+              "last_intent": "counsellor_student_reasoning",
+              "response_type": "explanation",
+              "last_topic": "student_reasoning"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "attendance is good but why is student 880001 risky",
+              "normalized_message": "attendance is good but why is student 880001 risky",
+              "primary_intent": "student_drilldown",
+              "user_goal": "student_drilldown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "individual_reasoning",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.94,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "attendance is good but why is student 880001 risky",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what action should i take for student 880001",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "counsellor_student_action_plan",
+          "answer": "Here is the first grounded action plan for student_id 880001 inside your counsellor scope.\n\nWhat I found:\n- Start with the active warning first so the student does not drift further while you intervene.\n- First action: Create a short academic recovery plan.\n- Next action: Refer to remedial or tutoring support.\n- Subject focus: stabilize Engineering Chemistry first because it is the weakest visible subject at 80.40%.\n- Finance follow-up: coordinate support around the current payment pressure (Unpaid).\n- Coursework focus: improve assessed work from the current weighted score of 0.0 and prevent further missed submissions.\n- Attendance posture to protect while intervening: SAFE.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_drilldown",
+              "student_id": 880001,
+              "intent": "counsellor_student_action_plan",
+              "pending_role_follow_up": "student_specific_action",
+              "default_follow_up_rewrite": "what action should i take for student 880001",
+              "last_intent": "counsellor_student_action_plan",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "what action should i take for student 880001",
+              "normalized_message": "what action should i take for student 880001",
+              "primary_intent": "student_drilldown",
+              "user_goal": "student_drilldown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "individual_reasoning",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.94,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what action should i take for student 880001",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "continue",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "counsellor_student_action_plan",
+          "answer": "Here is the next grounded follow-up plan for student_id 880001 inside your counsellor scope.\n\nWhat I found:\n- Next monitoring focus: keep checking Engineering Chemistry because it remains the weakest visible subject at 80.40%.\n- Escalation follow-up: coordinate support around the current payment pressure (Unpaid) so finance does not keep pulling the student backward.\n- Academic checkpoint: review whether assessed work has improved from the current weighted score of 0.0 and whether submission consistency is holding.\n- Close the loop on the active warning with one named checkpoint rather than an open-ended reminder.\n- Attendance posture to keep protected during follow-up: SAFE.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_drilldown",
+              "student_id": 880001,
+              "intent": "counsellor_student_action_plan",
+              "pending_role_follow_up": "student_specific_action",
+              "default_follow_up_rewrite": "what action should i take for student 880001",
+              "last_intent": "counsellor_student_action_plan",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "continue",
+              "normalized_message": "continue",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "continue",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

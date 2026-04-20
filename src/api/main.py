@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 import sys
 
 from fastapi import FastAPI
@@ -34,6 +35,7 @@ from src.api.routes.score import router as score_router
 from src.api.routes.student import router as student_router
 from src.api.routes.timeline import router as timeline_router
 from src.api.routes.warnings import router as warnings_router
+from src.db.database import Base, engine
 app = FastAPI(title="Student Retention Prediction API")
 
 app.add_middleware(
@@ -55,6 +57,13 @@ app.add_middleware(
 @app.get("/")
 def root() -> dict[str, str]:
     return {"message": "Student Retention API is running"}
+
+
+@app.on_event("startup")
+def ensure_runtime_tables() -> None:
+    auto_create_tables = str(os.getenv("RETENTIONOS_AUTO_CREATE_TABLES", "false")).strip().lower()
+    if auto_create_tables in {"1", "true", "yes", "on"}:
+        Base.metadata.create_all(bind=engine)
 
 
 @app.get("/favicon.ico", include_in_schema=False)

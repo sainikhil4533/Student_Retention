@@ -1,0 +1,15 @@
+{
+  "role_filter": "counsellor",
+  "label_filter": "counsellor_scope_defaults_chain",
+  "generated_at": "2026-04-18T08:46:42.150376+00:00",
+  "status": "infrastructure_failure",
+  "conversation_count": 0,
+  "passed_conversations": 0,
+  "failed_conversations": 0,
+  "failure_summary": {
+    "infrastructure_failure": 1
+  },
+  "error_type": "OSError",
+  "error_message": "[Errno 22] Invalid argument",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\Sai Nikhil\\Desktop\\Student_Retention\\tests\\chatbot_test_runner.py\", line 1541, in main\n    print(json.dumps(\n    ~~~~~^^^^^^^^^^^^\n        {\n        ^\n    ...<7 lines>...\n        indent=2,\n        ^^^^^^^^^\n    ))\n    ^^\nOSError: [Errno 22] Invalid argument\n"
+}

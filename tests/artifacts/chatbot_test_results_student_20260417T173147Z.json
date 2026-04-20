@@ -1,0 +1,536 @@
+{
+  "role_filter": "student",
+  "generated_at": "2026-04-17T17:31:47.359101+00:00",
+  "conversation_count": 7,
+  "passed_conversations": 7,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "student",
+      "label": "student_ambiguous_default_01",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "attendance",
+          "response_type": "data",
+          "last_topic": "attendance",
+          "last_intent": "student_self_attendance",
+          "answer": "Here is the attendance data I currently have for you.\n\nWhat I found:\n- Overall attendance for your current visible semester is 85.40%.\n- Current academic position: year 1, semester 1, mode regular_coursework.\n- Weakest visible subject right now: Engineering Chemistry at 80.40% with status SAFE.\n- Visible subject snapshot: Engineering Chemistry 80.40% (SAFE); Physical Fitness Sports and Games - I 81.40% (SAFE); Linear Algebra and Ordinary Differential Equations 82.40% (SAFE); Problem Solving through Programming - I 83.40% (SAFE)\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n\nIf you want, I can next tell you whether this puts you in safe, I-grade, or R-grade territory.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "attendance_territory",
+              "last_intent": "student_self_attendance",
+              "response_type": "data",
+              "last_topic": "attendance"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "attendance",
+              "normalized_message": "what is my overall attendance right now",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.84,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "attendance",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_ambiguous_default_02",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "assignments",
+          "response_type": "data",
+          "last_topic": "coursework",
+          "last_intent": "student_self_attendance",
+          "answer": "Here is your current assignment and submission position.\n\nWhat I found:\n- Your current assignment submission rate is 0.85.\n- Current weighted assessment score is 0.0.\n- Late submissions currently recorded: 0.\n- Completed assessments currently visible: 1.\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n\nIf you want, I can next explain whether this coursework pattern is helping or hurting your current risk.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_attendance",
+              "pending_student_follow_up": "coursework_risk_explanation",
+              "last_intent": "student_self_attendance",
+              "response_type": "data",
+              "last_topic": "coursework"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "assignments",
+              "normalized_message": "assignments",
+              "primary_intent": "student_self_attendance",
+              "user_goal": "student_data_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grounded_summary",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_current_attendance_foundation",
+                "compose_grounded_attendance_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.84,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "assignments",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_ambiguous_default_03",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "risk",
+          "response_type": "data",
+          "last_topic": "risk",
+          "last_intent": "student_self_risk",
+          "answer": "Your latest risk level is HIGH.\n\nWhat I found:\n- Final risk probability: 0.5976\n- Prediction timestamp available in score history for student_id 880001\n- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.\n- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.\n- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- LMS snapshot: 164 clicks in 7 days, 13 unique resources, engagement change +3.56.\n- ERP snapshot: submission rate 0.85, weighted score 0.0, late submissions 0.\n\nIf you want, I can next turn this into a practical action list to help reduce that risk.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_risk",
+              "response_type": "data",
+              "last_topic": "risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "risk",
+              "normalized_message": "what is my current risk level",
+              "primary_intent": "student_self_risk",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_ambiguous_default_04",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "status",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to a student intent yet.\n\nWhat I found:\n- latest risk or warning status\n- current attendance and subject-wise status\n- profile and assigned support contacts\n- Did you mean: your warning status, your attendance and subject-wise attendance, your profile contact details?",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "unsupported",
+              "last_follow_up": false,
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "status",
+              "normalized_message": "status",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "status",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_ambiguous_default_05",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "performance",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to a student intent yet.\n\nWhat I found:\n- latest risk or warning status\n- current attendance and subject-wise status\n- profile and assigned support contacts\n- Did you mean: your warning status, your attendance and subject-wise attendance, your latest risk?",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "unsupported",
+              "last_follow_up": false,
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "performance",
+              "normalized_message": "performance",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "performance",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_ambiguous_default_06",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "marks",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to a student intent yet.\n\nWhat I found:\n- latest risk or warning status\n- current attendance and subject-wise status\n- profile and assigned support contacts\n- Did you mean: your latest risk, your warning status, your I-grade, R-grade, or end-sem eligibility status?",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "unsupported",
+              "last_follow_up": false,
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "marks",
+              "normalized_message": "marks",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "marks",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "student",
+      "label": "student_ambiguous_default_07",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "progress",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to a student intent yet.\n\nWhat I found:\n- latest risk or warning status\n- current attendance and subject-wise status\n- profile and assigned support contacts\n- Did you mean: your profile contact details, your latest risk, your warning status?",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "unsupported",
+              "last_follow_up": false,
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "progress",
+              "normalized_message": "progress",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "progress",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

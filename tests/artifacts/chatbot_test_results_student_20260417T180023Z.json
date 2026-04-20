@@ -1,0 +1,369 @@
+{
+  "role_filter": "student",
+  "generated_at": "2026-04-17T18:00:22.984749+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 1,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "student",
+      "label": "student_burden_and_eligibility_chain",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "do i still have any uncleared grade issue from older sems",
+          "response_type": "explanation",
+          "last_topic": "academic_burden",
+          "last_intent": "student_self_subject_risk",
+          "answer": "I do not currently see any uncleared I-grade or R-grade subjects on your visible record.\n\nWhat I found:\n- That means your currently visible academic record does not show any pending I-grade or pending R-grade clearance items.\n- Current semester posture is SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "academic_burden"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "do i still have any uncleared grade issue from older sems",
+              "normalized_message": "do i still have any uncleared grade issue from older sems",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.84,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "do i still have any uncleared grade issue from older sems",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "ok",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "student_recovery_focus",
+          "answer": "Here is the grounded path to reduce your current HIGH alert posture.\n\nWhat I found:\n- The HIGH label does not go away manually. It comes down when the grounded signals improve in the next scoring cycle.\n- Your fastest recovery path is to improve the non-attendance drivers that are still pushing risk upward, not only to keep attendance SAFE.\n- Main risk drivers to reduce first: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Academic-performance priority: improve assessed performance from the current weighted score of 0.0 and keep submissions timely.\n- Engagement priority: keep LMS activity consistent beyond the current 164 clicks and 13 resources in 7 days.\n- Finance priority: resolve the current payment pressure (Unpaid, overdue amount 6300.00) because finance is currently increasing your final risk.\n- Attendance should stay protected while you recover: your weakest visible subject is Engineering Chemistry at 80.40%.\n- Because you already have an active warning, treat this as a guided recovery period and clear the highest-impact academic blocker first.\n\nIf you want, I can break this into attendance, coursework, or a day-by-day weekly recovery plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_recovery_focus",
+              "focus": "recovery",
+              "pending_student_follow_up": "day_by_day_plan",
+              "last_intent": "student_recovery_focus",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "ok",
+              "normalized_message": "what should i do first",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": [
+                "CB19 semantic planner rewrite: Continued the student action-list follow-up thread using local conversation memory."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "ok",
+              "rewritten_message": "what should i do first",
+              "rationale": "Continued the student action-list follow-up thread using local conversation memory.",
+              "confidence": 0.87
+            }
+          }
+        },
+        {
+          "prompt": "am i eligible for end sem",
+          "response_type": "explanation",
+          "last_topic": "eligibility",
+          "last_intent": "student_self_subject_risk",
+          "answer": "Here is your current end-sem eligibility position.\n\nWhat I found:\n- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.\n- End-sem eligibility: Eligible.\n\nIf you want, I can turn this into a simple 'what to do first' action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_self_subject_risk",
+              "pending_student_follow_up": "student_action_list",
+              "last_intent": "student_self_subject_risk",
+              "response_type": "explanation",
+              "last_topic": "eligibility"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "am i eligible for end sem",
+              "normalized_message": "am i eligible for end sem",
+              "primary_intent": "student_self_subject_risk",
+              "user_goal": "student_explanation_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "diagnostic_explanation",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_attendance_and_academic_burden_context",
+                "build_grounded_student_subject_risk_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.84,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "am i eligible for end sem",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "continue",
+          "response_type": "action",
+          "last_topic": "student_actions",
+          "last_intent": "student_recovery_focus",
+          "answer": "Here is the grounded path to reduce your current HIGH alert posture.\n\nWhat I found:\n- The HIGH label does not go away manually. It comes down when the grounded signals improve in the next scoring cycle.\n- Your fastest recovery path is to improve the non-attendance drivers that are still pushing risk upward, not only to keep attendance SAFE.\n- Main risk drivers to reduce first: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.\n- Academic-performance priority: improve assessed performance from the current weighted score of 0.0 and keep submissions timely.\n- Engagement priority: keep LMS activity consistent beyond the current 164 clicks and 13 resources in 7 days.\n- Finance priority: resolve the current payment pressure (Unpaid, overdue amount 6300.00) because finance is currently increasing your final risk.\n- Attendance should stay protected while you recover: your weakest visible subject is Engineering Chemistry at 80.40%.\n- Because you already have an active warning, treat this as a guided recovery period and clear the highest-impact academic blocker first.\n\nIf you want, I can break this into attendance, coursework, or a day-by-day weekly recovery plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "student_recovery_focus",
+              "focus": "recovery",
+              "pending_student_follow_up": "day_by_day_plan",
+              "last_intent": "student_recovery_focus",
+              "response_type": "action",
+              "last_topic": "student_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "continue",
+              "normalized_message": "what should i do first",
+              "primary_intent": "student_self_plan",
+              "user_goal": "student_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "advisory",
+              "orchestration_steps": [
+                "resolve_authenticated_student_scope",
+                "load_prediction_attendance_lms_erp_finance_context",
+                "build_grounded_student_action_advice"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": [
+                "CB19 semantic planner rewrite: Continued the student action-list follow-up thread using local conversation memory."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "continue",
+              "rewritten_message": "what should i do first",
+              "rationale": "Continued the student action-list follow-up thread using local conversation memory.",
+              "confidence": 0.87
+            }
+          }
+        },
+        {
+          "prompt": "what data do you have about me",
+          "response_type": "data",
+          "last_topic": "help",
+          "last_intent": "help",
+          "answer": "I can now see a grounded mix of student signals for your account, not just one narrow data slice.\n\nWhat I found:\n- Prediction data is available: latest risk probability 0.5976 with class HIGH.\n- Attendance foundation data is available, including overall semester and subject-wise attendance.\n- LMS engagement data is available: 164 clicks in the last 7 days and 13 unique resources touched.\n- ERP academic-performance data is available: submission rate 0.85, weighted score 0.0.\n- Finance context is available: payment status Unpaid, delay 1 day(s), overdue amount 6300.00.\n- Warning and support-workflow history is available for your record.\n\nTry asking: 'what is my attendance right now?', 'which subject is weakest?', or 'what should I focus on first this week?'",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "student_self",
+              "student_id": 880001,
+              "intent": "help",
+              "last_intent": "help",
+              "response_type": "data",
+              "last_topic": "help"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "student",
+              "original_message": "what data do you have about me",
+              "normalized_message": "what data do you have about me",
+              "primary_intent": "help",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what data do you have about me",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

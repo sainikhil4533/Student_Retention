@@ -22,6 +22,31 @@ Recommended supporting frontend docs:
 - [FRONTEND_DESIGN_SYSTEM.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_DESIGN_SYSTEM.md)
 - [FRONTEND_ROLE_FLOWS.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_ROLE_FLOWS.md)
 
+## 0A. Auth Contract Before Chat Even Starts
+
+The chatbot frontend sits inside the authenticated product, so the frontend cannot treat login as a separate unrelated feature.
+
+Before a user can reach any `/copilot` route from the UI, the frontend must first complete the institution-login contract.
+
+That contract is now:
+
+- no public signup
+- database-backed institution account
+- username/password login
+- optional forced password reset before entering the main app
+
+### Important beginner point
+
+If this auth layer is misunderstood, the chatbot UI will also be misunderstood.
+
+Why:
+
+- chat sessions are user-owned
+- role scope comes from the authenticated token
+- student/counsellor/admin chat behavior depends on that role
+
+So the frontend must treat authentication as the first chatbot dependency.
+
 ## 0. How To Use This Guide
 
 This guide is not only a list of endpoints.
@@ -93,6 +118,185 @@ Important rule for frontend:
 - treat `CB19` as an enhancement that may or may not be active at runtime
 
 The frontend should never depend on Gemini being available.
+
+## 2A. Important Role-Tone Rule For Student Chat
+
+This is a small but very important product rule:
+
+- a technically valid planner response is not always a good student response
+
+What this means in practice:
+
+- a student asking `What should I focus on first this week?` is usually asking for guided prioritization
+- the system should try to answer in a calm, helpful, student-safe way
+- the system should avoid exposing backend language such as:
+  - `run the backend query`
+  - `structured a CB22 plan`
+  - `current limits`
+
+Why this rule exists:
+
+- students should experience the copilot as guidance, not as an engineering console
+- planner/debug wording can make the system feel cold, confusing, or unfinished
+- role tone matters just as much as factual grounding
+
+### What went wrong before this fix
+
+During UAT, a student asked:
+
+- `What should I focus on first this week?`
+
+The optional semantic layer rewrote that question into a broader cohort-style wording closer to:
+
+- `Which students need attention first this week?`
+
+That rewrite made the request drift away from the student's personal guidance context.
+Once that happened, the backend was more likely to fall into a generic clarification or unsupported-intent path.
+
+So the bug was not only "bad wording."
+The deeper issue was:
+
+- student intent was being treated too much like admin/counsellor analytical intent
+
+### How the backend handles this now
+
+The current fix adds a student-specific weekly-focus shortcut before the generic clarification path.
+
+In simple terms:
+
+1. if the signed-in user is a student
+2. and the wording looks like a personal weekly-priority question
+3. the backend answers from that student's own latest prediction/warning context
+4. instead of surfacing planner-style clarification text
+
+This keeps the experience:
+
+- grounded
+- role-safe
+- supportive
+- professional
+
+### What frontend should assume here
+
+Frontend should still render `assistant_message.content` as usual.
+The important lesson is not a new rendering rule.
+The important lesson is:
+
+- student-facing clarification and guidance must be judged by tone, not only by technical correctness
+
+So during future UAT, if a student answer sounds like backend diagnostics instead of student support, treat that as a real product bug.
+
+## 2B. Visible Answer vs Hidden Metadata
+
+Another important beginner point:
+
+- the backend may know many internal details
+- but the user should not see all of them inside the visible chat bubble
+
+Examples of internal/backend details:
+
+- tool routing summaries
+- planner versions
+- unsupported-intent labels
+- internal limitations used for auditing and debugging
+
+Those are still useful for:
+
+- metadata storage
+- audit trails
+- developer verification
+- admin-side debugging if needed later
+
+But they should not be printed by default into a student-facing answer.
+
+### Current rule
+
+Visible answer content should focus on:
+
+- the direct answer
+- helpful grounded points
+- a short next-step suggestion when useful
+
+Hidden metadata should carry:
+
+- tools used
+- limitations
+- planner execution data
+- safety markers
+
+This separation matters because a system can be technically grounded and still feel unprofessional if the user is forced to read backend-style diagnostics in every reply.
+
+## 2C. Why Chat Could Feel Slow Even When Fallback Is Safe
+
+The chatbot has two planning layers:
+
+- deterministic baseline: `cb22`
+- optional semantic assist: `CB19`
+
+When Gemini quota is exhausted, the system is supposed to fall back safely to the deterministic planner.
+That fallback is correct.
+
+However, if the semantic layer waits through multiple retries first, the user experiences:
+
+- laggy chatbot replies
+- "the app feels stuck"
+- unnecessary waiting even though the deterministic answer was already available as a backup path
+
+### What the system does now
+
+The retry behavior was tightened so quota-style failures such as:
+
+- `RESOURCE_EXHAUSTED`
+- quota exceeded
+- invalid credentials / permission failures
+
+stop retrying early and fall back faster.
+
+That improves user experience without changing the safety model.
+
+So the new principle is:
+
+- safe fallback should also be fast fallback
+
+## 2D. Student Chat Has Started Moving To The New Academic Foundation
+
+This is an important architecture change.
+
+Earlier, student chat mostly answered from:
+
+- latest prediction
+- warning history
+- basic profile contact data
+
+That made the student copilot feel narrow because the system did not yet expose the richer academic structure.
+
+The backend now has a newer academic foundation layer, and the student side has started using it.
+
+What the student chatbot can now use more directly:
+
+- current academic year and semester
+- semester mode
+- current overall attendance status
+- subject-wise attendance for the visible semester
+- weakest subject
+- I-grade and R-grade status
+- semester-level shortage counts
+
+### Why this matters for frontend
+
+The frontend should now expect student chat and student overview behavior to feel more attendance-aware than before.
+
+That does not mean every possible student question is solved yet.
+It means the student experience is no longer limited to only prediction metadata.
+
+### Important beginner takeaway
+
+This is the first role where we have started connecting the chatbot to the richer generalized academic layer.
+
+That is why:
+
+- student behavior is improving first
+- counsellor and admin will follow in later passes
 
 ## 3. Chatbot Endpoints
 
@@ -254,6 +458,39 @@ Frontend usage:
 
 - optional admin-only internal diagnostics page
 - not needed for normal student/counsellor chat UI
+
+## 3A. Auth Endpoints The Frontend Also Relies On
+
+These are not chatbot endpoints, but they are part of the real chat product flow because chat is only available after sign-in.
+
+### Login
+
+Endpoint:
+
+- `POST /auth/login`
+
+Response fields the frontend now depends on:
+
+- `access_token`
+- `token_type`
+- `subject`
+- `username`
+- `role`
+- `student_id`
+- `display_name`
+- `auth_provider`
+- `password_reset_required`
+
+### Reset password
+
+Endpoint:
+
+- `POST /auth/reset-password`
+
+Why this matters for chat:
+
+- if `password_reset_required` is true, the frontend should route the user to the reset screen before allowing normal chat usage
+- this keeps the product aligned with the institution-issued starter credential model
 
 ## 4. Stable Response Objects
 
@@ -891,3 +1128,34 @@ It checks:
 - student self-risk response shape
 
 This verifier is meant to protect the frontend from accidental backend contract drift.
+
+## 16. Counsellor And Admin Academic Grounding Upgrade
+
+The student chat was the first role to move toward the generalized academic foundation.
+This later pass extends that same pattern to counsellor and admin.
+
+What changed:
+
+- counsellor chat now returns cohort-aware academic pressure answers for:
+  - overall shortage
+  - I-grade risk
+  - R-grade risk
+  - subject hotspots
+- admin chat now returns institution-aware academic pressure answers for:
+  - overall shortage
+  - I-grade risk
+  - R-grade risk
+  - branch attention ranking
+  - subject hotspots
+
+Why this matters for frontend:
+
+The frontend chat UI does not need a different renderer for every role, but it does need to trust that the backend answer is grounded in the right scope.
+
+After this pass the scope rule is:
+
+- student = self academic data
+- counsellor = assigned cohort academic data
+- admin = institution-wide academic data
+
+That is a key production rule because it keeps role boundaries consistent without forcing the frontend to re-implement access logic.

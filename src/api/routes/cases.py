@@ -5,12 +5,18 @@ from sqlalchemy.orm import Session
 
 from src.api.auth import AuthContext, require_roles
 from src.api.attendance_engine import build_attendance_summary
+from src.api.routes.faculty import _academic_burden_note, get_faculty_priority_queue
 from src.api.operational_context import (
     build_activity_summary,
     build_milestone_flags,
     build_sla_summary,
 )
-from src.api.schemas import ActiveCasesResponse, StudentCaseStateResponse
+from src.api.schemas import (
+    ActiveCasesResponse,
+    FacultyPriorityQueueItem,
+    StudentCaseStateResponse,
+)
+from src.api.scope import ensure_student_scope_access
 from src.api.time_utils import to_ist
 from src.db.database import get_db
 from src.db.repository import EventRepository
@@ -132,6 +138,9 @@ def _build_case_state_from_rows(
     latest_intervention,
     prediction_history,
     intervention_history,
+    academic_burden_summary: dict | None = None,
+    priority_score: int | None = None,
+    priority_label: str | None = None,
 ) -> StudentCaseStateResponse:
     risk_level = None
     final_risk_probability = None
@@ -161,6 +170,12 @@ def _build_case_state_from_rows(
         latest_alert=latest_alert,
         intervention_history=intervention_history,
     )
+    academic_burden_summary = academic_burden_summary or {
+        "has_active_burden": False,
+        "has_active_i_grade_burden": False,
+        "has_active_r_grade_burden": False,
+        "summary": "No unresolved I-grade or R-grade subject burden is currently active.",
+    }
     candidate_for_resolution = _resolution_candidate_status(
         latest_prediction,
         latest_intervention,
@@ -214,6 +229,9 @@ def _build_case_state_from_rows(
     elif latest_prediction is not None and int(latest_prediction.final_predicted_class) == 1:
         current_case_state = "high_risk_active"
         summary = "Student is currently high risk."
+    elif bool(academic_burden_summary.get("has_active_burden")):
+        current_case_state = "academic_burden_monitoring"
+        summary = _academic_burden_note(academic_burden_summary)
     else:
         current_case_state = "low_risk_stable"
         summary = "Student is currently low risk and has no active intervention workflow."
@@ -221,6 +239,8 @@ def _build_case_state_from_rows(
     return StudentCaseStateResponse(
         student_id=student_id,
         current_case_state=current_case_state,
+        priority_score=priority_score,
+        priority_label=priority_label,
         risk_level=risk_level,
         final_risk_probability=final_risk_probability,
         latest_prediction_created_at=to_ist(
@@ -251,6 +271,56 @@ def _build_case_state_from_rows(
     )
 
 
+def _build_case_state_from_queue_item(item: FacultyPriorityQueueItem) -> StudentCaseStateResponse:
+    current_case_state = "low_risk_stable"
+    if item.is_critical_unattended_case:
+        current_case_state = "critical_unattended_case"
+    elif item.is_reopened_case:
+        current_case_state = "reopened"
+    elif item.faculty_alert_type == "faculty_followup_reminder":
+        current_case_state = "followup_reminder_sent"
+    elif item.faculty_alert_type == "post_warning_escalation":
+        current_case_state = "escalated"
+    elif item.recovery_window_status == "expired":
+        current_case_state = "recovery_expired"
+    elif item.recovery_window_status == "active":
+        current_case_state = "recovery_active"
+    elif item.current_risk_level == "HIGH" and item.latest_intervention_status in FACULTY_HANDLING_STATUSES:
+        current_case_state = "faculty_handling_in_progress"
+    elif item.current_risk_level == "HIGH":
+        current_case_state = "high_risk_active"
+    elif item.has_active_academic_burden:
+        current_case_state = "academic_burden_monitoring"
+
+    return StudentCaseStateResponse(
+        student_id=int(item.student_id),
+        current_case_state=current_case_state,
+        priority_score=int(item.priority_score),
+        priority_label=str(item.priority_label),
+        risk_level=str(item.current_risk_level),
+        final_risk_probability=float(item.final_risk_probability),
+        latest_prediction_created_at=item.latest_prediction_created_at,
+        warning_status=item.warning_status,
+        warning_resolution_status=None,
+        faculty_alert_type=item.faculty_alert_type,
+        faculty_alert_status=item.faculty_alert_status,
+        guardian_alert_type=None,
+        guardian_alert_status=None,
+        guardian_alert_channel=None,
+        guardian_alert_sent_at=None,
+        latest_intervention_status=item.latest_intervention_status,
+        candidate_for_resolution=False,
+        is_reopened_case=bool(item.is_reopened_case),
+        is_critical_unattended_case=bool(item.is_critical_unattended_case),
+        last_meaningful_activity_at=item.last_meaningful_activity_at,
+        last_meaningful_activity_source=item.last_meaningful_activity_source,
+        active_milestone_flags=list(item.active_milestone_flags),
+        sla_status=str(item.sla_status),
+        followup_overdue=bool(item.followup_overdue),
+        summary=str(item.queue_reason),
+    )
+
+
 def _build_case_state_response(student_id: int, repository: EventRepository) -> StudentCaseStateResponse:
     prediction_history = repository.get_prediction_history_for_student(student_id)
     latest_prediction = prediction_history[0] if prediction_history else None
@@ -262,6 +332,10 @@ def _build_case_state_response(student_id: int, repository: EventRepository) -> 
     latest_guardian_alert = guardian_alert_history[0] if guardian_alert_history else None
     intervention_history = repository.get_intervention_history_for_student(student_id)
     latest_intervention = intervention_history[0] if intervention_history else None
+    academic_burden_summary = build_academic_burden_summary(
+        academic_rows=repository.get_student_academic_records(student_id),
+        attendance_rows=repository.get_current_student_subject_attendance_records(student_id),
+    )
 
     return _build_case_state_from_rows(
         student_id=student_id,
@@ -276,6 +350,7 @@ def _build_case_state_response(student_id: int, repository: EventRepository) -> 
         latest_intervention=latest_intervention,
         prediction_history=prediction_history,
         intervention_history=intervention_history,
+        academic_burden_summary=academic_burden_summary,
     )
 
 
@@ -286,6 +361,7 @@ def get_student_case_state(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> StudentCaseStateResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     history = repository.get_prediction_history_for_student(student_id)
     if not history:
         raise HTTPException(status_code=404, detail="No prediction history found for student.")
@@ -297,60 +373,8 @@ def get_active_cases(
     db: Session = Depends(get_db),
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> ActiveCasesResponse:
-    repository = EventRepository(db)
-    latest_predictions = repository.get_latest_predictions_for_all_students()
-    latest_prediction_map = {int(row.student_id): row for row in latest_predictions}
-    warning_map = _latest_by_student(repository.get_all_student_warning_events())
-    alert_map = _latest_by_student(repository.get_all_alert_events())
-    guardian_alert_map = _latest_by_student(repository.get_all_guardian_alert_events())
-    all_interventions = repository.get_all_intervention_actions()
-    intervention_map = _latest_by_student(all_interventions)
-    intervention_rows_by_student = _interventions_by_student(all_interventions)
-
-    cases: list[StudentCaseStateResponse] = []
-    active_states = {
-        "critical_unattended_case",
-        "reopened",
-        "followup_reminder_sent",
-        "escalated",
-        "recovery_expired",
-        "recovery_active",
-        "faculty_handling_in_progress",
-        "high_risk_active",
-        "resolution_candidate",
-        "attendance_followup_pending",
-    }
-
-    for student_id, latest_prediction in latest_prediction_map.items():
-        case_state = _build_case_state_from_rows(
-            student_id=student_id,
-            profile=repository.get_student_profile(student_id),
-            lms_events=repository.get_lms_events_for_student(student_id),
-            latest_prediction=latest_prediction,
-            latest_erp_event=repository.get_latest_erp_event(student_id),
-            latest_finance_event=repository.get_latest_finance_event(student_id),
-            latest_warning=warning_map.get(student_id),
-            latest_alert=alert_map.get(student_id),
-            latest_guardian_alert=guardian_alert_map.get(student_id),
-            latest_intervention=intervention_map.get(student_id),
-            prediction_history=repository.get_prediction_history_for_student(student_id),
-            intervention_history=intervention_rows_by_student.get(student_id, []),
-        )
-        if case_state.current_case_state in active_states:
-            cases.append(case_state)
-
-    cases.sort(
-        key=lambda item: (
-            item.current_case_state == "critical_unattended_case",
-            item.current_case_state == "reopened",
-            item.current_case_state == "followup_reminder_sent",
-            item.risk_level == "HIGH",
-            item.final_risk_probability or 0.0,
-            item.latest_prediction_created_at.isoformat()
-            if item.latest_prediction_created_at
-            else "",
-        ),
-        reverse=True,
-    )
-
+    queue_items = get_faculty_priority_queue(db=db, auth=auth).queue
+    if not queue_items:
+        return ActiveCasesResponse(total_students=0, cases=[])
+    cases = [_build_case_state_from_queue_item(item) for item in queue_items]
     return ActiveCasesResponse(total_students=len(cases), cases=cases)

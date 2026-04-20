@@ -1,0 +1,111 @@
+[sweep] start role=student prompt=What data do you have about me?
+[sweep] done role=student elapsed=1.49s
+--- student: What data do you have about me? ---
+I can now see a grounded mix of student signals for your account, not just one narrow data slice.
+
+What I found:
+- Prediction data is available: latest risk probability 0.5976 with class HIGH.
+- Attendance foundation data is available, including overall semester and subject-wise attendance.
+- LMS engagement data is available: 164 clicks in the last 7 days and 13 unique resources touched.
+- ERP academic-performance data is available: submission rate 0.85, weighted score 0.0.
+- Finance context is available: payment status Unpaid, delay 1 day(s), overdue amount 6300.00.
+- Warning and support-workflow history is available for your record.
+
+Try asking: 'what is my attendance right now?', 'which subject is weakest?', or 'what should I focus on first this week?'
+[sweep] start role=student prompt=What is my attendance right now?
+[sweep] done role=student elapsed=1.42s
+--- student: What is my attendance right now? ---
+Here is the attendance data I currently have for you.
+
+What I found:
+- Overall attendance for your current visible semester is 85.40%.
+- Current academic position: year 1, semester 1, mode regular_coursework.
+- Weakest visible subject right now: Engineering Chemistry at 80.40% with status SAFE.
+- Visible subject snapshot: Engineering Chemistry 80.40% (SAFE); Physical Fitness Sports and Games - I 81.40% (SAFE); Linear Algebra and Ordinary Differential Equations 82.40% (SAFE); Problem Solving through Programming - I 83.40% (SAFE)
+- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.
+- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.
+- Strongest current drivers: Weighted assessment score is 0.0.; Finance modifier increased final risk by 0.20.; Completed assessments count is 1.
+
+If you want, I can next tell you whether this puts you in safe, I-grade, or R-grade territory.
+[sweep] start role=student prompt=Which subject is hurting me most right now?
+[sweep] done role=student elapsed=1.97s
+--- student: Which subject is hurting me most right now? ---
+Here is the subject that is currently hurting you most in the visible attendance data.
+
+What I found:
+- Weakest visible subject: Engineering Chemistry at 80.40% with status SAFE.
+- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.
+- Current eligibility view: Eligible.
+
+If you want, I can turn this into a simple 'what to do first' action list.
+[sweep] start role=student prompt=Am I eligible for end sem?
+[sweep] done role=student elapsed=2.35s
+--- student: Am I eligible for end sem? ---
+Here is your current end-sem eligibility position.
+
+What I found:
+- Overall semester status: SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.
+- End-sem eligibility: Eligible.
+
+If you want, I can turn this into a simple 'what to do first' action list.
+[sweep] start role=student prompt=Do I still have any uncleared I grade or R grade subjects?
+[sweep] done role=student elapsed=3.15s
+--- student: Do I still have any uncleared I grade or R grade subjects? ---
+I do not currently see any uncleared I-grade or R-grade subjects on your visible record.
+
+What I found:
+- That means your currently visible academic record does not show any pending I-grade or pending R-grade clearance items.
+- Current semester posture is SAFE with 0 subject(s) below 75% and 0 subject(s) below 65%.
+
+If you want, I can turn this into a simple 'what to do first' action list.
+[sweep] start role=student prompt=Can you plan my next few weeks?
+[sweep] done role=student elapsed=1.45s
+--- student: Can you plan my next few weeks? ---
+For this week, your first focus should be: Create a short academic recovery plan.
+
+What I found:
+- Academic decline is the main risk source, so the student needs targeted support on marks, submissions, and deadlines.
+- You also have an active warning, so this should be treated as your first priority.
+- After that, the next useful step would be: Refer to remedial or tutoring support.
+- These signals are not contradictory: attendance currently looks SAFE, but broader non-attendance signals are still keeping the model risk high.
+- Dominant cross-signal explanation: Academic performance and submission behavior are the main sources of risk.
+
+If you want, I can also break this into attendance, coursework, or overall recovery priorities.
+[sweep] start role=counsellor prompt=How many of my students have I grade risk?
+[sweep] done role=counsellor elapsed=3.53s
+--- counsellor: How many of my students have I grade risk? ---
+There are 20 students in your current counsellor scope with current-semester I-grade attendance risk, and 25 students still carry an unresolved I-grade burden.
+
+What I found:
+- student_id 880054: weakest subject Data Mining Techniques at 60.00%.
+- student_id 880063: weakest subject Department Elective - 3 at 60.50%.
+- student_id 880045: weakest subject Compiler Design at 62.50%.
+- student_id 880036: weakest subject Theory of Computation at 63.00%.
+- student_id 880027: weakest subject Data Structures at 64.50%.
+- Monitoring note: these unresolved I-grade cases should stay on at least monthly counsellor review until the subject is actually cleared.
+[sweep] start role=counsellor prompt=How many of my students have R grade risk?
+[sweep] done role=counsellor elapsed=2.09s
+--- counsellor: How many of my students have R grade risk? ---
+There are 5 students in your current counsellor scope with current-semester R-grade attendance risk, and 8 students still carry an unresolved R-grade burden.
+
+What I found:
+- student_id 880054: weakest subject Data Mining Techniques at 60.00% and needs immediate recovery attention.
+- student_id 880063: weakest subject Department Elective - 3 at 60.50% and needs immediate recovery attention.
+- student_id 880045: weakest subject Compiler Design at 62.50% and needs immediate recovery attention.
+- student_id 880036: weakest subject Theory of Computation at 63.00% and needs immediate recovery attention.
+- student_id 880027: weakest subject Data Structures at 64.50% and needs immediate recovery attention.
+- Monitoring note: these unresolved R-grade cases should stay on at least weekly counsellor review until the repeat-grade subject is actually cleared.
+[sweep] start role=counsellor prompt=Which of my students need weekly monitoring because of unresolved R grade burden?
+[sweep] done role=counsellor elapsed=2.15s
+--- counsellor: Which of my students need weekly monitoring because of unresolved R grade burden? ---
+Yes. Even if some students look better in the current semester, unresolved academic burden can still keep them on monitoring inside your current counsellor scope.
+
+What I found:
+- Weekly monitoring cases from unresolved R-grade burden: 8.
+- Monthly monitoring cases from unresolved I-grade burden: 17.
+- student_id 880024: 22 uncleared academic burden subject(s) are still active: 19 I-grade and 3 R-grade. (WEEKLY)
+- student_id 880096: 22 uncleared academic burden subject(s) are still active: 19 I-grade and 3 R-grade. (WEEKLY)
+- student_id 880048: 11 uncleared academic burden subject(s) are still active: 8 I-grade and 3 R-grade. (WEEKLY)
+- student_id 880063: 5 uncleared academic burden subject(s) are still active: 2 I-grade and 3 R-grade. (WEEKLY)
+- student_id 880045: 7 uncleared academic burden subject(s) are still active: 5 I-grade and 2 R-grade. (WEEKLY)
+[sweep] start role=counsellor prompt=Which students need attention first this week?

@@ -1,0 +1,503 @@
+{
+  "role_filter": "admin",
+  "generated_at": "2026-04-18T06:35:29.477019+00:00",
+  "conversation_count": 5,
+  "passed_conversations": 2,
+  "failed_conversations": 3,
+  "failure_summary": {
+    "response_type_failure": 3
+  },
+  "conversations": [
+    {
+      "role": "admin",
+      "label": "admin_explanation_query_01",
+      "passed": false,
+      "failure_count": 1,
+      "turns": [
+        {
+          "prompt": "why is CSE high risk",
+          "response_type": "data",
+          "last_topic": "compound_filtered_subset_summary",
+          "last_intent": "compound_filtered_subset_summary",
+          "answer": "I analyzed the filtered imported subset for branch `CSE`.\n\nWhat I found:\n- Matching students: 100\n- Currently high-risk students: 3\n- 880001 (STU001)\n- 880073 (STU073)\n- 880082 (STU082)",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 1,
+              "prompt": "why is CSE high risk"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "compound_filtered_subset_summary",
+              "student_ids": [
+                880001,
+                880002,
+                880003,
+                880004,
+                880005,
+                880006,
+                880007,
+                880008,
+                880009,
+                880010,
+                880011,
+                880012,
+                880013,
+                880014,
+                880015,
+                880016,
+                880017,
+                880018,
+                880019,
+                880020,
+                880021,
+                880022,
+                880023,
+                880024,
+                880025,
+                880026,
+                880027,
+                880028,
+                880029,
+                880030,
+                880031,
+                880032,
+                880033,
+                880034,
+                880035,
+                880036,
+                880037,
+                880038,
+                880039,
+                880040,
+                880041,
+                880042,
+                880043,
+                880044,
+                880045,
+                880046,
+                880047,
+                880048,
+                880049,
+                880050,
+                880051,
+                880052,
+                880053,
+                880054,
+                880055,
+                880056,
+                880057,
+                880058,
+                880059,
+                880060,
+                880061,
+                880062,
+                880063,
+                880064,
+                880065,
+                880066,
+                880067,
+                880068,
+                880069,
+                880070,
+                880071,
+                880072,
+                880073,
+                880074,
+                880075,
+                880076,
+                880077,
+                880078,
+                880079,
+                880080,
+                880081,
+                880082,
+                880083,
+                880084,
+                880085,
+                880086,
+                880087,
+                880088,
+                880089,
+                880090,
+                880091,
+                880092,
+                880093,
+                880094,
+                880095,
+                880096,
+                880097,
+                880098,
+                880099,
+                880100
+              ],
+              "outcome_status": null,
+              "branch": "CSE",
+              "category": null,
+              "region": null,
+              "income": null,
+              "role_scope": "admin",
+              "last_intent": "compound_filtered_subset_summary",
+              "response_type": "data",
+              "last_topic": "compound_filtered_subset_summary"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "why is CSE high risk",
+              "normalized_message": "why is CSE high risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [
+                  "CSE"
+                ],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "why is CSE high risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_explanation_query_02",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "why are many students at risk",
+          "response_type": "explanation",
+          "last_topic": "institution_risk",
+          "last_intent": "cohort_summary",
+          "answer": "There are 3 currently high-risk students, 63 students with I-grade attendance risk, and 6 with R-grade attendance risk across the institution.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "cohort_summary",
+              "last_intent": "cohort_summary",
+              "response_type": "explanation",
+              "last_topic": "institution_risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "why are many students at risk",
+              "normalized_message": "why are many students at risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "why are many students at risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_explanation_query_03",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "what is causing dropout risk",
+          "response_type": "explanation",
+          "last_topic": "institution_risk",
+          "last_intent": "cohort_summary",
+          "answer": "There are 3 currently high-risk students, 63 students with I-grade attendance risk, and 6 with R-grade attendance risk across the institution.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "cohort_summary",
+              "last_intent": "cohort_summary",
+              "response_type": "explanation",
+              "last_topic": "institution_risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "what is causing dropout risk",
+              "normalized_message": "what is causing dropout risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": "Dropped",
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "what is causing dropout risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_explanation_query_04",
+      "passed": false,
+      "failure_count": 1,
+      "turns": [
+        {
+          "prompt": "which factor is affecting students most",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to an admin intent yet.\n\nWhat I found:\n- import coverage\n- cohort summaries\n- attendance policy pressure, including I-grade and R-grade risk\n- branch and subject hotspot summaries\n- basic governance summaries\n- student drilldowns by student_id\n- Did you mean: governance summaries, cohort or risk summaries, student drilldown by student_id?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 1,
+              "prompt": "which factor is affecting students most"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which factor is affecting students most",
+              "normalized_message": "which factor is affecting students most",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "which factor is affecting students most",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_explanation_query_05",
+      "passed": false,
+      "failure_count": 1,
+      "turns": [
+        {
+          "prompt": "why is performance declining",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to an admin intent yet.\n\nWhat I found:\n- import coverage\n- cohort summaries\n- attendance policy pressure, including I-grade and R-grade risk\n- branch and subject hotspot summaries\n- basic governance summaries\n- student drilldowns by student_id\n- Did you mean: student drilldown by student_id, import coverage, governance summaries?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 1,
+              "prompt": "why is performance declining"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "why is performance declining",
+              "normalized_message": "why is performance declining",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "why is performance declining",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

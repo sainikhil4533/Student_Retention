@@ -9,6 +9,7 @@ from src.ai.assistant_service import (
     generate_recovery_plan,
 )
 from src.api.ai_assistance_context import build_live_case_context
+from src.api.scope import ensure_student_scope_access
 from src.api.schemas import (
     AICaseSummaryResponse,
     AICommunicationDraftResponse,
@@ -43,6 +44,7 @@ def get_ai_case_summary(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> AICaseSummaryResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     result = generate_case_summary(_get_required_case_context(student_id, repository))
     return AICaseSummaryResponse(**result)
 
@@ -55,6 +57,7 @@ def get_ai_communication_draft(
     auth: AuthContext = Depends(require_same_student_or_roles("counsellor", "admin", "system")),
 ) -> AICommunicationDraftResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     result = generate_communication_draft(
         _get_required_case_context(student_id, repository),
         audience=audience,
@@ -70,6 +73,7 @@ def get_ai_guardian_communication_draft(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> AIGuardianCommunicationDraftResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     result = generate_guardian_communication_draft(
         _get_required_case_context(student_id, repository),
         channel=channel,
@@ -84,5 +88,6 @@ def get_ai_recovery_plan(
     auth: AuthContext = Depends(require_same_student_or_roles("counsellor", "admin", "system")),
 ) -> AIRecoveryPlanResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     result = generate_recovery_plan(_get_required_case_context(student_id, repository))
     return AIRecoveryPlanResponse(**result)

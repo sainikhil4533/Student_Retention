@@ -1,0 +1,520 @@
+{
+  "role_filter": "admin",
+  "generated_at": "2026-04-18T07:05:13.679440+00:00",
+  "conversation_count": 6,
+  "passed_conversations": 6,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "admin",
+      "label": "admin_strategy_query_01",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "what should we do to reduce risk",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded institution-level action list from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "what should we do to reduce risk",
+              "normalized_message": "show institutional operational priorities",
+              "primary_intent": "admin_governance",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "load_priority_queue",
+                "load_attendance_pressure_and_subject_hotspots",
+                "load_carry_forward_burden_counts",
+                "compose_grounded_institution_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner mapped an admin action-style question to a grounded institutional operational advisory response."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what should we do to reduce risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_strategy_query_02",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "how to improve student retention",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded institution-level action list from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "how to improve student retention",
+              "normalized_message": "show institutional operational priorities",
+              "primary_intent": "admin_governance",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "load_priority_queue",
+                "load_attendance_pressure_and_subject_hotspots",
+                "load_carry_forward_burden_counts",
+                "compose_grounded_institution_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner mapped an admin action-style question to a grounded institutional operational advisory response."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how to improve student retention",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_strategy_query_03",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "what strategy should we follow",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded institution-level action list from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "what strategy should we follow",
+              "normalized_message": "show institutional operational priorities",
+              "primary_intent": "admin_governance",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "load_priority_queue",
+                "load_attendance_pressure_and_subject_hotspots",
+                "load_carry_forward_burden_counts",
+                "compose_grounded_institution_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner mapped an admin action-style question to a grounded institutional operational advisory response."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what strategy should we follow",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_strategy_query_04",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "how can we reduce dropout rate",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded institution-level action list from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "how can we reduce dropout rate",
+              "normalized_message": "show institutional operational priorities",
+              "primary_intent": "admin_governance",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": "Dropped",
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "load_priority_queue",
+                "load_attendance_pressure_and_subject_hotspots",
+                "load_carry_forward_burden_counts",
+                "compose_grounded_institution_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner mapped an admin action-style question to a grounded institutional operational advisory response."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how can we reduce dropout rate",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_strategy_query_05",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "what actions should admin take",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded institution-level action list from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "what actions should admin take",
+              "normalized_message": "show institutional operational priorities",
+              "primary_intent": "admin_governance",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "load_priority_queue",
+                "load_attendance_pressure_and_subject_hotspots",
+                "load_carry_forward_burden_counts",
+                "compose_grounded_institution_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner mapped an admin action-style question to a grounded institutional operational advisory response."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what actions should admin take",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_strategy_query_06",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "give improvement plan",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded institution-level action list from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "give improvement plan",
+              "normalized_message": "show institutional operational priorities",
+              "primary_intent": "admin_governance",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "load_priority_queue",
+                "load_attendance_pressure_and_subject_hotspots",
+                "load_carry_forward_burden_counts",
+                "compose_grounded_institution_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner mapped an admin action-style question to a grounded institutional operational advisory response."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "give improvement plan",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

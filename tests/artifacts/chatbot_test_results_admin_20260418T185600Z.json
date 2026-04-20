@@ -1,0 +1,373 @@
+{
+  "role_filter": "admin",
+  "generated_at": "2026-04-18T18:56:00.275894+00:00",
+  "conversation_count": 5,
+  "passed_conversations": 5,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "admin",
+      "label": "admin_explanation_query_01",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "why is CSE high risk",
+          "response_type": "explanation",
+          "last_topic": "branch_attention",
+          "last_intent": "filtered_branch_explanation",
+          "answer": "Here is the grounded explanation for why CSE is under pressure right now.\n\nWhat I found:\n- Matching students in CSE: 100.\n- Current prediction high-risk students in CSE: 3.\n- Attendance-policy strain in CSE: 31 overall-shortage cases, 63 I-grade cases, and 6 R-grade cases.\n- Main pattern: prediction pressure and attendance-policy strain are overlapping inside the same branch, which is why the branch still looks high risk overall.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "filtered_branch_explanation",
+              "branch": "CSE",
+              "last_intent": "filtered_branch_explanation",
+              "response_type": "explanation",
+              "last_topic": "branch_attention"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "why is CSE high risk",
+              "normalized_message": "why is CSE high risk",
+              "primary_intent": "admin_governance",
+              "user_goal": "filtered_branch_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [
+                  "CSE"
+                ],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "branch_reasoning",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "why is CSE high risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_explanation_query_02",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "why are many students at risk",
+          "response_type": "explanation",
+          "last_topic": "institution_risk",
+          "last_intent": "cohort_summary",
+          "answer": "There are 3 currently high-risk students, 63 students with I-grade attendance risk, and 6 with R-grade attendance risk across the institution.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "cohort_summary",
+              "last_intent": "cohort_summary",
+              "response_type": "explanation",
+              "last_topic": "institution_risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "why are many students at risk",
+              "normalized_message": "why are many students at risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "why are many students at risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_explanation_query_03",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "what is causing dropout risk",
+          "response_type": "explanation",
+          "last_topic": "institution_risk",
+          "last_intent": "cohort_summary",
+          "answer": "There are 3 currently high-risk students, 63 students with I-grade attendance risk, and 6 with R-grade attendance risk across the institution.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "cohort_summary",
+              "last_intent": "cohort_summary",
+              "response_type": "explanation",
+              "last_topic": "institution_risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "what is causing dropout risk",
+              "normalized_message": "what is causing dropout risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": "Dropped",
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "what is causing dropout risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_explanation_query_04",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "which factor is affecting students most",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded view of the strongest institution-level factor affecting student performance right now.\n\nWhat I found:\n- The most common dominant driver inside the current high-risk cohort is academic decline.\n- ERP-side academic-performance pressure is visible in 3 of the evaluated high-risk cases, which is why coursework quality and submission consistency are still the main institutional weakness.\n- Finance pressure is contributing in 3 cases, while LMS pressure is visible in 0 cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which factor is affecting students most",
+              "normalized_message": "which factor is affecting students most",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which factor is affecting students most",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_explanation_query_05",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "why is performance declining",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded institution-health explanation right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "why is performance declining",
+              "normalized_message": "why is performance declining",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "why is performance declining",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

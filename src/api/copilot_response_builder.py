@@ -49,6 +49,7 @@ def build_grounded_response(
     tools_used: list[dict] | None = None,
     limitations: list[str] | None = None,
     closing: str | None = None,
+    include_diagnostics: bool = False,
 ) -> str:
     lines: list[str] = [opening.strip()]
 
@@ -61,23 +62,24 @@ def build_grounded_response(
         for point in normalized_key_points:
             lines.append(f"- {point}")
 
-    normalized_tools = _dedupe_preserve_order([
-        str(item.get("summary") or "").strip()
-        for item in (tools_used or [])
-        if str(item.get("summary") or "").strip()
-    ])
-    if normalized_tools:
-        lines.append("")
-        lines.append("Data used:")
-        for summary in normalized_tools:
-            lines.append(f"- {summary}")
+    if include_diagnostics:
+        normalized_tools = _dedupe_preserve_order([
+            str(item.get("summary") or "").strip()
+            for item in (tools_used or [])
+            if str(item.get("summary") or "").strip()
+        ])
+        if normalized_tools:
+            lines.append("")
+            lines.append("Data used:")
+            for summary in normalized_tools:
+                lines.append(f"- {summary}")
 
-    normalized_limitations = _dedupe_preserve_order([item.strip() for item in (limitations or []) if str(item).strip()])
-    if normalized_limitations:
-        lines.append("")
-        lines.append("Current limits:")
-        for item in normalized_limitations:
-            lines.append(f"- {item}")
+        normalized_limitations = _dedupe_preserve_order([item.strip() for item in (limitations or []) if str(item).strip()])
+        if normalized_limitations:
+            lines.append("")
+            lines.append("Current limits:")
+            for item in normalized_limitations:
+                lines.append(f"- {item}")
 
     if closing and closing.strip():
         lines.append("")

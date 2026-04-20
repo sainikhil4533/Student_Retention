@@ -96,6 +96,13 @@ Why it exists:
   - sidebar
   - chatbot dock
 
+What this phase now includes in the real codebase:
+
+- database-backed institution-style login
+- richer role-specific login pages
+- password-reset-required routing for temporary credentials
+- an authenticated shell that hides normal workspace routes until the reset step is complete
+
 ### F5. Student Module
 
 Goal:
@@ -200,6 +207,25 @@ That means the frontend now already has:
 - better chart empty states and legend blocks
 - admin export actions in the reporting layer
 - stronger mobile navigation and chat behavior
+- institution-backed login with password-reset-required routing
+
+## Auth Upgrade Status
+
+This used to be a future roadmap item.
+It is now implemented as part of the current frontend/backend integration layer.
+
+What is already real:
+
+- institution-created starter accounts in the backend
+- frontend login against stored accounts
+- reset-password route and page
+- route-guard enforcement of mandatory password change
+
+What is still future enhancement:
+
+- OTP login
+- SSO
+- richer admin-driven account lifecycle tooling
 
 ## What F5-F7 Added In Practical Product Terms
 

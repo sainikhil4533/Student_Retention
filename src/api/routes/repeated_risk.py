@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.api.auth import AuthContext, require_roles
+from src.api.scope import ensure_student_scope_access, get_counsellor_scope_student_ids
 from src.api.schemas import RepeatedRiskReportResponse, RepeatedRiskResponse
 from src.api.time_utils import to_ist
 from src.db.database import get_db
@@ -78,7 +79,12 @@ def get_repeated_risk_report(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> RepeatedRiskReportResponse:
     repository = EventRepository(db)
+    scoped_ids = get_counsellor_scope_student_ids(auth=auth, repository=repository)
     latest_predictions = repository.get_latest_predictions_for_all_students()
+    if scoped_ids is not None:
+        latest_predictions = [
+            row for row in latest_predictions if int(row.student_id) in scoped_ids
+        ]
     repeated_risk_students: list[RepeatedRiskResponse] = []
 
     for prediction in latest_predictions:
@@ -125,6 +131,7 @@ def get_repeated_risk_analysis(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> RepeatedRiskResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     history = repository.get_prediction_history_for_student(student_id)
     intervention_history = repository.get_intervention_history_for_student(student_id)
 

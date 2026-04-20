@@ -20,6 +20,7 @@ Then continue with:
 - [FRONTEND_PHASE_PLAN.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_PHASE_PLAN.md)
 - [FRONTEND_ROLE_FLOWS.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_ROLE_FLOWS.md)
 - [FRONTEND_DESIGN_SYSTEM.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_DESIGN_SYSTEM.md)
+- [FRONTEND_UAT_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_UAT_GUIDE.md)
 
 ## 1. What This Frontend Is Trying To Achieve
 
@@ -197,6 +198,21 @@ The backend returns:
 
 The frontend stores that in local storage through [auth.tsx](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/frontend/src/lib/auth.tsx).
 
+### Auth Upgrade Correction
+
+The older wording in this document described login as a development-safe version.
+That is no longer the full truth.
+
+The current system now uses institution-style accounts stored in the database.
+That means the frontend already works with:
+
+- institution-created starter users
+- username/password login tied to stored account records
+- password-reset-required routing for temporary passwords
+- a clean extension path toward OTP or SSO later
+
+So when you read older notes in this guide that sound future-looking, treat them as historical context, not the current production direction.
+
 ### Important Beginner Note
 
 This current login flow is still the development-safe version.
@@ -242,6 +258,60 @@ While building the frontend, we noticed a product gap:
 
 - the timeline route existed
 - but it only allowed counsellor/admin access
+
+## 7A. Student Frontend Is Now Starting To Use The Generalized Academic Foundation
+
+This is one of the most important recent changes.
+
+Earlier, the student UI was mostly driven by:
+
+- latest prediction
+- warning history
+- profile context
+
+That was useful, but it was not enough to make the product feel like a real academic system.
+
+The student pages now also consume a richer backend block:
+
+- `academic_progress`
+
+That block includes:
+
+- current year
+- current semester
+- semester mode
+- overall attendance summary
+- current subject-wise attendance
+- weakest subject
+- semester progression history
+- I-grade and R-grade posture
+
+### Why this change matters
+
+Without this block, the student dashboard can only say:
+
+- you are high risk
+- you have warnings
+- here are generic recommendations
+
+With the new block, it can start saying:
+
+- this is your current attendance posture
+- this is your weakest subject
+- this semester has shortage risk
+- this semester mode is internship, project review, or regular coursework
+
+That is much closer to a real institution product.
+
+### Important beginner note
+
+This was intentionally done as a student-first pass.
+
+Why:
+
+- the student experience was where the chatbot weakness was most visible
+- student questions are highly dependent on attendance, subject status, and semester posture
+- once this pattern is strong for students, we can extend the same generalized academic layer to counsellor and admin views
 
 That meant the student could not see their own timeline in the new dashboard.
 
@@ -551,3 +621,301 @@ The product now has:
 - integrated chatbot UX
 - deeper reporting surfaces
 - mobile-aware interaction patterns
+
+## 16. What Changed In The Auth Upgrade And Why
+
+This auth upgrade matters because it changes the product from "demo login with nice UI" into "real institution-style access with a controlled lifecycle."
+
+### What changed
+
+Before this pass, the frontend login mostly behaved like a polished role entry into the app.
+
+Now the real flow is:
+
+1. the backend reads a stored account record
+2. the backend returns role, username, display name, auth provider, and password-reset-required state
+3. the frontend stores that auth state
+4. route guards decide whether the user can go directly to the dashboard or must first complete password reset
+
+### Why this was necessary
+
+We had already agreed on the product principle:
+
+- no public signup
+- institution provisions the user
+- the user receives an initial credential
+- the user later changes that temporary password
+
+Without implementing this, the frontend would have looked more real than the system actually was.
+
+### Hidden working that a beginner usually cannot see
+
+When login succeeds, the frontend is not only storing an access token.
+It is also storing:
+
+- `username`
+- `role`
+- `studentId`
+- `displayName`
+- `authProvider`
+- `passwordResetRequired`
+
+That hidden state is what makes the rest of the app behave correctly.
+
+For example:
+
+- if a user is authenticated but still has a temporary password, the app should not let that user move around dashboards, reports, or chat first
+- it should send the user to `/app/reset-password`
+
+That is why auth state is not a cosmetic feature. It controls route safety and product realism.
+
+### What is still future work
+
+This does not mean the auth story is finished forever.
+It still leaves room for:
+
+- OTP login
+- SSO
+- richer admin-managed account lifecycle tooling
+
+But the important point is that the system is already on the real-world institution path now, not just pointing toward it.
+
+## 17. What Changed In The Visual Polish Pass And Why
+
+This polish pass was not about adding new routes.
+It was about making the product feel closer to a real institution-grade system when a user actually looks at it.
+
+### What was wrong before
+
+Even though the frontend was already functionally strong, there were still some visual weaknesses:
+
+- too many white surfaces in sequence
+- not enough dark/light rhythm on the homepage
+- the authenticated shell felt correct but not premium enough
+- the chatbot worked well, but still looked more like a utility panel than a polished product surface
+
+### What changed
+
+We improved three main areas:
+
+1. Homepage contrast and section rhythm
+- stronger dark/light alternation
+- better separation between trust sections and CTA sections
+- more structured messaging about why the product is closed-campus and role-specific
+
+2. Authenticated shell polish
+- sidebar now feels more like a deliberate workspace surface
+- signed-in state card is visually stronger
+- active navigation states are clearer
+- the app feels more premium without becoming flashy
+
+3. Chat workspace polish
+- dock launcher is stronger
+- thread list selection is clearer
+- message surfaces are easier to scan
+- full-page chat feels more like a real productivity surface
+
+### Why this matters
+
+Frontend quality is not only about "can the route load?"
+It is also about whether a user believes the product is serious, trustworthy, and production-grade.
+
+This pass was specifically aimed at improving that feeling without making the UI noisy or childish.
+
+## 18. Why We Still Keep A Separate UAT Guide
+
+Even after the automated verifiers pass, visual quality still needs a browser-oriented checklist.
+
+That is why [FRONTEND_UAT_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_UAT_GUIDE.md) exists.
+
+The automated layer answers:
+
+- did the route work?
+- did the contract stay stable?
+- did auth/chat/report flows still behave correctly?
+
+The manual browser layer answers:
+
+- does the homepage feel premium?
+- does the sign-in flow feel clear?
+- do the dashboards feel too crowded or too empty?
+- does mobile behavior feel intentional?
+
+That distinction is important for a beginner, because it explains why "all tests passed" and "the UI feels finished" are related, but not identical.
+
+## 19. Counsellor And Admin Academic Pressure Upgrade
+
+The frontend originally gave student pages the first academic-foundation upgrade.
+This later pass extends the same idea to counsellor and admin.
+
+### What changed
+
+Counsellor screens now start showing:
+
+- overall shortage counts
+- I-grade risk counts
+- R-grade risk counts
+- subject hotspots inside counsellor scope
+
+Admin screens now start showing:
+
+- institution-wide I-grade risk counts
+- institution-wide R-grade risk counts
+- overall shortage pressure
+- top subject hotspots
+
+### Why this matters
+
+If a counsellor asks the chatbot about R-grade risk but the dashboard only shows generic high-risk queue numbers, the product feels split-brained.
+
+So this pass keeps three things aligned:
+
+- what the backend knows
+- what the chatbot says
+- what the dashboard shows
+
+That is a major production-quality rule:
+the numbers visible in the product should support the language used by the assistant.
+
+## 20. Counsellor Scope Safety Rule
+
+There is another rule that matters just as much as good UI:
+
+- a counsellor must only see assigned students
+
+This is not only a backend concern.
+It affects frontend trust too, because the frontend will render whatever the backend allows.
+
+After the scope-hardening pass, the intended rule is:
+
+- student sees only self
+- counsellor sees only assigned students
+- admin sees institution-wide data
+
+So when a counsellor opens:
+
+- case workbench
+- student history
+- timeline
+- warnings
+- alerts
+- AI assist drilldowns
+
+the backend should reject out-of-scope students instead of silently returning data.
+
+## 21. Branch And Semester Pressure Visuals
+
+This pass added a deeper analytical layer to the counsellor and admin reports pages.
+
+Before this, the UI could already show:
+
+- top subject pressure
+- I-grade counts
+- R-grade counts
+- overall shortage counts
+
+That was useful, but it still left an important real-world question unanswered:
+
+- where is the pressure concentrated
+
+In real institutional work, that usually means:
+
+- which branch is under the most pressure
+- which semester needs attention first
+
+So the frontend now includes:
+
+- branch pressure charts
+- semester pressure charts
+
+These are not decorative charts.
+They are grounded summaries built from the generalized academic foundation.
+
+What they help users understand:
+
+- counsellors can see whether one branch inside their assigned cohort needs more attention
+- admins can see whether one branch or semester slice needs broader institutional action
+
+Why this matters:
+
+- it makes the reports feel more like a real academic operations product
+- it also keeps dashboard, reports, and chatbot aligned around the same branch/semester pressure model
+
+## 22. Deeper Case Drilldown Context
+
+This pass improves the counsellor case workbench and the admin operations reading experience.
+
+Before this pass, the operational context panel mostly explained:
+
+- recent activity
+- milestone flags
+- SLA posture
+
+That was useful, but it still forced the user to mentally reconstruct the academic situation.
+
+So the operational drilldown now also surfaces:
+
+- branch
+- current year and semester
+- semester mode
+- overall attendance posture
+- subjects below threshold counts
+- weakest subject
+- current academic consequence summary
+
+Why this matters:
+
+- a counsellor can now open one student and understand both workflow state and academic state in one place
+- the product feels more production-grade because the case screen behaves like a real case brief, not just a notification trace
+
+## 23. Active Academic Burden Visibility
+
+This pass adds a real-world academic rule that is easy to miss if the UI only shows current-semester numbers.
+
+### The problem
+
+A student may:
+
+- be performing better in the current semester
+- even look `LOW` risk in the prediction layer
+- but still have an uncleared `I_GRADE` or `R_GRADE` from an earlier semester
+
+If the frontend hides that, the product gives the wrong academic picture.
+
+### What the frontend now shows
+
+Student pages now surface:
+
+- active burden count
+- academic burden summary
+- monitoring cadence
+- unresolved `I_GRADE` and `R_GRADE` subject cards with effective status such as:
+  - `Pending I-grade clearance`
+  - `Pending R-grade clearance`
+
+Counsellor pages now surface:
+
+- total students with active academic burden
+- carry-forward burden monitoring panel
+- queue emphasis for burden-backed monitoring cases
+- case drilldown visibility for unresolved burden subjects
+
+### Why this matters
+
+This keeps the UI honest:
+
+- current semester improvement is still visible
+- but uncleared I/R grade obligations are not silently forgotten
+
+That is much closer to how a real institution would track academic follow-up.
+
+### Timeline effect
+
+The timeline now also includes uncleared-burden visibility.
+
+That means a student can now see events that effectively say:
+
+- this subject entered I-grade or R-grade status
+- this subject still remains uncleared
+
+This is important because otherwise the timeline would show only the trigger moment and not the continuing burden that follows.

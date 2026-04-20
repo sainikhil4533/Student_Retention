@@ -1,0 +1,696 @@
+{
+  "role_filter": "counsellor",
+  "generated_at": "2026-04-18T18:34:46.939379+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 0,
+  "failed_conversations": 1,
+  "failure_summary": {
+    "response_type_failure": 1
+  },
+  "conversations": [
+    {
+      "role": "counsellor",
+      "label": "counsellor_edge_and_mixed_queries",
+      "passed": false,
+      "failure_count": 1,
+      "turns": [
+        {
+          "prompt": "who is worst student",
+          "response_type": "data",
+          "last_topic": "high_risk_students",
+          "last_intent": "counsellor_high_risk_students",
+          "answer": "Here are the students currently performing worst from a grounded risk-and-pressure view in your counsellor scope (showing up to 5, currently 3 matched).\n\nWhat I found:\n- Worst-performing risk view:\n- student_id 880001 (STU001): CSE, current prediction HIGH at 0.5976\n- student_id 880073 (STU073): CSE, current prediction HIGH at 0.5976\n- student_id 880082 (STU082): CSE, current prediction HIGH at 0.5976\n- This view blends current prediction pressure with visible academic-risk signals rather than raw marks alone.\n- I-grade risk in the same scope: 21.\n- R-grade risk in the same scope: 1.\n\nIf you want, I can next explain one student or turn this ranking into a counsellor action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "counsellor_high_risk_students",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "counsellor_high_risk_students",
+              "response_type": "data",
+              "last_topic": "high_risk_students"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "who is worst student",
+              "normalized_message": "show top 5 risky students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "who is worst student",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which student will fail",
+          "response_type": "explanation",
+          "last_topic": "cohort_summary",
+          "last_intent": "cohort_summary",
+          "answer": "Here is the grounded consequence view for the highest-pressure students in your current counsellor scope.\n\nWhat I found:\n- Failure-risk view: no grounded system should promise one exact failure outcome, but the students sitting at the top of the current high-risk and burden cluster are the ones most likely to deteriorate first if support is delayed.\n- Current prediction high-risk students in your scope: 3.\n- I-grade attendance risk in the same scope: 21.\n- R-grade attendance risk in the same scope: 1.\n- The strongest visible attendance-pressure hotspot right now is Big Data Analytics, where 3 students are below threshold.\n- The most pressured branch in your current scope is CSE with 9 overall-shortage cases.\n- Carry-forward burden is also active: 26 unresolved I-grade and 5 unresolved R-grade cases still need monitoring.\n- The main pattern is broader than one metric alone: current risk pressure is being reinforced by academic strain, attendance-policy pressure, and unresolved burden inside the same counsellor scope.\n\nIf you want, I can next turn this into a counsellor action plan or narrow it to one branch, year, or student subset.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_summary",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "response_type": "explanation",
+              "last_topic": "cohort_summary",
+              "last_intent": "cohort_summary"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "which student will fail",
+              "normalized_message": "which student will fail",
+              "primary_intent": "cohort_summary",
+              "user_goal": "cohort_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "cohort_reasoning",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_prediction_and_attendance_pressure",
+                "load_scoped_burden_and_subject_hotspots",
+                "compose_grounded_cohort_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "which student will fail",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "is situation serious",
+          "response_type": "explanation",
+          "last_topic": "cohort_summary",
+          "last_intent": "cohort_summary",
+          "answer": "Here is the grounded explanation for the main pressure across your current counsellor scope.\n\nWhat I found:\n- Current prediction high-risk students in your scope: 3.\n- I-grade attendance risk in the same scope: 21.\n- R-grade attendance risk in the same scope: 1.\n- The strongest visible attendance-pressure hotspot right now is Big Data Analytics, where 3 students are below threshold.\n- The most pressured branch in your current scope is CSE with 9 overall-shortage cases.\n- Carry-forward burden is also active: 26 unresolved I-grade and 5 unresolved R-grade cases still need monitoring.\n- The main pattern is broader than one metric alone: current risk pressure is being reinforced by academic strain, attendance-policy pressure, and unresolved burden inside the same counsellor scope.\n\nIf you want, I can next turn this into a counsellor action plan or narrow it to one branch, year, or student subset.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_summary",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "response_type": "explanation",
+              "last_topic": "cohort_summary",
+              "last_intent": "cohort_summary"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "is situation serious",
+              "normalized_message": "is situation serious",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "is situation serious",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "should I worry about my group",
+          "response_type": "explanation",
+          "last_topic": "cohort_summary",
+          "last_intent": "cohort_summary",
+          "answer": "Here is the grounded group-risk seriousness view for your current counsellor scope.\n\nWhat I found:\n- Worry-level view: the situation is serious enough to need active prioritization, but it is still actionable because the pressure is concentrated in identifiable students and hotspots rather than being uniformly severe everywhere.\n- Current prediction high-risk students in your scope: 3.\n- I-grade attendance risk in the same scope: 21.\n- R-grade attendance risk in the same scope: 1.\n- The strongest visible attendance-pressure hotspot right now is Big Data Analytics, where 3 students are below threshold.\n- The most pressured branch in your current scope is CSE with 9 overall-shortage cases.\n- Carry-forward burden is also active: 26 unresolved I-grade and 5 unresolved R-grade cases still need monitoring.\n- The main pattern is broader than one metric alone: current risk pressure is being reinforced by academic strain, attendance-policy pressure, and unresolved burden inside the same counsellor scope.\n\nIf you want, I can next turn this into a counsellor action plan or narrow it to one branch, year, or student subset.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_summary",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "response_type": "explanation",
+              "last_topic": "cohort_summary",
+              "last_intent": "cohort_summary"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "should I worry about my group",
+              "normalized_message": "should i worry about my group",
+              "primary_intent": "cohort_summary",
+              "user_goal": "cohort_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "cohort_reasoning",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_prediction_and_attendance_pressure",
+                "load_scoped_burden_and_subject_hotspots",
+                "compose_grounded_cohort_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "should I worry about my group",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "are things getting worse",
+          "response_type": "explanation",
+          "last_topic": "cohort_summary",
+          "last_intent": "cohort_summary",
+          "answer": "Here is the grounded improvement-versus-pressure view for your current counsellor scope.\n\nWhat I found:\n- Trend caution: this answer is based on the current grounded pressure snapshot, so it is strongest for current posture rather than long-range historical trend scoring.\n- Current prediction high-risk students in your scope: 3.\n- I-grade attendance risk in the same scope: 21.\n- R-grade attendance risk in the same scope: 1.\n- The strongest visible attendance-pressure hotspot right now is Big Data Analytics, where 3 students are below threshold.\n- The most pressured branch in your current scope is CSE with 9 overall-shortage cases.\n- Carry-forward burden is also active: 26 unresolved I-grade and 5 unresolved R-grade cases still need monitoring.\n- The main pattern is broader than one metric alone: current risk pressure is being reinforced by academic strain, attendance-policy pressure, and unresolved burden inside the same counsellor scope.\n\nIf you want, I can next turn this into a counsellor action plan or narrow it to one branch, year, or student subset.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_summary",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "response_type": "explanation",
+              "last_topic": "cohort_summary",
+              "last_intent": "cohort_summary"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "are things getting worse",
+              "normalized_message": "are things getting worse",
+              "primary_intent": "cohort_summary",
+              "user_goal": "cohort_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "cohort_reasoning",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_prediction_and_attendance_pressure",
+                "load_scoped_burden_and_subject_hotspots",
+                "compose_grounded_cohort_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "are things getting worse",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "compare attendance and assignments for risky students",
+          "response_type": "data",
+          "last_topic": "counsellor_risky_subset_compare",
+          "last_intent": "counsellor_risky_subset_compare",
+          "answer": "Here is the grounded compare view for attendance and assignments across risky students in your counsellor scope.\n\nWhat I found:\n- Attendance pressure is currently visible in 0 of 3 risky students.\n- Assignments pressure is currently visible in 0 of 3 risky students.\n- Pressure comparison: assignments is the more common visible driver across this risky subset right now.\n- student_id 880001: attendance pressure=no, assignments pressure=no, submission rate=0.85.\n- student_id 880073: attendance pressure=no, assignments pressure=no, submission rate=0.87.\n- student_id 880082: attendance pressure=no, assignments pressure=no, submission rate=0.86.",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `explanation` but got `data`.",
+              "turn_index": 6,
+              "prompt": "compare attendance and assignments for risky students"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_risky_subset_compare",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "counsellor_risky_subset_compare",
+              "response_type": "data",
+              "last_topic": "counsellor_risky_subset_compare"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "compare attendance and assignments for risky students",
+              "normalized_message": "compare attendance and assignments for risky students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "cohort_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "cohort_reasoning",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_prediction_and_attendance_pressure",
+                "load_scoped_coursework_and_submission_pressure",
+                "compose_grounded_cohort_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "compare attendance and assignments for risky students",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which factor is affecting most students",
+          "response_type": "explanation",
+          "last_topic": "cohort_summary",
+          "last_intent": "cohort_summary",
+          "answer": "Here is the grounded view of the factor affecting the most students in your current counsellor scope.\n\nWhat I found:\n- Most-common-factor view: attendance-policy pressure is touching the widest share of students, while prediction-high risk remains concentrated in the sharper pressure cluster.\n- Current prediction high-risk students in your scope: 3.\n- I-grade attendance risk in the same scope: 21.\n- R-grade attendance risk in the same scope: 1.\n- The strongest visible attendance-pressure hotspot right now is Big Data Analytics, where 3 students are below threshold.\n- The most pressured branch in your current scope is CSE with 9 overall-shortage cases.\n- Carry-forward burden is also active: 26 unresolved I-grade and 5 unresolved R-grade cases still need monitoring.\n- The main pattern is broader than one metric alone: current risk pressure is being reinforced by academic strain, attendance-policy pressure, and unresolved burden inside the same counsellor scope.\n\nIf you want, I can next turn this into a counsellor action plan or narrow it to one branch, year, or student subset.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_summary",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "response_type": "explanation",
+              "last_topic": "cohort_summary",
+              "last_intent": "cohort_summary"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "which factor is affecting most students",
+              "normalized_message": "which factor is affecting most students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "cohort_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "cohort_reasoning",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_prediction_and_attendance_pressure",
+                "load_scoped_burden_and_subject_hotspots",
+                "compose_grounded_cohort_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which factor is affecting most students",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what is biggest issue across my students",
+          "response_type": "explanation",
+          "last_topic": "cohort_summary",
+          "last_intent": "cohort_summary",
+          "answer": "Here is the grounded explanation for the biggest issue across your current counsellor scope.\n\nWhat I found:\n- Biggest-issue view: the same students are being hit by overlapping academic strain, attendance-policy pressure, and carry-forward burden, so support demand is clustering instead of spreading evenly.\n- Current prediction high-risk students in your scope: 3.\n- I-grade attendance risk in the same scope: 21.\n- R-grade attendance risk in the same scope: 1.\n- The strongest visible attendance-pressure hotspot right now is Big Data Analytics, where 3 students are below threshold.\n- The most pressured branch in your current scope is CSE with 9 overall-shortage cases.\n- Carry-forward burden is also active: 26 unresolved I-grade and 5 unresolved R-grade cases still need monitoring.\n- The main pattern is broader than one metric alone: current risk pressure is being reinforced by academic strain, attendance-policy pressure, and unresolved burden inside the same counsellor scope.\n\nIf you want, I can next turn this into a counsellor action plan or narrow it to one branch, year, or student subset.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_summary",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "response_type": "explanation",
+              "last_topic": "cohort_summary",
+              "last_intent": "cohort_summary"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "what is biggest issue across my students",
+              "normalized_message": "what is biggest issue across my students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "cohort_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "cohort_reasoning",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_prediction_and_attendance_pressure",
+                "load_scoped_burden_and_subject_hotspots",
+                "compose_grounded_cohort_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what is biggest issue across my students",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which students are improving vs declining",
+          "response_type": "data",
+          "last_topic": "counsellor_student_trend_split",
+          "last_intent": "counsellor_student_trend_split",
+          "answer": "Here is the grounded improving-versus-declining view for students in your counsellor scope.\n\nWhat I found:\n- Matching students in improving view: 0 shown.\n- Matching students in declining view: 3 shown.\n- student_id 880001: declining view with current pressure from risk/attendance/coursework signals.\n- student_id 880004: declining view with current pressure from risk/attendance/coursework signals.\n- student_id 880007: declining view with current pressure from risk/attendance/coursework signals.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_student_trend_split",
+              "role_scope": "counsellor",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "counsellor_student_trend_split",
+              "response_type": "data",
+              "last_topic": "counsellor_student_trend_split"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "which students are improving vs declining",
+              "normalized_message": "which students are improving vs declining",
+              "primary_intent": "cohort_summary",
+              "user_goal": "cohort_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "cohort_reasoning",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_prediction_and_attendance_pressure",
+                "load_scoped_burden_and_subject_hotspots",
+                "compose_grounded_cohort_explanation"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.87,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "which students are improving vs declining",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

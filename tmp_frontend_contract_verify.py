@@ -87,9 +87,9 @@ def main() -> None:
     failures: list[str] = []
     client = TestClient(app)
 
-    admin_token = _login(client, "admin_demo", "admin_demo")
-    counsellor_token = _login(client, "counsellor_demo", "counsellor_demo")
-    student_token = _login(client, "student_880001", "student_880001")
+    admin_token = _login(client, "admin.retention", "Admin@123")
+    counsellor_token = _login(client, "counsellor.vignan", "Counsellor@123")
+    student_token = _login(client, "student.880001", "Student@123")
 
     admin_session_payload = _create_session(client, admin_token, "Frontend contract admin")
     admin_session = admin_session_payload["session"]
@@ -158,6 +158,30 @@ def main() -> None:
     student_text = student_answer["assistant_message"]["content"].lower()
     if "risk level" not in student_text and "could not find a prediction" not in student_text:
         failures.append("Student answer: expected either a risk summary or the no-prediction empty-state message.")
+
+    student_focus = _send(client, student_token, student_session_id, "what should i focus on first this week?")
+    _assert_common_assistant_contract(student_focus, failures, label="Student weekly focus")
+    student_focus_text = student_focus["assistant_message"]["content"].lower()
+    if "your first focus should be" not in student_focus_text and "safest first step" not in student_focus_text:
+        failures.append("Student weekly focus: expected grounded weekly-priority guidance instead of a generic clarification.")
+    if student_focus["assistant_message"]["metadata_json"].get("resolved_intent") == "planner_clarification":
+        failures.append("Student weekly focus: should not fall back to planner clarification for the standard student starter prompt.")
+
+    student_focus_follow_up = _send(client, student_token, student_session_id, "yes do it")
+    _assert_common_assistant_contract(student_focus_follow_up, failures, label="Student weekly focus follow-up")
+    student_focus_follow_up_text = student_focus_follow_up["assistant_message"]["content"].lower()
+    if "attendance:" not in student_focus_follow_up_text or "coursework:" not in student_focus_follow_up_text:
+        failures.append("Student weekly focus follow-up: expected the promised attendance/coursework/recovery breakdown.")
+    if student_focus_follow_up["assistant_message"]["metadata_json"].get("resolved_intent") == "unsupported":
+        failures.append("Student weekly focus follow-up: should reuse the prior weekly-focus context instead of falling into unsupported student intent.")
+
+    student_help = _send(client, student_token, student_session_id, "what all data you have")
+    _assert_common_assistant_contract(student_help, failures, label="Student help answer")
+    student_help_text = student_help["assistant_message"]["content"].lower()
+    if "focused set of grounded student data" not in student_help_text and "latest risk or prediction snapshot" not in student_help_text:
+        failures.append("Student help answer: expected a student data/capabilities summary for 'what all data you have'.")
+    if student_help["assistant_message"]["metadata_json"].get("resolved_intent") == "unsupported":
+        failures.append("Student help answer: should route as help instead of unsupported.")
 
     if failures:
         print("Frontend contract verification failed:")

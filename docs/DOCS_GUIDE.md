@@ -45,6 +45,29 @@ If you are completely new, read in this order:
 10. [FRONTEND_ROLE_FLOWS.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_ROLE_FLOWS.md)
    - how student, counsellor, and admin flows differ in practice
 
+11. [FRONTEND_UAT_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_UAT_GUIDE.md)
+   - how to test the frontend manually in a real browser after the automated checks pass
+
+12. [LOCAL_STARTUP_AND_READINESS_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/LOCAL_STARTUP_AND_READINESS_GUIDE.md)
+   - the simplest way to start backend, worker, and frontend locally
+   - what "ready" looks like before doing browser UAT
+
+13. [DEPLOYMENT_READINESS_CHECKLIST.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/DEPLOYMENT_READINESS_CHECKLIST.md)
+   - the final launch-readiness checklist
+   - what still must be true before calling the system demo-ready, staging-ready, or production-style ready
+
+14. [.env.example](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/.env.example)
+   - safe environment template
+   - use this instead of reusing old live secrets when preparing a fresh machine or deployment target
+
+15. [GENERALIZED_ACADEMIC_DATA_TEMPLATE_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/GENERALIZED_ACADEMIC_DATA_TEMPLATE_GUIDE.md)
+   - how the new institution-agnostic academic CSV pack is structured
+   - why richer curriculum, attendance-policy, and semester-history data are needed before the next chatbot/generalization pass
+
+16. [GENERALIZED_INSTITUTION_IMPORT_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/GENERALIZED_INSTITUTION_IMPORT_GUIDE.md)
+   - how the backend now consumes that generalized contract
+   - what the new import foundation actually writes into the database
+
 After that, go into specialized docs depending on your task.
 
 ## 2. Docs By Purpose
@@ -98,6 +121,15 @@ These are the best docs for understanding the product and architecture.
 - [FRONTEND_ROLE_FLOWS.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_ROLE_FLOWS.md)
   - role-by-role UX reasoning and operational flow explanation
 
+- [FRONTEND_UAT_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_UAT_GUIDE.md)
+  - manual browser checklist for homepage, login, dashboards, chat, reports, imports, and mobile behavior
+
+- [LOCAL_STARTUP_AND_READINESS_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/LOCAL_STARTUP_AND_READINESS_GUIDE.md)
+  - exact local startup modes and beginner-friendly readiness checklist
+
+- [DEPLOYMENT_READINESS_CHECKLIST.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/DEPLOYMENT_READINESS_CHECKLIST.md)
+  - final pre-launch checklist for secrets, scope safety, chatbot readiness, worker readiness, and deployment confidence
+
 ### E. Operational / Milestone Docs
 
 - [BACKEND_SIGNOFF_2026-04-12.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/BACKEND_SIGNOFF_2026-04-12.md)
@@ -110,6 +142,15 @@ These are the best docs for understanding the product and architecture.
 
 - [VIGNAN_IMPORT_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/VIGNAN_IMPORT_GUIDE.md)
   - production-style import guide for Vignan data
+
+- [GENERALIZED_ACADEMIC_DATA_TEMPLATE_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/GENERALIZED_ACADEMIC_DATA_TEMPLATE_GUIDE.md)
+  - explains the reusable CSV schema and data-contract design for generalized institution data
+
+- [DATA_TEMPLATE_INDEX.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/DATA_TEMPLATE_INDEX.md)
+  - quick entry point for the new data-template contract docs and cleanup note about the removed temporary sample pack
+
+- [GENERALIZED_INSTITUTION_IMPORT_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/GENERALIZED_INSTITUTION_IMPORT_GUIDE.md)
+  - explains the new backend implementation that consumes the generalized contract
 
 ### G. Guardian Notification Docs
 
@@ -142,6 +183,7 @@ Read:
 - [FRONTEND_ROLE_FLOWS.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_ROLE_FLOWS.md)
 - [CHATBOT_FRONTEND_INTEGRATION_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/CHATBOT_FRONTEND_INTEGRATION_GUIDE.md)
 - [CHATBOT.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/CHATBOT.md)
+- [FRONTEND_UAT_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FRONTEND_UAT_GUIDE.md)
 
 ### If you want to understand data/features
 
@@ -149,6 +191,7 @@ Read:
 
 - [DATA_DICTIONARY.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/DATA_DICTIONARY.md)
 - [FEATURE_CONTRACT.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/FEATURE_CONTRACT.md)
+- [GENERALIZED_ACADEMIC_DATA_TEMPLATE_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/GENERALIZED_ACADEMIC_DATA_TEMPLATE_GUIDE.md)
 
 ### If you want to understand AI output ownership
 

@@ -43,25 +43,58 @@ export function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <SectionTitle
-        eyebrow="Admin dashboard"
-        title="Institution-wide visibility with clean operational depth"
-        description="The admin landing experience stays executive-first. Uploads and full reports remain available, but the first screen is designed for quick institutional understanding."
-        action={
-          <NavLink to="/app/admin/imports">
-            <Button>
-              <UploadCloud className="mr-2 h-4 w-4" />
-              Upload new cohort
-            </Button>
-          </NavLink>
-        }
-      />
+      <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <Card className="overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white shadow-lift">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-indigo-200">Admin dashboard</p>
+              <h2 className="mt-3 text-4xl font-black tracking-tight">Institution-wide visibility with clean operational depth.</h2>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">
+                The admin landing experience stays executive-first. Uploads and full reports remain available, but the first screen is designed for quick institutional understanding before deeper operational work.
+              </p>
+            </div>
+            <NavLink to="/app/admin/imports">
+              <Button className="bg-white text-slate-950 hover:bg-slate-100">
+                <UploadCloud className="mr-2 h-4 w-4" />
+                Upload new cohort
+              </Button>
+            </NavLink>
+          </div>
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
+              <p className="text-xs uppercase tracking-[0.18em] text-indigo-200">Imported students</p>
+              <p className="mt-2 text-sm font-semibold text-white">{coverage.total_imported_students} currently visible in the imported cohort</p>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
+              <p className="text-xs uppercase tracking-[0.18em] text-indigo-200">Scoring readiness</p>
+              <p className="mt-2 text-sm font-semibold text-white">{coverage.scored_students} students already have prediction output</p>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
+              <p className="text-xs uppercase tracking-[0.18em] text-indigo-200">Outcome posture</p>
+              <p className="mt-2 text-sm font-semibold text-white">{overview.total_high_risk_students} students are currently high risk</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="space-y-4 bg-white/92">
+          <SectionTitle
+            eyebrow="Executive reading"
+            title="What admins should see first"
+            description="The first screen stays summary-first so institution leaders can orient quickly before moving into reports, imports, or operations."
+          />
+          <div className="space-y-3">
+            <AdminInfoRow label="Why uploads are separate" value="Imports are operational tasks, so they should not dominate the executive landing screen." />
+            <AdminInfoRow label="Why reports are a dedicated route" value="Heavy charts belong in their own analytics workspace instead of overloading the first admin view." />
+            <AdminInfoRow label="Copilot role" value="Use the admin copilot for institution-scoped questions, comparisons, and reporting follow-ups grounded to backend data." />
+          </div>
+        </Card>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Total students" value={String(overview.total_students)} note="Current institution-wide live student count in the risk overview." />
         <StatCard label="High risk" value={String(overview.total_high_risk_students)} note="Students currently classified as high risk." accent="rose" />
-        <StatCard label="Imported students" value={String(coverage.total_imported_students)} note="Current imported cohort size visible through import coverage." accent="teal" />
-        <StatCard label="Scored imported students" value={String(coverage.scored_students)} note="Imported students that already have a prediction generated." accent="gold" />
+        <StatCard label="I-grade risk" value={String(overview.total_students_with_i_grade_risk)} note="Students currently below the safe subject-wise attendance band." accent="teal" />
+        <StatCard label="R-grade risk" value={String(overview.total_students_with_r_grade_risk)} note="Students currently in repeat-grade attendance territory." accent="gold" />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
@@ -76,16 +109,29 @@ export function AdminDashboardPage() {
           dataKey="value"
         />
         <PieChartCard
-          title="Outcome distribution"
-          description="A quick institution-wide outcome posture view."
-          data={overview.outcome_distribution.map((item) => ({
-            label: item.outcome_status,
-            value: item.student_count,
-          }))}
+          title="Attendance policy posture"
+          description="A quick institution-wide view of overall shortage, I-grade pressure, and R-grade pressure."
+          data={[
+            { label: "Overall shortage", value: overview.total_students_with_overall_shortage },
+            { label: "I-grade", value: overview.total_students_with_i_grade_risk },
+            { label: "R-grade", value: overview.total_students_with_r_grade_risk },
+            { label: "High risk", value: overview.total_high_risk_students },
+          ]}
           nameKey="label"
           dataKey="value"
         />
       </div>
+
+      <BarChartCard
+        title="Subject pressure hotspots"
+        description="Shows which subjects are currently pulling the most students below the institutional attendance policy."
+        data={overview.top_subject_pressure.map((item) => ({
+          label: item.subject_name,
+          value: item.students_below_threshold,
+        }))}
+        xKey="label"
+        dataKey="value"
+      />
 
       <Card className="bg-slate-950 text-white">
         <p className="text-xs uppercase tracking-[0.22em] text-slate-300">Executive summary</p>
@@ -95,10 +141,19 @@ export function AdminDashboardPage() {
   );
 }
 
+function AdminInfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{label}</p>
+      <p className="mt-2 text-sm leading-7 text-slate-700">{value}</p>
+    </div>
+  );
+}
+
 export function AdminReportsPage() {
   const { auth } = useAuth();
   const institutionQuery = useQuery({
-    queryKey: ["institution-report", auth?.accessToken],
+    queryKey: ["institution-overview", auth?.accessToken],
     queryFn: () => apiRequest<InstitutionOverview>("/institution/risk-overview", { token: auth?.accessToken }),
   });
 
@@ -136,11 +191,59 @@ export function AdminReportsPage() {
           dataKey="value"
         />
         <BarChartCard
+          title="Attendance policy posture"
+          description="Institution-wide split of overall shortage, I-grade, and R-grade pressure."
+          data={[
+            { label: "Overall shortage", value: overview.total_students_with_overall_shortage },
+            { label: "I-grade", value: overview.total_students_with_i_grade_risk },
+            { label: "R-grade", value: overview.total_students_with_r_grade_risk },
+            { label: "High risk", value: overview.total_high_risk_students },
+          ]}
+          xKey="label"
+          dataKey="value"
+        />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <BarChartCard
           title="Category-wise high-risk load"
           description="Administrative comparison view across imported profile categories."
           data={overview.category_buckets.map((item) => ({
             label: item.bucket_label,
             value: item.high_risk_students,
+          }))}
+          xKey="label"
+          dataKey="value"
+        />
+        <BarChartCard
+          title="Top subject hotspots"
+          description="Subjects with the highest number of students below attendance policy."
+          data={overview.top_subject_pressure.map((item) => ({
+            label: item.subject_name,
+            value: item.students_below_threshold,
+          }))}
+          xKey="label"
+          dataKey="value"
+        />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <BarChartCard
+          title="Branch attendance pressure"
+          description="Shows which branches carry the strongest combined overall-shortage and repeat-grade pressure."
+          data={overview.branch_pressure.map((item) => ({
+            label: item.bucket_label,
+            value: item.students_with_r_grade_risk + item.students_with_overall_shortage,
+          }))}
+          xKey="label"
+          dataKey="value"
+        />
+        <BarChartCard
+          title="Semester attendance pressure"
+          description="Shows which semester slices currently need the most institution-wide recovery attention."
+          data={overview.semester_pressure.map((item) => ({
+            label: item.bucket_label,
+            value: item.students_with_r_grade_risk + item.students_with_overall_shortage,
           }))}
           xKey="label"
           dataKey="value"
@@ -171,12 +274,13 @@ export function AdminImportsPage() {
       const form = new FormData();
       form.append("file", file);
       const response = await apiRequest<Record<string, unknown>>(
-        `/admin/imports/vignan?trigger_scoring=${triggerScoring}&dry_run=${dryRun}`,
+        `/admin/imports/institution?trigger_scoring=${triggerScoring}&dry_run=${dryRun}`,
         {
           method: "POST",
           token: auth?.accessToken,
           body: form,
           isFormData: true,
+          timeoutMs: 600000,
         },
       );
       setResult(response);
@@ -200,7 +304,7 @@ export function AdminImportsPage() {
           <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-5">
             <p className="text-sm font-semibold text-slate-900">Upload file</p>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Accepts the production-style Vignan import formats supported by the backend: `.xlsx` or `.zip` with named CSV sheets.
+              Accepts the generalized institution import formats supported by the backend: `.xlsx` or `.zip` with named CSV sheets.
             </p>
             <input
               type="file"
@@ -231,7 +335,7 @@ export function AdminImportsPage() {
         {error ? <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</div> : null}
 
         {result ? (
-          <Card className="bg-slate-950 text-white">
+          <Card className="border-slate-900/80 text-white" style={{ background: "#020617" }}>
             <p className="text-xs uppercase tracking-[0.22em] text-slate-300">Latest import response</p>
             <pre className="mt-4 overflow-auto whitespace-pre-wrap text-sm leading-6 text-slate-100">
               {JSON.stringify(result, null, 2)}
@@ -250,7 +354,7 @@ export function AdminOperationsPage() {
     queryFn: () => apiRequest<OperationalOverview>("/reports/operations-overview", { token: auth?.accessToken }),
   });
   const importCoverageQuery = useQuery({
-    queryKey: ["import-coverage-detailed", auth?.accessToken],
+    queryKey: ["import-coverage", auth?.accessToken],
     queryFn: () => apiRequest<ImportCoverage>("/reports/import-coverage", { token: auth?.accessToken }),
   });
 
@@ -263,6 +367,9 @@ export function AdminOperationsPage() {
 
   const operations = operationsQuery.data;
   const coverage = importCoverageQuery.data;
+  const topBranch = operations.institution_overview.branch_pressure[0];
+  const topSemester = operations.institution_overview.semester_pressure[0];
+  const topSubject = operations.institution_overview.top_subject_pressure[0];
 
   return (
     <div className="space-y-6">
@@ -300,6 +407,61 @@ export function AdminOperationsPage() {
             { label: "Missing finance", value: coverage.students_missing_finance },
             { label: "Missing counsellor email", value: coverage.students_missing_counsellor_email },
           ]}
+          xKey="label"
+          dataKey="value"
+        />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <StatCard
+          label="Most pressured branch"
+          value={topBranch?.bucket_label || "Unavailable"}
+          note={
+            topBranch
+              ? `${topBranch.students_with_r_grade_risk} R-grade and ${topBranch.students_with_overall_shortage} overall-shortage students`
+              : "No branch-pressure detail available yet."
+          }
+        />
+        <StatCard
+          label="Most pressured semester"
+          value={topSemester?.bucket_label || "Unavailable"}
+          note={
+            topSemester
+              ? `${topSemester.students_with_r_grade_risk} R-grade and ${topSemester.students_with_overall_shortage} overall-shortage students`
+              : "No semester-pressure detail available yet."
+          }
+          accent="teal"
+        />
+        <StatCard
+          label="Top subject hotspot"
+          value={topSubject?.subject_name || "Unavailable"}
+          note={
+            topSubject
+              ? `${topSubject.students_below_threshold} students below threshold`
+              : "No subject hotspot detail available yet."
+          }
+          accent="gold"
+        />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <BarChartCard
+          title="Branch pressure from operations view"
+          description="This helps admins move from abstract risk posture to the first branch-level action area."
+          data={operations.institution_overview.branch_pressure.map((item) => ({
+            label: item.bucket_label,
+            value: item.students_with_r_grade_risk + item.students_with_overall_shortage,
+          }))}
+          xKey="label"
+          dataKey="value"
+        />
+        <BarChartCard
+          title="Semester pressure from operations view"
+          description="This shows which semester slice currently concentrates the most attendance-policy stress."
+          data={operations.institution_overview.semester_pressure.map((item) => ({
+            label: item.bucket_label,
+            value: item.students_with_r_grade_risk + item.students_with_overall_shortage,
+          }))}
           xKey="label"
           dataKey="value"
         />

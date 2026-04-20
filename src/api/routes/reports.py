@@ -28,6 +28,7 @@ from src.reporting.faculty_summary_snapshot_service import (
 
 
 router = APIRouter(prefix="/reports", tags=["reports"])
+_SYSTEM_AUTH = AuthContext(role="system", subject="system")
 
 
 def _csv_response(filename: str, fieldnames: list[str], rows: list[dict]) -> PlainTextResponse:
@@ -49,9 +50,9 @@ def get_operational_report_overview(
 ) -> OperationalReportOverviewResponse:
     return OperationalReportOverviewResponse(
         generated_at=to_ist(datetime.now(UTC)),
-        summary=get_faculty_summary(db),
-        institution_overview=get_institution_risk_overview(db=db, imported_only=imported_only),
-        intervention_effectiveness=get_intervention_effectiveness_analytics(db),
+        summary=get_faculty_summary(db=db, auth=_SYSTEM_AUTH),
+        institution_overview=get_institution_risk_overview(db=db, imported_only=imported_only, auth=_SYSTEM_AUTH),
+        intervention_effectiveness=get_intervention_effectiveness_analytics(db=db, auth=_SYSTEM_AUTH),
     )
 
 

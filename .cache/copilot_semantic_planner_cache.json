@@ -1,0 +1,1001 @@
+{
+  "57d9cd11ccc8828ca03ed003a12172e3c6f2913525ae9aedb93dcb4ee6ec5506": {
+    "action": "rewrite",
+    "rewritten_message": "Am I at risk due to my current attendance?",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message requests direct personal attendance data, which is not a supported grounded behavior (comparison, ranking, diagnostic, or risk assessment). Rewriting it as a question about attendance-related risk transforms it into a 'student priority/risk' query, which is a supported and relevant behavior for a university retention copilot. This makes the query actionable without inventing new backend abilities.",
+    "_source_provider": "gemini"
+  },
+  "7663d366f35e2dca949cb562dacd9a1e6d70681c2fd0b515ccab62cb387ceb2d": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "What specifically would you like me to tell you about retention?",
+    "refusal_reason": "",
+    "confidence": 0.8,
+    "rationale": "The original message 'ok tell' is too vague and unspecific to be processed or rewritten into a grounded retention query. It does not align with any supported behaviors and requires clarification from the user to understand their intent.",
+    "_source_provider": "gemini"
+  },
+  "d88a56ec697a3a2d0523fb6a56020c7806d3972e73978de692e9584a45fcb895": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please specify what information you're asking 'why exactly' about?",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message 'and why exactly?' is too vague and lacks context to determine a user goal or primary intent. It cannot be kept or rewritten into a grounded retention query without knowing what the user is referring to. Clarification is necessary to proceed.",
+    "_source_provider": "gemini"
+  },
+  "bce7d9414a5eb92b87045c6c6ded791ad528e3bb17086848440a451e9594650f": {
+    "action": "rewrite",
+    "rewritten_message": "tell me whether this puts me in safe, i-grade, or r-grade territory",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student attendance-territory follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "bf6149cf74dbe2ed11b85c5187993f5812d2f97887992c186225708025506de8": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please specify what 'why' you are referring to, perhaps related to a specific group of students, a particular outcome, or a trend in retention data?",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message \"and why exactly?\" is too vague and lacks specific context. It requires further details from the user to understand their intent and to determine if it aligns with any of the supported grounded retention queries.",
+    "_source_provider": "gemini"
+  },
+  "25ce2746144f9754a293b2fa1e8adb34b7e8a7ad48cc6392a04c06805210f7b8": {
+    "action": "rewrite",
+    "rewritten_message": "do i have i grade risk or r grade risk and am i eligible for end sem",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student attendance-territory follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "bf80c6980027ccd3842dae26bc60564040b8069b94232495c8895790c5f5e25b": {
+    "action": "rewrite",
+    "rewritten_message": "am i safe or should i worry",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.84,
+    "rationale": "Converted a short student why-follow-up into the grounded student safety explanation path using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "020ffc60a712e180f14ee05317385c1bb13c42fd9be0d97fa4294a44735f8c5c": {
+    "action": "rewrite",
+    "rewritten_message": "am i safe or should i worry",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.84,
+    "rationale": "Converted a short student why-follow-up into the grounded student safety explanation path using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "cf164adf7e5497bf93186778329ba9fe8075e033060acf7b403daf159fc97d84": {
+    "action": "rewrite",
+    "rewritten_message": "show attendance risk branch wise",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.84,
+    "rationale": "Extended the previous grouped attendance analysis into another requested dimension using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "7e86b806ae2435efcb35590145489bd5b6aa2590478613a4fd4bbcc399eb7a08": {
+    "action": "rewrite",
+    "rewritten_message": "what is the difference between prediction risk and attendance risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.85,
+    "rationale": "Continued a prior risk-layer or grouped-risk explanation using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "b053da72a2bee9a1b2dbcb4a2a1f0fc95fcc3458f0c26aec363aadeddeaae34c": {
+    "action": "rewrite",
+    "rewritten_message": "which of my students need weekly monitoring because of unresolved r grade burden",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.86,
+    "rationale": "Mapped fuzzy unresolved-burden monitoring phrasing to the grounded weekly burden path.",
+    "_source_provider": "local_fallback"
+  },
+  "b78c163c9035e29ea421b3879fc16f17074878e31f2d5a45c7e46ba6778c326c": {
+    "action": "rewrite",
+    "rewritten_message": "only Female",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.83,
+    "rationale": "Normalized a bucket-specific grouped follow-up using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "cf17c6469cca60411223075ec55887d42f117c9f0fecd9515f68f3217446e2bb": {
+    "action": "rewrite",
+    "rewritten_message": "show attendance risk semester wise",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.84,
+    "rationale": "Extended the previous grouped attendance analysis into another requested dimension using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "152f88344beac5045d438d98d9659544e1af83106ca0a8306f0fd1788ab08678": {
+    "action": "rewrite",
+    "rewritten_message": "do i have i grade risk or r grade risk and am i eligible for end sem",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student attendance-territory follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "b5b8ee7eb769071d5c30bf61b947917754ddceb9ef8488a08ead40e6fa7a064c": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the student action-list follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "96f12a1e7170a7997177a176a3aa77ce19e5500bf5d6e916e6576a8d65ccf367": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please specify what you would like to proceed with, in the context of student retention? For example, are you looking to compare student performance, identify at-risk students, or analyze specific retention metrics?",
+    "refusal_reason": "",
+    "confidence": 0.95,
+    "rationale": "The original message 'proceed' is too vague and lacks specific context to be processed as a grounded retention query. Clarification is required to understand the user's intent and align it with supported functionalities like comparison, attention ranking, or diagnostic analysis.",
+    "_source_provider": "gemini"
+  },
+  "36a42cfb349a13519f5bb7df0ebbd6011419ab87596282131344bdd0bcea80d8": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please provide more context about what you mean by 'you said only right'?",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message is very vague and lacks context, making it impossible to understand the user's intent or relate it to any supported retention query. Clarification is needed to proceed.",
+    "_source_provider": "gemini"
+  },
+  "f367db007d98327c7209a347372bad083bc0edf6a0eaf1d6e439656cc23e6964": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please specify which aspect of 'recovery priorities' you're interested in? For example, are you looking to compare retention metrics across a specific dimension, identify which student groups need attention, or diagnose the reasons for a gap?",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message 'proceed with overall recovery priorities' is too vague and does not align with any of the supported grounded retention queries (e.g., comparison, attention ranking, diagnostic). Clarification is needed to understand the user's specific intent and guide them toward a supported query type.",
+    "_source_provider": "gemini"
+  },
+  "d73104dcb58995444827451a9bc65fb293605f0999ecd27e1047a3c86bc59fdf": {
+    "action": "rewrite",
+    "rewritten_message": "What actions can I take to improve my academic standing if I am identified as high risk?",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.85,
+    "rationale": "The original message 'how can i recover from High alert' is vague and ungrounded. Interpreting 'High alert' as a student's academic risk status, the message is rewritten to a clearer, grounded query about actions a student can take to improve their standing. This aligns with the 'student priority/risk questions inside role scope' supported behavior, allowing the deterministic planner to route it safely. The planner's low confidence and unsupported intent signal indicate that a rewrite is necessary for successful processing.",
+    "_source_provider": "gemini"
+  },
+  "2a76ce33905ad5b11cd39466170e421ca82eea81108cceba0b31e5f3b6479597": {
+    "action": "rewrite",
+    "rewritten_message": "turn this into a simple day by day plan for the week",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the day-by-day weekly planning thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "067fa66752dc96142d13ba9d1d5f8ba084f36d4f3283e3416628faecaf7583a0": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first for my students",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "73f9236aca21d1ecfdcf67f52829a6351dc746f9f6075635fcd8878f7d437f3c": {
+    "action": "rewrite",
+    "rewritten_message": "what should we do first institution wide",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "f5796edf7f64bc1e3caf56d6887e4d0185082685ad687f5f0ee4d7f485088c97": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Are you asking about your assignment completion rate, average grades, or something else?",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The term \"assignment rate\" is ambiguous and could refer to several metrics (e.g., completion, grades, submission). Clarification is needed to understand the user's specific intent and to align the query with supported grounded behaviors.",
+    "_source_provider": "gemini"
+  },
+  "c033291680a84f59da97fb7073cc939c6f7a3df3c2f293ed42544ffd04a686a0": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "What specific analysis or comparison are you interested in regarding assignment submission rates?",
+    "refusal_reason": "",
+    "confidence": 0.8,
+    "rationale": "The original message identifies a metric ('assignment submission rate') but does not specify the user's goal (e.g., comparison, ranking, diagnosis) or any dimension for analysis. This lack of context makes the user's intent unclear and prevents grounding the query to supported analytical behaviors. Clarification is needed to understand the desired analysis type.",
+    "_source_provider": "gemini"
+  },
+  "82ac5e7be0fff3f7e88460ea97846b31ab03da74268620c818c0722e617321e8": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please clarify what you mean by 'yes'?",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The input 'yes' is ambiguous and lacks context. The deterministic planner also indicates an unknown user goal and unsupported primary intent. Therefore, clarification is needed to understand the user's intention and proceed with a grounded retention query.",
+    "_source_provider": "gemini"
+  },
+  "50f75045fd83a126f16812eb7c916e7a944e168aa140f7d2b9726349c98f65d0": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the student action-list follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "ad948cca8c7839271c6afed5bc4198b8452316d19648d8c1f0c21bc2d8d05498": {
+    "action": "keep",
+    "rewritten_message": "",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message is a clear and direct question about a student's risk status, which is a supported behavior for the 'counsellor' role. It does not require rewriting or clarification.",
+    "_source_provider": "gemini"
+  },
+  "ff081d6b1757ffa0e13f42403f6b2b575c710275e1437a5b2655d68a393b1e5e": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please tell me more about what you would like to do or ask?",
+    "refusal_reason": "",
+    "confidence": 0.55,
+    "rationale": "The message 'ok' is too ambiguous and provides no clear intent for a retention copilot. It does not align with any supported grounded behaviors. A clarification is needed to understand the user's goal.",
+    "_source_provider": "gemini"
+  },
+  "fe71b5a2cbed7596cecf4ab3265807352d064aa4b8310a3f567162fe04f594cb": {
+    "action": "rewrite",
+    "rewritten_message": "only CSE",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.83,
+    "rationale": "Normalized a bucket-specific grouped follow-up using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "4565ce12afa0d16bf5db180a297dfe4cabf1575137034d61e14f45ee3693267e": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Which dimension are you interested in for the 'top 5'? For example, are you asking about top 5 branches, top 5 student categories, or something else?",
+    "refusal_reason": "",
+    "confidence": 0.65,
+    "rationale": "The original message 'what about top 5' is too ambiguous and does not specify a comparison dimension or context. Clarification is needed to understand the user's intent regarding which metric or dimension they want to rank (e.g., top 5 branches, top 5 categories, etc.) to align with supported grounded behaviors like 'comparison across one dimension' or 'attention ranking'.",
+    "_source_provider": "gemini"
+  },
+  "c05fbd94040fbb5efd8794123c3e63e28c5b6af675200dbd7f60504099bbf762": {
+    "action": "rewrite",
+    "rewritten_message": "how is my current lms activity affecting my risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student LMS-to-risk follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "714cfb95cf0020753dfe7c5c8241ac91376ac4b1e090c7ee07497a84342a7315": {
+    "action": "rewrite",
+    "rewritten_message": "how is my current finance posture affecting my risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student finance-to-risk follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "9ffeb4305ce1017a47b7ac0dfda44fd9e1e30c18c4921c25fee6da7dbe7bf5f3": {
+    "action": "rewrite",
+    "rewritten_message": "do i have i grade risk or r grade risk and am i eligible for end sem",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student attendance-territory follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "55e7e96a896e396a5ebc624d18fed09560809e73b3e6739c046546c756998bb9": {
+    "action": "rewrite",
+    "rewritten_message": "am i safe or should i worry",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.84,
+    "rationale": "Converted a short student why-follow-up into the grounded student safety explanation path using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "d2aa6133f18c31d87c68044e6053f5d7bb7b0c9c6221d5587b1668073cfb1e00": {
+    "action": "rewrite",
+    "rewritten_message": "show attendance risk branch wise",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.84,
+    "rationale": "Extended the previous grouped attendance analysis into another requested dimension using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "4182a856cadc0144174b362dd58c98192925feb550a8de6c58c42d74235768c2": {
+    "action": "rewrite",
+    "rewritten_message": "what is the difference between prediction risk and attendance risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.85,
+    "rationale": "Continued a prior risk-layer or grouped-risk explanation using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "ec99592ee7302b900eadf3d23b0751f7d112b343ce3ad1958296639c1384195c": {
+    "action": "rewrite",
+    "rewritten_message": "which of my students need weekly monitoring because of unresolved r grade burden",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.86,
+    "rationale": "Mapped fuzzy unresolved-burden monitoring phrasing to the grounded weekly burden path.",
+    "_source_provider": "local_fallback"
+  },
+  "3573e9f8379eba44fbe5c57f14f15e5187aaeabae4d885ba45a4bb9af250c014": {
+    "action": "rewrite",
+    "rewritten_message": "do i have i grade risk or r grade risk and am i eligible for end sem",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student attendance-territory follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "5ad99f9de21aa5e7fd056745e28d0b4798c79f10617ef83e55910c5da45cc5d5": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the student action-list follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "0a3944f76a480a744fc888058e6035e84387256609c52b9ff2bbbc40ec06a143": {
+    "action": "rewrite",
+    "rewritten_message": "turn this into a simple day by day plan for the week",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the day-by-day weekly planning thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "a2e2bafc8da92219579634b39b88bf5ef8f91f0d83993f3620886dcf56ff0347": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the student action-list follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "10b52429f56adc702843a1eaf22decb59a7a95a7d5d63e27fb090a45450090d7": {
+    "action": "rewrite",
+    "rewritten_message": "do i have i grade risk or r grade risk and am i eligible for end sem",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student attendance-territory follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "552beeb2e92ee4d805c5d3468747d1571e4cc59867f899c096655f2aa1fe1ad1": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please elaborate on what you mean by 'yes'?",
+    "refusal_reason": "",
+    "confidence": 0.7,
+    "rationale": "The original message 'yes' is an ungrounded affirmation that provides no context or actionable query. It cannot be processed as-is or rewritten without making assumptions. Clarification is needed to understand the user's intent.",
+    "_source_provider": "gemini"
+  },
+  "e094fafd8e081f0599d9bfd0e6ff49ba345d2008271e90575b7fea5350a65c92": {
+    "action": "rewrite",
+    "rewritten_message": "how can i remove the high label risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the student recovery-impact follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "e6fc1b4ba8ae52ecb58f2568aea7ff3adff143b802ce2a14b0c1de11133c93fa": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please elaborate on what you mean by 'ok' or what you would like to do next?",
+    "refusal_reason": "",
+    "confidence": 0.55,
+    "rationale": "The user's message 'ok' is too vague to determine any intent or apply any supported grounded behaviors. Clarification is needed to understand their goal.",
+    "_source_provider": "gemini"
+  },
+  "137d69c308117c1d22e27749614a21534622329e358a531f998b25d60e4e579a": {
+    "action": "rewrite",
+    "rewritten_message": "do i have i grade risk or r grade risk and am i eligible for end sem",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student attendance-territory follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "129231ce9fbd93a16eff9f70f9fc670b708dd43d63789363bb2eecf45d6ad348": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the student action-list follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "60ab51f22077a470c6418b3ca6b676f10b2d6094082f99807e45937c55846f67": {
+    "action": "rewrite",
+    "rewritten_message": "turn this into a simple day by day plan for the week",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the day-by-day weekly planning thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "53d157ddb76899bd4cfe3b6a29e7a911782e589a5855c67ae45e4f0511e564e3": {
+    "action": "rewrite",
+    "rewritten_message": "how can i remove the high label risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the student recovery-impact follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "51e11814cc5c5c2de12c4985fe53f891f9bb63c0c9c3a2fba25559e82945852b": {
+    "action": "rewrite",
+    "rewritten_message": "how is my current coursework pattern affecting my risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student coursework-to-risk follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "93e85e49e89ccbcaa743d895498ea28b84a1d1ee03a6120a50424893bb72b92a": {
+    "action": "rewrite",
+    "rewritten_message": "do i have i grade risk or r grade risk and am i eligible for end sem",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student attendance-territory follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "44b4ba0ba4f190e305f0466aefb6d638c332c9a55727285b6babb08aa0037b0f": {
+    "action": "rewrite",
+    "rewritten_message": "am i safe or should i worry",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.84,
+    "rationale": "Converted a short student why-follow-up into the grounded student safety explanation path using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "b193271cc7d193923862fa1a8c0f82a43409dfa60e6d29be83e4625b86d1a6ea": {
+    "action": "rewrite",
+    "rewritten_message": "show attendance risk branch wise",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.84,
+    "rationale": "Extended the previous grouped attendance analysis into another requested dimension using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "3d7f6090698f1eee8d6d0ef3d04673b8524a43c061d073e02099158cc0680f5a": {
+    "action": "rewrite",
+    "rewritten_message": "what is the difference between prediction risk and attendance risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.85,
+    "rationale": "Continued a prior risk-layer or grouped-risk explanation using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "47a68505148c8a2ee08a16c575db91ebf6e57695e6846e69740cdb2b8748d233": {
+    "action": "rewrite",
+    "rewritten_message": "which of my students need weekly monitoring because of unresolved r grade burden",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.86,
+    "rationale": "Mapped fuzzy unresolved-burden monitoring phrasing to the grounded weekly burden path.",
+    "_source_provider": "local_fallback"
+  },
+  "8e0200067f775a9d6639ea336bb73ba2edbd32c544c16084a2ed27ee431c68f9": {
+    "action": "rewrite",
+    "rewritten_message": "do i have i grade risk or r grade risk and am i eligible for end sem",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student attendance-territory follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "857e067b03e9d2578c3a085609e08ca6876d291abcd145fa1caed74d5b1c8d74": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the student action-list follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "213ad4538a14316e4c98957e23ca242dabcdc1f6a14f3c82c9a5b6f182ada342": {
+    "action": "rewrite",
+    "rewritten_message": "what should we do first institution wide",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "5fa80b78f19b43a430278a626eb505ca021b27066b49823ce4aea1ce86596e42": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first for my students",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "87b3cc2fdad6e6864e2d5b0ed84de1a800e436b19e937a626dc03669ece49a5b": {
+    "action": "rewrite",
+    "rewritten_message": "how is my current lms activity affecting my risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student LMS-to-risk follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "b44f3426d051f46d77caf7bf714c9b58867098154b40735b12a4ffacaa3d2f6b": {
+    "action": "rewrite",
+    "rewritten_message": "how is my current finance posture affecting my risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student finance-to-risk follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "f62203ca6c0240c67e283d764e3825f7068b4b6161f334d19f7ed9e58274c498": {
+    "action": "rewrite",
+    "rewritten_message": "do i have i grade risk or r grade risk and am i eligible for end sem",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student attendance-territory follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "e184d75c5fc8956126bea04c316c9091d1bb14de1d6cf12db44a011f00b7a70d": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the student action-list follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "4ce5a786e5ab2e8ef47a9f2c0fe1e8a5e38ae6273afb61989a6657d9a2926696": {
+    "action": "rewrite",
+    "rewritten_message": "only CSE",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.83,
+    "rationale": "Normalized a bucket-specific grouped follow-up using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "2e96adc4746f8d0c894d50777f941da561645323dd0842834b05c3d4457c505d": {
+    "action": "rewrite",
+    "rewritten_message": "show my assigned students",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.85,
+    "rationale": "Preserved a top-N subset follow-up so the grounded memory-follow-up layer can answer it locally instead of reopening clarification.",
+    "_source_provider": "local_fallback"
+  },
+  "dc9d7d95103d47a2738304fe2909a42efc5d6c8847e0bd0a3ffa15b23095a406": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first for my students",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "85f29b394dbbf27f80a957a7afbc1b9dfa1bc7ad982ee3ffa953400bc292e8c2": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first for my students",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "75f78f8564c9e8afb01f81f0b37d78fbe083baa8f98a9fa76ea23b265f8d2dd4": {
+    "action": "rewrite",
+    "rewritten_message": "what should we do first institution wide",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "9eaf7992e078e689b01158a21f42b67f69ffc08d9adebac18bc79cfa5001d408": {
+    "action": "rewrite",
+    "rewritten_message": "only CSE",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.83,
+    "rationale": "Normalized a bucket-specific grouped follow-up using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "6e4cffc1e33756f35a1bf4cc413d98679c548db46f7152e768d7341dd8a03f9f": {
+    "action": "rewrite",
+    "rewritten_message": "what should we do first institution wide",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "2ba832761e4485db3ebf918b995f574c77d203fff68511dc48338a6787f2bb49": {
+    "action": "rewrite",
+    "rewritten_message": "show attendance risk year wise",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.84,
+    "rationale": "Extended the previous grouped attendance analysis into another requested dimension using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "723f22ebfd5e7419b2bc6fce08478b365786e6fe76dcf66cd6e420ed2d1e45a7": {
+    "action": "rewrite",
+    "rewritten_message": "turn this into a simple day by day plan for the week",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.86,
+    "rationale": "Continued the weekly-plan breakdown thread by moving into an actionable day-by-day plan using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "cea815a896b820ca1cdf70c56f85467d63e2c784adad1d8106698dde021c6051": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please specify what 'it' refers to and what criteria you are using to determine 'good' or 'bad'?",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message 'is it good or bad' is too vague and lacks context for any supported retention query. Clarification is needed to understand the subject and the intended comparison or evaluation criteria.",
+    "_source_provider": "gemini"
+  },
+  "30bb0ad45cae7891871fe41ef8bc4931d4383cec91dbe5c39a30e0924ea1917c": {
+    "action": "rewrite",
+    "rewritten_message": "is my current assignment submission rate helping or hurting my current risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued the coursework-evaluation thread by converting a vague quality judgement follow-up into a grounded coursework-versus-risk explanation.",
+    "_source_provider": "local_fallback"
+  },
+  "4ada42268c3f5801a9919d957a8872bf0c2ab55ce42a262ff6a1a6161d7bfc97": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Hi there! How can I help you with student retention today?",
+    "refusal_reason": "",
+    "confidence": 0.6,
+    "rationale": "The original message is a generic greeting ('hey') that does not express a clear intent or query related to student retention. Clarification is necessary to understand the user's specific needs or questions within the scope of the retention copilot.",
+    "_source_provider": "gemini"
+  },
+  "751b52f04d28729b4f21c179f743f32809017b80bd03ee5af4b564351ff46f32": {
+    "action": "refuse",
+    "rewritten_message": "",
+    "clarification_question": "",
+    "refusal_reason": "The request to identify your current semester is outside the scope of the retention copilot's abilities.",
+    "confidence": 0.55,
+    "rationale": "The user's query 'which semester i am in right now' has a primary intent that is unsupported by the retention copilot, as it is not a grounded retention query. The request cannot be rewritten into a supported query, nor does it require clarification based on competing dimensions. While not a sensitive request, refusing it for being out of scope is the appropriate action to prevent unsupported queries from proceeding in the system.",
+    "_source_provider": "gemini"
+  },
+  "a7535655795cd602acdc0315e85af8f38e52e620d2151c65a489b19f21cb6824": {
+    "action": "rewrite",
+    "rewritten_message": "how is my current lms activity affecting my risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Continued the student LMS-to-risk follow-up thread using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "1a836fd07bf0340e2ec70856aafbd96e570c1b9130068938d5756368d0b175b9": {
+    "action": "rewrite",
+    "rewritten_message": "turn this into a simple day by day plan for the week",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.86,
+    "rationale": "Continued the weekly-plan breakdown thread by moving into an actionable day-by-day plan using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "5cf7af75f840b90db37e107cdb1bb852d3f332e41607a740dd3547ff84888444": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Can you please tell me what information you are looking for?",
+    "refusal_reason": "",
+    "confidence": 0.6,
+    "rationale": "The original message 'ok give' is too vague and lacks any specific request. It does not align with any supported grounded retention queries, so clarification is necessary to understand the user's intent.",
+    "_source_provider": "gemini"
+  },
+  "ae079c8929668415ae8c803eb939c1c911ba14dc5d29fbe17dac0354e05ba4e6": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Can you please tell me what information you are looking for?",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message 'ok give' is too vague and lacks any clear intent or specific information. It does not align with any supported grounded behaviors. Clarification is necessary to understand the user's request.",
+    "_source_provider": "gemini"
+  },
+  "ce96af5ea560c39805385315d8ee4516c6767322653864284837aa10ed2c9129": {
+    "action": "rewrite",
+    "rewritten_message": "am i safe or should i worry",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path.",
+    "_source_provider": "local_fallback"
+  },
+  "48ba77cdff2ac6c358ae44b537a1c795ce8b3c9d3b48e5522b78db021a22fae6": {
+    "action": "rewrite",
+    "rewritten_message": "am i safe or should i worry",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path.",
+    "_source_provider": "local_fallback"
+  },
+  "5497ed71e680d8679b63bd15deb49e86c5fd527a4140fb22169129f4ebdd38ae": {
+    "action": "rewrite",
+    "rewritten_message": "what exactly is hurting me most right now",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.86,
+    "rationale": "Mapped broad student explanation and mixed-signal wording to the grounded weakest-driver explanation path.",
+    "_source_provider": "local_fallback"
+  },
+  "552ec3554ff5981856de3e41e7d94f5bdd4f2eebc34281c12d62ec72eba23228": {
+    "action": "rewrite",
+    "rewritten_message": "am i safe or should i worry",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path.",
+    "_source_provider": "local_fallback"
+  },
+  "d2992310e691187cb6d3c6d28d1e9f05853e5fe0a82c533f689d55886142ade5": {
+    "action": "rewrite",
+    "rewritten_message": "am i safe or should i worry",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped broad student wellbeing/performance phrasing to the grounded student safety explanation path.",
+    "_source_provider": "local_fallback"
+  },
+  "ebea19ae99c3af8eb0380c1e0b4c0d03d3a8016155a8f3a144996f31a8d05bc3": {
+    "action": "keep",
+    "rewritten_message": "ok",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.8,
+    "rationale": "The original message 'ok' is a complete, albeit uninformative, statement. It does not present a query that can be rewritten into a clearer grounded retention query, nor does it contain competing dimensions requiring clarification. It is also not a sensitive request that would warrant refusal. Therefore, the most appropriate action is to keep the message as-is, allowing the downstream system to handle the lack of a defined intent, as already indicated by the deterministic planner summary (user_goal=unknown, primary_intent=unsupported).",
+    "_source_provider": "gemini"
+  },
+  "81a6f94884eefc247bd4310dde1c0b6147b813ec7ce7d63211c861b9e54e37ca": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please specify which other factors you're interested in, or what kind of analysis you'd like to perform (e.g., compare, rank, or diagnose)?",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The user's message \"what about other factors\" is extremely vague and underspecified. It does not indicate which specific factors the user is interested in, nor what type of analysis (e.g., comparison, ranking, diagnosis) they wish to perform. This lack of specificity makes it impossible to map to any of the supported grounded behaviors without further input from the user. Clarification is required to understand the user's intent.",
+    "_source_provider": "gemini"
+  },
+  "d0513efe7cad33afd485c4cde1c141d77455d7dfa2a992a61eb58f277101260f": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Could you please specify what 'problem' you are referring to? For example, are you interested in understanding retention rates, student performance trends, or issues related to a specific student group or academic branch?",
+    "refusal_reason": "",
+    "confidence": 0.95,
+    "rationale": "The original message 'so what is the problem now' is too vague and ungrounded. It does not align with any of the supported retention copilot behaviors (comparison, attention ranking, diagnostic comparison, or priority questions) without further context. Clarification is necessary to guide the user toward a specific, actionable query that can be processed by the system.",
+    "_source_provider": "gemini"
+  },
+  "3b8bee5e770aae79d0fbc32edc8c9be3a75431b28d6db3990d01ff17e39de6c3": {
+    "action": "keep",
+    "rewritten_message": "can you give week-by-week plan",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message is clear and concise. While the deterministic planner indicated an unsupported primary intent, the request does not involve messy wording that would benefit from rewriting into a grounded retention query, nor does it present competing comparison dimensions for clarification. According to the specified rules, refusal is exclusively reserved for sensitive or secret requests, which this message is not. Therefore, the message is kept as-is to be handled by subsequent layers.",
+    "_source_provider": "gemini"
+  },
+  "7b6054e3c5cd48837a0e911b3e0f423ee000fe5b46b3380a40e2f5a6723c6e9f": {
+    "action": "keep",
+    "rewritten_message": "",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.55,
+    "rationale": "The message 'ok' is not a retention query and provides no actionable intent that aligns with supported grounded behaviors. It does not require rewriting or clarification. It is not a sensitive request and therefore not refused.",
+    "_source_provider": "gemini"
+  },
+  "ea651f1ec6dca3c365eec5b03fed3eab773c4dfc19bfd5b53e213c1f5428aeb4": {
+    "action": "rewrite",
+    "rewritten_message": "what should i do first for my students",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+    "_source_provider": "local_fallback"
+  },
+  "355cefee52d4135fdaeaefd59bd10b6874f8441725c06e42920f3ea9b629c9e8": {
+    "action": "keep",
+    "rewritten_message": "",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message 'high risk students first' is already a clear and concise query that directly aligns with the supported grounded behaviors of 'attention ranking' and 'counsellor or student priority/risk questions inside role scope'. A rewrite would not materially improve its clarity or routing for the deterministic planner, thus 'keep' is preferred per rule 1.",
+    "_source_provider": "gemini"
+  },
+  "d51e93327ae8eeef386595957e1d44f8ea6d07b5db207d538fcfbb86827cf25d": {
+    "action": "rewrite",
+    "rewritten_message": "Prioritize active cases for follow-up.",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.85,
+    "rationale": "The original query implies a need for prioritization or identification of high-attention cases. Rewriting it to explicitly ask for prioritization aligns it more clearly with the supported 'attention ranking' behavior and provides a more grounded retention query for the planner.",
+    "_source_provider": "gemini"
+  },
+  "f23523bd6664257ca2105848f8fc5b8e0ce771cf809f137f52d51cdd20ee8119": {
+    "action": "keep",
+    "rewritten_message": "",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.8,
+    "rationale": "The original message is a clear and direct request for a cohort summary based on student grades, which is a supported grounded behavior for the 'counsellor' role. No rewrite is needed as it is already clear, and no clarification or refusal is necessary.",
+    "_source_provider": "gemini"
+  },
+  "20525500cec6b51c2d09fa440772888a5fee468d3ddbcfd996d2d6a0e87606dd": {
+    "action": "rewrite",
+    "rewritten_message": "Which of my students need attention?",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message is a broad request for a list of all students, which does not directly align with the supported analytical retention queries. Rewriting it to 'Which of my students need attention?' transforms it into a grounded retention query, fitting supported behaviors like 'attention ranking' and 'counsellor or student priority/risk questions' for a retention copilot.",
+    "_source_provider": "gemini"
+  },
+  "087485e3a192dbeb3c5271bd1a88b61dc14beefa015960e006388752cac1066d": {
+    "action": "keep",
+    "rewritten_message": "",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message is clear and directly aligns with the 'cohort_summary' intent and the 'counsellor' role. It does not require rewriting for clarity, clarification, or refusal as it is a direct and supported query for a counsellor to view their assigned students.",
+    "_source_provider": "gemini"
+  },
+  "5f10f606b1e0ad2057ec3ec55eacf0b701fde2eee04b9f02fc93b84a2a0d89a0": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Can you specify what criteria or factors you are considering when asking 'who are in danger'? For example, are you referring to students at risk of dropping out, academic probation, or something else?",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message 'who are in danger' is too vague and ungrounded to be processed directly. It's unclear what 'danger' refers to in the context of university retention. Clarification is needed to understand the specific criteria or risk factors the user is interested in.",
+    "_source_provider": "gemini"
+  },
+  "6f41a9df77245b40a3b87e0cf884e39a694a4d74440e45f3b13baca0c0c31163": {
+    "action": "clarify",
+    "rewritten_message": "",
+    "clarification_question": "Do you mean students with a low number of submitted assignments, or students with low grades on assignments?",
+    "refusal_reason": "",
+    "confidence": 0.7,
+    "rationale": "The term 'low assignments' is ambiguous. It's unclear whether the user is referring to the quantity of assignments submitted or the quality (grades) of assignments. Clarification is needed to ensure the query is properly understood and can be routed to a specific supported retention analysis.",
+    "_source_provider": "gemini"
+  },
+  "a00c32514a834a7c3ffd9ffa52e457f05e41427b8d793b494aa5e0c0ee9849d6": {
+    "action": "rewrite",
+    "rewritten_message": "Which students should I prioritize contacting this week?",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.8,
+    "rationale": "The original request 'give weekly plan' is vague and doesn't directly map to a grounded retention query. Interpreting 'weekly plan' within the context of a university retention copilot and a 'counsellor' role, the most likely intent is to identify students requiring attention. Rewriting it as a query for prioritized student contact aligns with the supported 'attention ranking' behavior without inventing new backend abilities, adhering to rule #3.",
+    "_source_provider": "gemini"
+  },
+  "2e51e8744b4acac8e13f3eca3797c4d97e8b6f41f105e07a829a809a5b21e1d2": {
+    "action": "rewrite",
+    "rewritten_message": "List students who have good attendance and are identified as high retention risk.",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message asks for a specific cohort based on two attributes (attendance and risk). Rewriting it into a direct query makes it a clearer, grounded retention query, aligning with 'counsellor or student priority/risk questions inside role scope'. The planner's low confidence (0.55) and unknown goal suggest a rewrite would be beneficial for routing.",
+    "_source_provider": "gemini"
+  },
+  "ebf574745a36f78fb59307b78a38731ded37734b70d06190efc9a3ee2f5d81aa": {
+    "action": "rewrite",
+    "rewritten_message": "how many i grade students and how many r grade students are in my scope",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped counsellor I-grade/R-grade counting phrasing to the grounded scoped burden summary path.",
+    "_source_provider": "local_fallback"
+  },
+  "55237f403d65d91e1a2b94bce3b98baacde5c82cbdd330a676a40143ac7df66a": {
+    "action": "rewrite",
+    "rewritten_message": "which students have good attendance but high risk",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.89,
+    "rationale": "Mapped a counsellor contradiction query to the grounded good-attendance/high-risk cohort path.",
+    "_source_provider": "local_fallback"
+  },
+  "2891ae07532e96d0b833319280c494db828bba8283d1eadb7a71e37e10f98d34": {
+    "action": "rewrite",
+    "rewritten_message": "how many i grade students and how many r grade students are in my scope",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped counsellor I-grade/R-grade counting phrasing to the grounded scoped burden summary path.",
+    "_source_provider": "local_fallback"
+  },
+  "cda8b002476d298fca85c36ef36157414d24f1bb5217de44bba49fe18561f66c": {
+    "action": "rewrite",
+    "rewritten_message": "which students have low assignment submission rate",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped a counsellor low-assignment filter to the grounded low-submission cohort path.",
+    "_source_provider": "local_fallback"
+  },
+  "61a55ef2bdfb4cec83c7589592ddb55d19c5ecfe06d0f622f5659635d1e58eaa": {
+    "action": "rewrite",
+    "rewritten_message": "what weekly plan should i follow as counsellor",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Mapped counsellor weekly-planning phrasing to the grounded operational weekly-plan path.",
+    "_source_provider": "local_fallback"
+  },
+  "c17e65be914f28bd7d7a47300c519b4a9baeb4480892de0f1a41d34b2fbde12a": {
+    "action": "rewrite",
+    "rewritten_message": "how many i grade students and how many r grade students are in my scope",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped counsellor I-grade/R-grade counting phrasing to the grounded scoped burden summary path.",
+    "_source_provider": "local_fallback"
+  },
+  "99346fbaf06ca2cd07ee82e296a2d38ecebd3d7f34c801cce1df8d83c5641080": {
+    "action": "rewrite",
+    "rewritten_message": "how many i grade students and how many r grade students are in my scope",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped counsellor I-grade/R-grade counting phrasing to the grounded scoped burden summary path.",
+    "_source_provider": "local_fallback"
+  },
+  "ea93651c543aecde130818939b63e1be8e285b70225847bc12bd0dcf25aeb298": {
+    "action": "rewrite",
+    "rewritten_message": "which students have low assignment submission rate",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped a counsellor low-assignment filter to the grounded low-submission cohort path.",
+    "_source_provider": "local_fallback"
+  },
+  "bdee995cf3d09f05f3a1498148273e8ebe45733ca92465d255c64d6cecf5be18": {
+    "action": "rewrite",
+    "rewritten_message": "what weekly plan should i follow as counsellor",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.87,
+    "rationale": "Mapped counsellor weekly-planning phrasing to the grounded operational weekly-plan path.",
+    "_source_provider": "local_fallback"
+  },
+  "e6e2581e06f293442c3b966a84743d899935f62719d408800bad1890f6ffe3ff": {
+    "action": "rewrite",
+    "rewritten_message": "which students have low assignment submission rate",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.88,
+    "rationale": "Mapped a counsellor low-assignment filter to the grounded low-submission cohort path.",
+    "_source_provider": "local_fallback"
+  },
+  "34c93d6d82d814cf17c75adc8997dfc137e29e9efa39e8be17fff70a50c89336": {
+    "action": "keep",
+    "rewritten_message": "",
+    "clarification_question": "",
+    "refusal_reason": "",
+    "confidence": 0.9,
+    "rationale": "The original message 'Show me active cases that need follow-up' is clear and directly aligns with the 'attention ranking' grounded behavior for a counsellor. No rewrite is needed as it is already a grounded retention query.",
+    "_source_provider": "gemini"
+  }
+}

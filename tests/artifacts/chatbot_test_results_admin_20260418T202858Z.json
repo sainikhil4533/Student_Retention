@@ -1,0 +1,1538 @@
+{
+  "role_filter": "admin",
+  "generated_at": "2026-04-18T20:28:57.984312+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 1,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "admin",
+      "label": "admin_trend_decision_and_edge_queries",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "is risk increasing over time",
+          "response_type": "data",
+          "last_topic": "institution_trend_snapshot",
+          "last_intent": "institution_trend_snapshot",
+          "answer": "Here is the grounded 30-day institution trend snapshot.\n\nWhat I found:\n- Students newly entering high risk in the last 30 days: 3.\n- Current prediction high-risk students right now: 3.\n- Most pressured branch in the current snapshot: CSE with prediction high risk 3, overall shortage 31, I-grade risk 63, and R-grade risk 6.\n- Recent-entry sample: 880082, 880073, 880001",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_trend_snapshot",
+              "role_scope": "admin",
+              "last_intent": "institution_trend_snapshot",
+              "response_type": "data",
+              "last_topic": "institution_trend_snapshot"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "is risk increasing over time",
+              "normalized_message": "is risk increasing over time",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "is risk increasing over time",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "how is trend of student performance",
+          "response_type": "data",
+          "last_topic": "institution_trend_snapshot",
+          "last_intent": "institution_trend_snapshot",
+          "answer": "Here is the grounded current performance-trend snapshot for the institution.\n\nWhat I found:\n- Students newly entering high risk in the last 30 days: 3.\n- Current prediction high-risk students right now: 3.\n- This is a current trend view from recent risk-entry pressure and academic strain, not a full term-over-term GPA history layer.\n- Most pressured branch in the current snapshot: CSE with prediction high risk 3, overall shortage 31, I-grade risk 63, and R-grade risk 6.\n- Recent-entry sample: 880082, 880073, 880001",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_trend_snapshot",
+              "role_scope": "admin",
+              "last_intent": "institution_trend_snapshot",
+              "response_type": "data",
+              "last_topic": "institution_trend_snapshot"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "how is trend of student performance",
+              "normalized_message": "how is trend of student performance",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "how is trend of student performance",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "is dropout risk rising",
+          "response_type": "data",
+          "last_topic": "institution_trend_snapshot",
+          "last_intent": "institution_trend_snapshot",
+          "answer": "Here is the grounded dropout-risk trend snapshot for the institution.\n\nWhat I found:\n- Students newly entering high risk in the last 30 days: 3.\n- Current prediction high-risk students right now: 3.\n- The safest current proxy for rising dropout pressure is whether new high-risk entries keep appearing alongside attendance-policy strain.\n- Most pressured branch in the current snapshot: CSE with prediction high risk 3, overall shortage 31, I-grade risk 63, and R-grade risk 6.\n- Recent-entry sample: 880082, 880073, 880001",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_trend_snapshot",
+              "role_scope": "admin",
+              "last_intent": "institution_trend_snapshot",
+              "response_type": "data",
+              "last_topic": "institution_trend_snapshot"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "is dropout risk rising",
+              "normalized_message": "is dropout risk rising",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": "Dropped",
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "is dropout risk rising",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "compare current vs previous term",
+          "response_type": "data",
+          "last_topic": "institution_trend_snapshot",
+          "last_intent": "institution_trend_snapshot",
+          "answer": "Here is the grounded current-versus-prior snapshot I can support right now.\n\nWhat I found:\n- Students newly entering high risk in the last 30 days: 3.\n- Current prediction high-risk students right now: 3.\n- A strict term-over-term comparison layer is not fully built here, so this answer is grounded in the latest 30-day risk-entry pressure plus the current institution posture.\n- Most pressured branch in the current snapshot: CSE with prediction high risk 3, overall shortage 31, I-grade risk 63, and R-grade risk 6.\n- Recent-entry sample: 880082, 880073, 880001",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_trend_snapshot",
+              "role_scope": "admin",
+              "last_intent": "institution_trend_snapshot",
+              "response_type": "data",
+              "last_topic": "institution_trend_snapshot"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "compare current vs previous term",
+              "normalized_message": "compare current vs previous term",
+              "primary_intent": "unsupported",
+              "user_goal": "comparison",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [
+                "count"
+              ],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": true,
+              "clarification_question": "What should I compare for you: branch, category, region, income, or outcome status?",
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.45,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "compare current vs previous term",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which branch is worst",
+          "response_type": "explanation",
+          "last_topic": "comparison",
+          "last_intent": "comparison_summary",
+          "answer": "I compared the imported cohort across the requested `branch` buckets.\n\nWhat I found:\n- CSE matching students: 100\n- Highest matching students: `CSE` with 100",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "comparison_summary",
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "planner_version": "cb22",
+              "analysis_mode": "comparison",
+              "orchestration_steps": [
+                "filter_requested_subset",
+                "group_subset_by_branch",
+                "compute_requested_metrics",
+                "rank_requested_buckets",
+                "compose_grounded_comparison_summary"
+              ],
+              "last_intent": "comparison_summary",
+              "response_type": "explanation",
+              "last_topic": "comparison"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which branch is worst",
+              "normalized_message": "compare branches by high-risk students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "comparison",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [
+                "branch"
+              ],
+              "metrics": [
+                "count"
+              ],
+              "comparison": {
+                "enabled": true,
+                "dimension": "branch",
+                "values": []
+              },
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "comparison",
+              "orchestration_steps": [
+                "filter_requested_subset",
+                "group_subset_by_branch",
+                "compute_requested_metrics",
+                "rank_requested_buckets",
+                "compose_grounded_comparison_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner inferred a branch-wide comparison from department phrasing."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which branch is worst",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "where should we focus",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded admin priority call from the current retention picture.\n\nWhat I found:\n- Start with the most pressured `branch` bucket in the current view: `CSE`. It currently shows prediction high risk 3, overall shortage 31, I-grade risk 63, and R-grade risk 6.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n- Priority call: focus first on the bucket carrying the most visible concentrated strain instead of spreading effort thinly across every branch at once.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "focus_bucket": "CSE",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "action_stage": 1,
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "where should we focus",
+              "normalized_message": "where should we focus",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "where should we focus",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which department is struggling",
+          "response_type": "explanation",
+          "last_topic": "comparison",
+          "last_intent": "comparison_summary",
+          "answer": "I compared the imported cohort across the requested `branch` buckets.\n\nWhat I found:\n- CSE matching students: 100\n- Highest matching students: `CSE` with 100",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "comparison_summary",
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "planner_version": "cb22",
+              "analysis_mode": "comparison",
+              "orchestration_steps": [
+                "filter_requested_subset",
+                "group_subset_by_branch",
+                "compute_requested_metrics",
+                "rank_requested_buckets",
+                "compose_grounded_comparison_summary"
+              ],
+              "last_intent": "comparison_summary",
+              "response_type": "explanation",
+              "last_topic": "comparison"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which department is struggling",
+              "normalized_message": "compare branches by high-risk students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "comparison",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [
+                "branch"
+              ],
+              "metrics": [
+                "count"
+              ],
+              "comparison": {
+                "enabled": true,
+                "dimension": "branch",
+                "values": []
+              },
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "comparison",
+              "orchestration_steps": [
+                "filter_requested_subset",
+                "group_subset_by_branch",
+                "compute_requested_metrics",
+                "rank_requested_buckets",
+                "compose_grounded_comparison_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner inferred a branch-wide comparison from department phrasing."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which department is struggling",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what is biggest issue overall",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded view of the strongest institution-level factor affecting student performance right now.\n\nWhat I found:\n- The most common dominant driver inside the current high-risk cohort is academic decline.\n- ERP-side academic-performance pressure is visible in 3 of the evaluated high-risk cases, which is why coursework quality and submission consistency are still the main institutional weakness.\n- Finance pressure is contributing in 3 cases, while LMS pressure is visible in 0 cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "what is biggest issue overall",
+              "normalized_message": "what is biggest issue overall",
+              "primary_intent": "unsupported",
+              "user_goal": "comparison",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [
+                "count"
+              ],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": true,
+              "clarification_question": "What should I compare for you: branch, category, region, income, or outcome status?",
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.45,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "what is biggest issue overall",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "where should we take action first",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded admin priority call from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n- Priority call: focus first on the bucket carrying the most visible concentrated strain instead of spreading effort thinly across every branch at once.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "bucket_values": [],
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "action_stage": 1,
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "where should we take action first",
+              "normalized_message": "where should we take action first",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "where should we take action first",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which group needs immediate attention",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded institution-level action list from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "bucket_values": [],
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "action_stage": 1,
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which group needs immediate attention",
+              "normalized_message": "which group needs immediate attention",
+              "primary_intent": "admin_governance",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "which group needs immediate attention",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which branch should we prioritize",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded admin priority call from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n- Priority call: focus first on the bucket carrying the most visible concentrated strain instead of spreading effort thinly across every branch at once.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "bucket_values": [],
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "action_stage": 1,
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which branch should we prioritize",
+              "normalized_message": "compare branches by high-risk students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "comparison",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [
+                "branch"
+              ],
+              "metrics": [
+                "count"
+              ],
+              "comparison": {
+                "enabled": true,
+                "dimension": "branch",
+                "values": []
+              },
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "comparison",
+              "orchestration_steps": [
+                "filter_requested_subset",
+                "group_subset_by_branch",
+                "compute_requested_metrics",
+                "rank_requested_buckets",
+                "compose_grounded_comparison_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner inferred a branch-wide comparison from department phrasing."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which branch should we prioritize",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what is most critical area",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded institution-health explanation right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "what is most critical area",
+              "normalized_message": "what is most critical area",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "what is most critical area",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which branch is failing completely",
+          "response_type": "explanation",
+          "last_topic": "comparison",
+          "last_intent": "comparison_summary",
+          "answer": "I compared the imported cohort across the requested `branch` buckets.\n\nWhat I found:\n- CSE matching students: 100\n- Highest matching students: `CSE` with 100",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "comparison_summary",
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "planner_version": "cb22",
+              "analysis_mode": "comparison",
+              "orchestration_steps": [
+                "filter_requested_subset",
+                "group_subset_by_branch",
+                "compute_requested_metrics",
+                "rank_requested_buckets",
+                "compose_grounded_comparison_summary"
+              ],
+              "last_intent": "comparison_summary",
+              "response_type": "explanation",
+              "last_topic": "comparison"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which branch is failing completely",
+              "normalized_message": "compare branches by high-risk students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "comparison",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [
+                "branch"
+              ],
+              "metrics": [
+                "count"
+              ],
+              "comparison": {
+                "enabled": true,
+                "dimension": "branch",
+                "values": []
+              },
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "comparison",
+              "orchestration_steps": [
+                "filter_requested_subset",
+                "group_subset_by_branch",
+                "compute_requested_metrics",
+                "rank_requested_buckets",
+                "compose_grounded_comparison_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner inferred a branch-wide comparison from department phrasing."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "which branch is failing completely",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "is situation critical",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded criticality check for the institution right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- The current posture should be treated as critical enough for active intervention planning, especially in the most pressured branch and hotspot areas.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "is situation critical",
+              "normalized_message": "is situation critical",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "is situation critical",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "are we in danger",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded danger-level check for the institution right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- This is serious enough to require active management, but it is still a pressure-management problem rather than a reason to panic blindly.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "are we in danger",
+              "normalized_message": "are we in danger",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "are we in danger",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "should we be worried",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded worry-check for the institution right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- Yes, this deserves attention, but the useful response is focused intervention on the most pressured buckets rather than generic alarm.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "should we be worried",
+              "normalized_message": "should we be worried",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "should we be worried",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "is performance normal",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded normal-versus-pressure check for current institutional performance.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- This is not a comfortably normal picture, because the same pressure is clustering in visible high-risk and attendance-burden pockets.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "is performance normal",
+              "normalized_message": "is performance normal",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "is performance normal",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "compare attendance and risk across branches",
+          "response_type": "explanation",
+          "last_topic": "comparison",
+          "last_intent": "comparison_summary",
+          "answer": "I compared the imported cohort across the requested `branch` buckets.\n\nWhat I found:\n- CSE prediction high risk students: 3\n- Highest prediction high risk students: `CSE` with 3",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "comparison_summary",
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "planner_version": "cb22",
+              "analysis_mode": "comparison",
+              "orchestration_steps": [
+                "filter_requested_subset",
+                "group_subset_by_branch",
+                "compute_requested_metrics",
+                "rank_requested_buckets",
+                "compose_grounded_comparison_summary"
+              ],
+              "last_intent": "comparison_summary",
+              "response_type": "explanation",
+              "last_topic": "comparison"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "compare attendance and risk across branches",
+              "normalized_message": "compare branches by high-risk students",
+              "primary_intent": "cohort_summary",
+              "user_goal": "comparison",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [
+                "branch"
+              ],
+              "metrics": [
+                "risk"
+              ],
+              "comparison": {
+                "enabled": true,
+                "dimension": "branch",
+                "values": []
+              },
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "comparison",
+              "orchestration_steps": [
+                "filter_requested_subset",
+                "group_subset_by_branch",
+                "compute_requested_metrics",
+                "rank_requested_buckets",
+                "compose_grounded_comparison_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner inferred a branch-wide comparison from department phrasing."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "compare attendance and risk across branches",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which factor affects most students",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded view of the strongest institution-level factor affecting student performance right now.\n\nWhat I found:\n- The most common dominant driver inside the current high-risk cohort is academic decline.\n- ERP-side academic-performance pressure is visible in 3 of the evaluated high-risk cases, which is why coursework quality and submission consistency are still the main institutional weakness.\n- Finance pressure is contributing in 3 cases, while LMS pressure is visible in 0 cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which factor affects most students",
+              "normalized_message": "which factor affects most students",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "which factor affects most students",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which branch has improving vs declining performance",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded institution-health explanation right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which branch has improving vs declining performance",
+              "normalized_message": "which branch has improving vs declining performance",
+              "primary_intent": "cohort_summary",
+              "user_goal": "comparison",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [
+                "count"
+              ],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": true,
+              "clarification_question": "I can compare current coverage across groups, but historical improvement by one bucket is not built yet. Do you want the current snapshot for that group, or a comparison across multiple groups?",
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.5,
+              "notes": [
+                "Planner detected an improvement-over-time request that still needs a historical comparison layer."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "which branch has improving vs declining performance",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what is biggest weakness overall",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded view of the strongest institution-level factor affecting student performance right now.\n\nWhat I found:\n- The most common dominant driver inside the current high-risk cohort is academic decline.\n- ERP-side academic-performance pressure is visible in 3 of the evaluated high-risk cases, which is why coursework quality and submission consistency are still the main institutional weakness.\n- Finance pressure is contributing in 3 cases, while LMS pressure is visible in 0 cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "what is biggest weakness overall",
+              "normalized_message": "what is biggest weakness overall",
+              "primary_intent": "unsupported",
+              "user_goal": "comparison",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [
+                "count"
+              ],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": true,
+              "clarification_question": "What should I compare for you: branch, category, region, income, or outcome status?",
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.45,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "what is biggest weakness overall",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

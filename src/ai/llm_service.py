@@ -155,6 +155,13 @@ def _call_gemini_with_retries(
             )
         except Exception as error:
             last_error = error
+            if not _should_retry_gemini_error(error):
+                print(
+                    f"[llm] Gemini attempt {attempt} failed "
+                    f"({type(error).__name__}: {error}); falling back without retry",
+                    flush=True,
+                )
+                break
             if attempt >= GEMINI_MAX_RETRIES:
                 break
 
@@ -168,6 +175,21 @@ def _call_gemini_with_retries(
 
     assert last_error is not None
     raise last_error
+
+
+def _should_retry_gemini_error(error: Exception) -> bool:
+    text = str(error).lower()
+    non_retriable_markers = (
+        "resource_exhausted",
+        "quota exceeded",
+        "generate_content_free_tier_requests",
+        "billing details",
+        "api key not valid",
+        "permission_denied",
+        "unauthenticated",
+        "invalid_argument",
+    )
+    return not any(marker in text for marker in non_retriable_markers)
 
 
 def generate_ai_insights(

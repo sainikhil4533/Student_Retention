@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.pool import NullPool
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -25,7 +26,18 @@ engine_kwargs = {"future": True}
 # statements across reused pooled sessions. Disabling prepared statements keeps
 # repeated API requests stable in this deployment mode.
 if DATABASE_URL.startswith("postgresql+psycopg://"):
-    engine_kwargs["connect_args"] = {"prepare_threshold": None}
+    engine_kwargs["connect_args"] = {
+        "prepare_threshold": None,
+        "connect_timeout": 5,
+    }
+
+# The Supabase pooler is already the real connection pool. Keeping an extra
+# small SQLAlchemy pool on top of it can make the app look healthy at first and
+# then degrade after a few slow requests, because long-lived chat/page requests
+# can pin the tiny local pool. Using NullPool here avoids that local bottleneck
+# and lets the remote pooler own connection reuse.
+if ".pooler.supabase.com:6543/" in DATABASE_URL:
+    engine_kwargs["poolclass"] = NullPool
 
 engine = create_engine(DATABASE_URL, **engine_kwargs)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)

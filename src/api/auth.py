@@ -159,7 +159,7 @@ def decode_access_token(token: str) -> AuthContext:
             if payload.get("display_name") not in (None, "")
             else None
         ),
-        auth_provider="local_jwt",
+        auth_provider="local_institution_account",
     )
 
 

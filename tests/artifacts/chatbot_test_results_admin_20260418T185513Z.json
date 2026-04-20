@@ -1,0 +1,442 @@
+{
+  "role_filter": "admin",
+  "generated_at": "2026-04-18T18:55:13.435681+00:00",
+  "conversation_count": 6,
+  "passed_conversations": 6,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "admin",
+      "label": "admin_natural_query_01",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "how is overall performance",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded institution-health explanation right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "how is overall performance",
+              "normalized_message": "how is overall performance",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "how is overall performance",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_natural_query_02",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "is everything going well",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded institution-health check right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "is everything going well",
+              "normalized_message": "is everything going well",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "is everything going well",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_natural_query_03",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "which area is problematic",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded view of the most problematic institutional area right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which area is problematic",
+              "normalized_message": "which area is problematic",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which area is problematic",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_natural_query_04",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "are students doing okay",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded institution-health check right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "are students doing okay",
+              "normalized_message": "are students doing okay",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "are students doing okay",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_natural_query_05",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "is the situation under control",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded institution-health check right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "is the situation under control",
+              "normalized_message": "is the situation under control",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "is the situation under control",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_natural_query_06",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "performance",
+          "response_type": "explanation",
+          "last_topic": "institution_health",
+          "last_intent": "institution_health_explanation",
+          "answer": "Here is the grounded institution-health explanation right now.\n\nWhat I found:\n- Current prediction high-risk students: 3.\n- Attendance-policy pressure is still substantial: 63 students with I-grade risk and 6 with R-grade risk.\n- Main pattern: current prediction risk and attendance-policy pressure are concentrated in overlapping parts of the institution rather than being isolated one-off cases.\n- Most pressured branch right now: CSE with 31 overall-shortage cases.\n- Most visible attendance hotspot right now: Big Data Analytics affecting 10 students.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_governance",
+              "intent": "institution_health_explanation",
+              "last_intent": "institution_health_explanation",
+              "response_type": "explanation",
+              "last_topic": "institution_health"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "performance",
+              "normalized_message": "how is overall performance",
+              "primary_intent": "admin_governance",
+              "user_goal": "institution_health_explanation",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "institution_health",
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.9,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "performance",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

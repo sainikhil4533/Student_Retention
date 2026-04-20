@@ -1,0 +1,162 @@
+{
+  "role_filter": "counsellor",
+  "generated_at": "2026-04-18T03:52:12.935127+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 0,
+  "failed_conversations": 1,
+  "failure_summary": {
+    "response_type_failure": 2
+  },
+  "conversations": [
+    {
+      "role": "counsellor",
+      "label": "counsellor_action_queries_b",
+      "passed": false,
+      "failure_count": 2,
+      "turns": [
+        {
+          "prompt": "how to reduce their risk",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to a counsellor intent yet.\n\nWhat I found:\n- high-risk cohort counts\n- student drilldowns by student_id\n- attendance policy pressure, including I-grade and R-grade risk\n- Did you mean: cohort or risk summaries, student drilldown by student_id?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `action` but got `data`.",
+              "turn_index": 1,
+              "prompt": "how to reduce their risk"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "how to reduce their risk",
+              "normalized_message": "how to reduce their risk",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "how to reduce their risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what actions are needed",
+          "response_type": "data",
+          "last_topic": "unsupported",
+          "last_intent": "unsupported",
+          "answer": "I didn\u2019t fully match that to a counsellor intent yet.\n\nWhat I found:\n- high-risk cohort counts\n- student drilldowns by student_id\n- attendance policy pressure, including I-grade and R-grade risk\n- Did you mean: student drilldown by student_id, cohort or risk summaries?",
+          "failures": [
+            {
+              "type": "response_type_failure",
+              "message": "Expected response_type `action` but got `data`.",
+              "turn_index": 2,
+              "prompt": "what actions are needed"
+            }
+          ],
+          "metadata": {
+            "memory_context": {
+              "kind": "unsupported",
+              "intent": "unsupported",
+              "last_intent": "unsupported",
+              "response_type": "data",
+              "last_topic": "unsupported"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "what actions are needed",
+              "normalized_message": "what actions are needed",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "what actions are needed",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

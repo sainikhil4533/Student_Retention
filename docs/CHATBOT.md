@@ -75,6 +75,223 @@ That means:
 - admin can ask institution-wide questions
 - answers should be based on real backend data, not hallucinated free-form guesses
 
+## Latest Hardening Note
+
+The most recent chatbot hardening pass expanded the system beyond one-off grouped questions.
+
+## Latest Student Refactor Note
+
+The latest student pass started moving the student chatbot from a router-first flow toward a more reasoning-first flow for self-service questions.
+
+What was tightened in this pass:
+
+- student semester-position questions such as:
+  - `which semester am I in right now?`
+- assignment-count questions that ask for both:
+  - what is visible as submitted
+  - what exact total is or is not available from the current ERP snapshot
+- follow-up continuation after a day-by-day plan, especially:
+  - `ok give`
+  - `yes tell me`
+- week-by-week recovery planning, including:
+  - `week-by-week plan`
+  - `what should I do for second week`
+- finance-vs-performance questions such as:
+  - `is finance affecting my performance`
+- seriousness questions such as:
+  - `should I panic`
+
+Why this mattered:
+
+- earlier, too much meaning was being decided by intent buckets and pending flags
+- so some real student prompts could still fall into:
+  - wrong safety refusal
+  - wrong topic reuse
+  - generic weekly-plan repetition
+  - finance questions collapsing into ERP-only answers
+
+What is now different:
+
+- the student answer layer now does a small query-classification pass before choosing the answer path
+- that pass separates:
+  - semester-position questions
+  - assignment-total questions
+  - finance-vs-performance explanation questions
+  - seriousness questions
+  - label-reduction follow-ups
+  - multi-week recovery-plan questions
+
+Verification added for this pass:
+
+- [tmp_student_reasoning_refactor_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_student_reasoning_refactor_verify.py)
+
+That verifier checks the exact browser-class failures that previously felt too predefined.
+
+## Latest Counsellor Refactor Note
+
+The latest counsellor pass started the same reasoning-first cleanup for counsellor-side decision-support questions.
+
+What was tightened in this pass:
+
+- natural triage prompts such as:
+  - `who needs attention`
+  - `which students are struggling`
+  - `who needs urgent help`
+- fresh scoped filters such as:
+  - `show only CSE students`
+  - `only final year`
+  - `only low attendance students`
+- factor and seriousness questions such as:
+  - `which factor is affecting most students`
+  - `should I worry about my group`
+  - `which student will fail`
+- direct analytical comparison such as:
+  - `compare attendance and assignments for risky students`
+
+Why this mattered:
+
+- earlier, some counsellor natural-language questions could still fall back into generic cohort routing
+- that made fresh filters and seriousness questions feel more mechanical than they should
+
+What is now different:
+
+- the counsellor layer now does a small query-classification pass before stale follow-up reuse
+- that pass separates:
+  - natural student-priority questions
+  - factor/seriousness explanations
+  - fresh scoped filters
+- standalone filters now get their own scoped answer path instead of collapsing into the generic risky-cohort summary
+
+Verification added for this pass:
+
+- [tmp_counsellor_reasoning_refactor_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_counsellor_reasoning_refactor_verify.py)
+
+## Latest Admin Refactor Note
+
+The latest admin pass started the same reasoning-first cleanup for institution-level analysis and strategy questions.
+
+What was tightened in this pass:
+
+- natural institution-health prompts such as:
+  - `should we be worried`
+  - `which area is problematic`
+  - `what is biggest weakness overall`
+- fresh grouped/admin comparison prompts such as:
+  - `branch wise risk`
+  - `risk by department`
+  - `compare attendance and risk across branches`
+- fresh strategy prompts such as:
+  - `where should we focus`
+  - `give strategic plan`
+- grouped follow-up continuity such as:
+  - `branch wise risk -> only CSE -> compare with ECE -> why is CSE worse -> give strategic plan`
+
+Why this mattered:
+
+- earlier, fresh admin questions could still be pulled into stale grouped or strategy memory too early
+- that made the admin role feel more router-driven than analytical
+
+What is now different:
+
+- the admin answer layer now does a small query-classification pass before stale follow-up reuse
+- that pass separates:
+  - institution-health questions
+  - fresh grouped/comparison questions
+  - strategy-first questions
+- fresh grouped questions now keep their own scope instead of being hijacked by the previous admin action thread
+
+Verification added for this pass:
+
+- [tmp_admin_reasoning_refactor_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_admin_reasoning_refactor_verify.py)
+
+What is now covered more explicitly:
+
+- ambiguity questions such as:
+  - `what is the difference between prediction risk and attendance risk?`
+- direct comparison questions such as:
+  - `compare Male vs Female high-risk students`
+  - `compare Urban vs Rural high-risk students`
+- diagnostic comparison questions such as:
+  - `which region is worse and why?`
+  - `which gender is worse and why?`
+
+Why this mattered:
+
+- earlier, the planner could recognize some grouped dimensions, but the answer layer could still flatten or miss the real analytical ask
+- now the chatbot can explain:
+  - prediction risk
+  - attendance-policy risk
+  - carry-forward academic burden
+- and it can compare scoped cohorts using those grounded layers instead of answering with one vague total
+
+Verification added for this pass:
+
+- [tmp_chatbot_comparison_ambiguity_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_comparison_ambiguity_sweep.py)
+- [tmp_live_chatbot_uat_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_live_chatbot_uat_sweep.py)
+
+That verifier checks:
+
+- admin ambiguity explanation
+- counsellor ambiguity explanation
+- admin direct comparison
+- counsellor direct comparison
+- admin diagnostic comparison
+- counsellor diagnostic comparison
+- follow-up bucket focus after a comparison answer
+
+The live UAT sweep adds more natural prompts such as:
+
+- student:
+  - `am i safe or should i worry?`
+  - `what exactly is hurting me most and what should i do first?`
+  - `do i still have any uncleared grade issue from older sems?`
+- counsellor:
+  - `even if they are doing fine now, who still needs weekly monitoring?`
+  - `show my students high risk semester wise`
+- admin:
+  - `can you show me all the students who are at high risk semester wise, year wise`
+  - follow-up:
+    - `branch wise also`
+
+Why this verifier matters:
+
+- it checks whether the chatbot still behaves sensibly when the user writes in a more natural, less polished way
+- it also checks that grouped follow-up continuity still works after broader planner and comparison changes
+
+There is now also a stricter mixed-role runtime sweep:
+
+- [tmp_live_chatbot_mixed_role_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_live_chatbot_mixed_role_sweep.py)
+
+Why this one matters:
+
+- it does not only test isolated prompt families
+- it tests chained runtime behavior across all three roles in one live imported-database pass
+- it checks whether the local-first semantic planner, cached follow-up normalization, and grounded answer layer stay aligned together
+
+What it currently covers:
+
+- student:
+  - `what is my current attendance`
+  - `ok tell`
+  - `and why exactly?`
+- admin:
+  - `can you show me all the students who are at high risk semester wise, year wise`
+  - `branch wise also`
+  - `what do you mean by that?`
+- counsellor:
+  - `even if they look okay now, who still needs weekly monitoring`
+  - `show attendance risk gender wise`
+  - `what about only Female`
+  - `semester wise also`
+
+This is an important signoff step because it catches a different failure class:
+
+- the first prompt may be correct
+- the second prompt may also be correct
+- but the third prompt can still fail if memory, semantic normalization, and grounded tool execution are not staying in sync
+
+That is exactly the kind of problem a browser user feels immediately, so this verifier now belongs in the signoff story rather than being treated like an optional experiment.
+
 ## Phase Plan
 
 ### Phase CB1 - Copilot Foundation
@@ -1096,6 +1313,243 @@ Current CB19 limits:
 - even when configured, it is intentionally conservative and will often keep the deterministic plan if no rewrite is needed
 - it is not a free-form answer generator; it is only a semantic normalization layer
 
+### CB19 efficiency hardening
+
+One practical problem with an optional semantic layer is quota burn:
+
+- a user asks a messy natural prompt
+- Gemini helps normalize it once
+- then a near-identical prompt can accidentally burn another API call
+
+That is wasteful, especially when the semantic layer is only supposed to help routing.
+
+What was added:
+
+- semantic-planner response caching in [copilot_semantic_planner.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/src/api/copilot_semantic_planner.py)
+- stricter gating so very short low-value prompts do not call Gemini unnecessarily
+- new environment controls:
+  - `COPILOT_SEMANTIC_CACHE_ENABLED=true`
+  - `COPILOT_SEMANTIC_CACHE_MAX_ENTRIES=500`
+
+Why this matters:
+
+- repeated fuzzy prompts can reuse earlier normalization results
+- Gemini is preserved for cases where it adds the most value
+- the system moves closer to a practical hybrid model instead of either:
+  - hand-coding every phrase forever
+  - or paying an API call for every small wording variation
+
+Verification:
+
+- [tmp_cb19_cache_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_cb19_cache_verify.py)
+
+This verifier confirms that:
+
+- the first fuzzy prompt uses the semantic layer
+- the second identical prompt is served from cache
+- provider calls are not repeated unnecessarily
+- cached semantic hints also preserve their original source:
+  - `gemini`
+  - or `local_fallback`
+
+### CB19 local semantic fallback
+
+The next practical improvement was to stop treating CB19 as only:
+
+- Gemini
+or
+- nothing
+
+That still leaves too much pressure on the external provider.
+
+What was added:
+
+- a local semantic fallback layer inside [copilot_semantic_planner.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/src/api/copilot_semantic_planner.py)
+
+Runtime order is now:
+
+1. deterministic planner
+2. semantic cache lookup
+3. local semantic fallback
+4. Gemini semantic assist
+5. safe fallback to deterministic baseline
+
+What the local fallback helps with:
+
+- fuzzy attention prompts like:
+  - `who's under the heaviest strain right now and why`
+- broader admin variants like:
+  - `where is the trouble worst right now and why`
+- fuzzy support-gap prompts
+- broader support-coverage variants like:
+  - `where is support coverage slipping worst across regions`
+- hotspot / pain-point attendance prompts
+- broader attendance-pressure variants like:
+  - `what subject is hurting us the most attendance wise`
+- some student safe-attendance-but-high-alert phrasing
+- broader student risk phrasing like:
+  - `attendance looks okay so why am i still red flagged`
+- broader student recovery phrasing like:
+  - `what's dragging me down the most and what do i fix first`
+- broader old-burden phrasing like:
+  - `am i still carrying any old grade baggage from older sems`
+- broader counsellor monitoring phrasing like:
+  - `who do i need to keep the closest eye on this week`
+  - `even if they look okay now, who still needs weekly monitoring`
+- some local clarification cases where two dimensions are clearly competing
+
+Example of that clarification behavior:
+
+- `compare CSE and ECE students in Urban and Rural but what's driving it`
+
+The chatbot now prefers a local clarification first instead of spending a Gemini call on a prompt whose main problem is competing dimensions, not missing language understanding.
+
+Why this matters:
+
+- fewer Gemini calls
+- better behavior when API quota is exhausted
+- less dependence on hand-patching every browser-found prompt one by one
+
+Verification for the broader local phrase families:
+
+- [tmp_cb19_local_prompt_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_cb19_local_prompt_sweep.py)
+
+This sweep confirms that covered fuzzy prompts across:
+
+- admin
+- counsellor
+- student
+
+stay on the local semantic fallback path without calling the external provider.
+
+### CB19 local follow-up normalization
+
+The next practical improvement was to stop treating short follow-ups as if they always need either:
+
+- brittle exact phrase routing
+or
+- a semantic-provider call
+
+That is wasteful and can still feel unnatural in multi-turn chat.
+
+What was added:
+
+- local follow-up normalization inside [copilot_semantic_planner.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/src/api/copilot_semantic_planner.py)
+- cache keys now include a small fingerprint of the last assistant memory context, so short prompts like `ok` do not accidentally reuse the wrong meaning from another thread
+
+What this local follow-up layer helps with:
+
+- student short continuations after a promised next step, such as:
+  - `ok`
+  - `so what`
+  - `then?`
+- grouped dimension extensions such as:
+  - `branch wise also`
+  - `semester wise also`
+
+Why this matters:
+
+- short follow-ups now reuse the conversation state that the chatbot itself created
+- the system depends less on external semantic calls for tiny continuation prompts
+- cache behavior stays safe because follow-up meaning is now tied to the last assistant memory context, not only the raw text
+
+Verification for this pass:
+
+- [tmp_cb19_followup_local_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_cb19_followup_local_verify.py)
+
+This verifier confirms that local semantic normalization now handles:
+
+- student promised follow-ups
+- admin grouped dimension extensions
+- counsellor grouped dimension extensions
+
+without calling the external provider.
+
+### CB19 local comparison follow-up normalization
+
+The next improvement was to make short comparison continuations more reliable without depending on Gemini.
+
+What was added:
+
+- local comparison-follow-up normalization inside [copilot_semantic_planner.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/src/api/copilot_semantic_planner.py)
+
+What this layer now helps with:
+
+- diagnostic comparison follow-ups such as:
+  - `which is worse then`
+- grouped high-risk subset follow-ups such as:
+  - `what about only the high-risk ones`
+- bucket-specific follow-ups after grouped comparison such as:
+  - `what about only Female`
+
+Why this matters:
+
+- comparison threads now stay analytical even when the user writes a short natural continuation
+- the chatbot can keep using the last grouped/comparison memory context instead of falling back to brittle phrase handling
+- more comparison follow-ups now stay on the local path instead of spending provider calls
+
+Verification for this pass:
+
+- [tmp_cb19_comparison_followup_local_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_cb19_comparison_followup_local_verify.py)
+
+This verifier confirms that:
+
+- diagnostic worse-and-why follow-ups
+- grouped high-risk subset follow-ups
+- grouped bucket-focus follow-ups
+
+can all be normalized locally from conversation memory without calling the external provider.
+
+### CB19 local ambiguity and drilldown follow-ups
+
+The next improvement was to keep short explanation-style continuations grounded too.
+
+What was added:
+
+- local ambiguity and drilldown follow-up normalization inside [copilot_semantic_planner.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/src/api/copilot_semantic_planner.py)
+
+What this layer now helps with:
+
+- ambiguity follow-ups such as:
+  - `prediction or attendance?`
+  - `what do you mean by that?`
+- short why-follow-ups after a student safety answer such as:
+  - `and why exactly?`
+- short why-follow-ups after a student drilldown such as:
+  - `and why exactly?`
+
+Why this matters:
+
+- the chatbot can now continue an explanation thread using the last memory context instead of flattening back into generic routing
+- short explanation prompts stay grounded in the previous answer family
+- more real multi-turn chat now stays on the local-first path before Gemini is considered
+
+Verification for this pass:
+
+- [tmp_cb19_ambiguity_drilldown_followup_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_cb19_ambiguity_drilldown_followup_verify.py)
+
+This verifier confirms that:
+
+- risk-layer ambiguity follow-ups
+- short student why-follow-ups
+- short drilldown why-follow-ups
+
+can all be normalized locally from conversation memory without calling the external provider.
+
+New environment control:
+
+- `COPILOT_LOCAL_SEMANTIC_FALLBACK_ENABLED=true`
+
+Verification:
+
+- [tmp_cb19_local_fallback_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_cb19_local_fallback_verify.py)
+
+This verifier confirms that covered fuzzy prompts:
+
+- are normalized locally
+- do not call the external semantic provider
+- still produce grounded rewritten or clarification plans
+
 ## Legacy CB11 Note
 
 The same verifier listed above still covers the earlier CB11 comparison, trend, counsellor-scope, and student/counsellor continuity behavior.
@@ -1337,6 +1791,177 @@ What does not work yet:
 
 - multi-tool planning
 
+## Generalized Student Foundation Pass
+
+This is a newer implementation pass that sits on top of the older CB phases.
+
+Why it was needed:
+
+- the student chatbot had become too patch-like
+- it was still answering from a shallow data model too often
+- real student questions about attendance, weak subjects, I-grade, R-grade, and short planning needed stronger academic grounding
+
+What changed in this pass:
+
+- the student backend now reads from the new generalized academic foundation tables
+- student overview now exposes an `academic_progress` block
+- student timeline now includes attendance-policy events like shortage, I-grade, and R-grade transitions
+- student chatbot now recognizes more grounded student question families such as:
+  - current attendance
+  - available student data
+  - weakest subject
+  - I-grade / R-grade / eligibility risk
+  - weekly or short-term focus planning
+
+What this pass does not claim:
+
+- counsellor and admin are not fully upgraded to the same generalized academic depth yet
+- every possible student wording is not magically solved forever
+- this is a foundation-connected role pass, not the end of chatbot work
+
+Why this pass matters:
+
+- it is the first real move away from chatbot behavior that only sounded smart
+- it connects student-facing answers to actual attendance-policy and subject-level academic data
+
+## Generalized Counsellor And Admin Academic Pass
+
+This pass extends the same generalized academic foundation into counsellor and admin behavior.
+
+Why it was needed:
+
+- the student side had started reading real academic policy data
+- counsellor and admin were still too dependent on older prediction-only and governance-only summaries
+- that mismatch makes a system feel artificial, because one role can see academic reality while another role still sounds shallow
+
+What changed in this pass:
+
+- counsellor summary now includes:
+  - students with overall shortage
+  - students with I-grade risk
+  - students with R-grade risk
+  - top subject-pressure hotspots inside counsellor scope
+- admin institution overview now includes:
+  - institution-wide overall shortage
+  - institution-wide I-grade risk
+  - institution-wide R-grade risk
+  - top subject-pressure hotspots
+- counsellor chatbot now handles:
+  - which students have I-grade risk
+  - which students have R-grade risk
+  - which subjects are causing the most attendance issues
+  - richer student drilldowns with attendance posture
+- admin chatbot now handles:
+  - how many students have I-grade risk
+  - how many students have R-grade risk
+  - which branch needs attention first
+  - which subjects are causing the most attendance issues
+
+Hidden working:
+
+- repository provides cohort-level academic reads instead of only single-student reads
+- route summaries and chatbot answers both derive their numbers from the same current semester and subject-attendance records
+- counsellor scope is now respected in faculty summary and priority queue logic
+
+What this pass does not claim:
+
+- it does not magically solve every possible open-ended admin or counsellor prompt forever
+- it does not replace deeper future analytics work such as richer per-counsellor scorecards or multi-step institutional planning
+- it is a serious grounding pass, not the end of chatbot evolution
+
+## Counsellor Scope Hardening Pass
+
+This pass was about access safety, not just answer quality.
+
+Why it was needed:
+
+- a counsellor should only see assigned students
+- earlier passes improved counsellor summaries and chatbot behavior
+- but some per-student API routes still relied only on role checks
+
+What changed:
+
+- a shared scope helper now enforces:
+  - admin/system can access broad data
+  - student can access only self
+  - counsellor can access only assigned students
+- this scope helper is now applied to major per-student routes such as:
+  - profile
+  - timeline
+  - warnings
+  - alerts
+  - guardian alerts
+  - score history and latest score
+  - cases
+  - operations context
+  - interventions
+  - AI assist routes
+  - recovery scorecard
+  - risk drivers
+  - repeated-risk drilldowns
+
+Why this matters:
+
+This is one of the biggest trust rules in the system.
+If counsellor scope leaks even once, the product stops feeling institution-safe.
+
+## Branch And Semester Analytics Pass
+
+This pass deepened the generalized academic layer for counsellor and admin.
+
+Why it was needed:
+
+- summary counts alone are not enough for real institutional work
+- once a user knows there is pressure, the next question is usually:
+  - which branch
+  - which semester
+  - where should we act first
+- if the dashboard can answer that but the chatbot cannot, the product starts to feel inconsistent
+
+What changed:
+
+- a shared academic-pressure helper now builds one grounded snapshot containing:
+  - top subject hotspots
+  - branch pressure
+  - semester pressure
+  - top academically pressured students
+- counsellor chatbot can now answer branch-pressure and semester-pressure style questions inside counsellor scope
+- admin chatbot can now answer the same kind of question institution-wide
+
+Why this matters:
+
+- the backend now computes branch and semester attention from the same academic records already used for I-grade and R-grade logic
+- this keeps chatbot, dashboard, and reporting aligned instead of giving each surface its own custom math
+
+## Deeper Student Drilldown Pass For Counsellor And Admin
+
+This pass was about making one-student drilldowns feel like real case summaries.
+
+Why it was needed:
+
+- earlier drilldowns could show profile and risk details
+- but they still felt too light once a counsellor or admin wanted to understand the student academically
+- in real academic operations, the next questions are usually:
+  - which semester is this student in
+  - is the main issue overall attendance or subject attendance
+  - which subject is weakest
+  - how close is the student to I-grade or R-grade consequences
+
+What changed:
+
+- counsellor and admin drilldown answers now include:
+  - academic position
+  - overall attendance posture
+  - how many subjects are below 75%
+  - how many subjects are below 65%
+  - weakest visible subject
+  - eligibility context when available
+
+Why this matters:
+
+- the answer now feels closer to a compact case brief
+- this makes the copilot much more believable for real support workflows
+
 ## Files Added Or Updated In CB1
 
 - `src/db/models.py`
@@ -1351,3 +1976,1073 @@ What does not work yet:
 ## Next Recommended Step
 
 Move to Phase CB9 and introduce multi-tool planning for more complex analytics questions.
+
+## 23. Active I-Grade And R-Grade Burden Handling
+
+This pass adds a very important real-world rule:
+
+- a student may look stable in the current semester
+- but still carry an uncleared `I_GRADE` or `R_GRADE` from an earlier semester
+
+That means the system must not behave as if the student is fully clear just because current attendance or current prediction risk improved.
+
+### What the system now separates
+
+The chatbot now treats these as different layers:
+
+- prediction risk
+  - `LOW`, `MEDIUM`, `HIGH`
+- attendance-policy risk
+  - current semester `SAFE`, `I_GRADE`, `R_GRADE`
+- active academic burden
+  - unresolved older `I_GRADE` / `R_GRADE` subjects that are still not cleared
+
+### Why this matters
+
+If a student has an unresolved `R_GRADE`:
+
+- that subject should still be treated as uncleared
+- the student should stay visible for counsellor monitoring
+- the chatbot should not talk as if the subject is fully passed
+
+If a student has an unresolved `I_GRADE`:
+
+- the student should remain on a lighter but still visible monitoring cadence
+- the chatbot should explain that the burden is still active until actual clearance
+
+### Monitoring logic now used
+
+- active `R_GRADE` burden
+  - `academic_risk_band = SEVERE`
+  - `monitoring_cadence = WEEKLY`
+- active `I_GRADE` burden
+  - `academic_risk_band = WATCHLIST`
+  - `monitoring_cadence = MONTHLY`
+- no unresolved burden
+  - `academic_risk_band = SAFE`
+  - `monitoring_cadence = NONE`
+
+### Chatbot behavior improvement
+
+Student answers now mention:
+
+- current attendance posture
+- unresolved burden when present
+- that uncleared I/R subjects should not be treated as cleared until actually cleared
+
+### Import-time hardening
+
+The system now also hardens this rule during generalized import:
+
+- if an academic row looks passed in raw source data
+- but the linked attendance outcome still indicates unresolved `I_GRADE` or `R_GRADE`
+
+the stored effective academic outcome is normalized to:
+
+- `Pending I-grade clearance`
+- or `Pending R-grade clearance`
+
+This reduces contradiction between:
+
+- raw imported academic rows
+- runtime burden logic
+- chatbot explanations
+
+Counsellor answers now mention:
+
+- current-semester I-grade / R-grade counts
+- unresolved carry-forward burden counts
+- why those students remain on monitoring even if the latest prediction is low
+
+## 24. Grouped Risk Breakdown Across Cohort Dimensions
+
+This pass improves a specific weak point that felt very unnatural in live questioning:
+
+- users were asking things like:
+  - `show high risk semester wise and year wise`
+  - `show prediction high risk and attendance risk semester wise and year wise`
+- the old chatbot could answer a nearby question
+- but still miss the real structure of the ask
+
+### What changed
+
+The planner now explicitly recognizes grouped breakdown asks such as:
+
+- grouping dimensions:
+  - `semester`
+  - `year`
+  - `branch`
+  - `gender`
+  - `age band`
+  - `batch`
+  - `program type`
+  - `category`
+  - `region`
+  - `income`
+  - `outcome status`
+- risk layers:
+  - `prediction_high_risk`
+  - `overall_shortage`
+  - `i_grade_risk`
+  - `r_grade_risk`
+
+That means the answer layer no longer has to guess only from loose phrase matching.
+
+### Why this matters
+
+In a real institution, the word `high risk` is often ambiguous.
+
+It may mean:
+
+- prediction-model high risk
+- attendance-policy academic risk
+- or both at the same time
+
+The chatbot now treats that ambiguity more honestly.
+
+If the prompt is generic, it can separate:
+
+- prediction high risk
+- overall attendance shortage
+- I-grade risk
+- R-grade risk
+
+instead of collapsing them into one misleading count.
+
+### Role behavior
+
+Examples now handled more reliably:
+
+- `show high risk semester wise and year wise`
+- `show prediction high risk and attendance risk branch wise`
+- `show attendance risk region wise`
+- `show attendance risk gender wise`
+- `show attendance risk batch wise`
+- `show prediction high risk program wise`
+- `show prediction high risk and attendance risk age band wise`
+- `show prediction high risk and attendance risk branch wise, semester wise and year wise`
+
+Admin:
+
+- grouped semester/year breakdowns are institution-wide
+
+Counsellor:
+
+- grouped breakdowns are limited to the counsellor's assigned students only
+
+This keeps the same question family available to both roles while still respecting role scope.
+
+### Verification note
+
+There is now a focused verifier for this role-grounded academic behavior:
+
+- [tmp_chatbot_role_regression_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_role_regression_verify.py)
+
+It checks three high-value cases against the imported database:
+
+There is also a broader natural-language sweep for current live-style role prompts:
+
+- [tmp_live_chatbot_prompt_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_live_chatbot_prompt_sweep.py)
+
+That sweep checks a wider prompt family across:
+
+- student self-data and attendance questions
+- weakest-subject and end-sem eligibility questions
+- uncleared I-grade / R-grade burden questions
+- counsellor I-grade / R-grade counts
+- counsellor weekly unresolved-burden monitoring
+- counsellor attention-first priority queue questions
+- admin subject-hotspot questions
+- admin grouped branch / year / semester risk breakdowns
+
+There is also a multi-turn follow-up verifier for conversation continuity:
+
+- [tmp_chatbot_followup_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_followup_sweep.py)
+
+That verifier checks things like:
+
+- student weekly-plan follow-up:
+  - `Can you plan my next few weeks?`
+  - `yes, break it down`
+- admin grouped bucket follow-up:
+  - `Show attendance risk branch wise.`
+  - `only CSE`
+- counsellor grouped bucket follow-up:
+  - `Show attendance risk gender wise.`
+  - `only Female`
+
+- student uncleared I-grade / R-grade wording
+- counsellor unresolved R-grade weekly-monitoring wording
+- admin grouped risk breakdown wording including branch-wise, semester-wise, and year-wise sections
+
+One additional hardening was needed here:
+
+- counsellor burden answers now use a lighter unresolved-burden aggregation instead of eagerly building the full faculty summary every time
+
+That keeps the answer path closer to real-time behavior for common counsellor monitoring prompts.
+
+## 25. Final Chatbot Stabilization And Signoff
+
+This pass focuses less on adding another narrow feature and more on making the current chatbot behavior harder to accidentally break.
+
+### What this pass adds
+
+- a consolidated signoff regression runner:
+  - [tmp_chatbot_signoff_regression.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_signoff_regression.py)
+- a stricter live-UAT sweep:
+  - [tmp_live_chatbot_uat_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_live_chatbot_uat_sweep.py)
+- stronger contract language in:
+  - [AI_RESPONSE_CONTRACT.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/AI_RESPONSE_CONTRACT.md)
+
+### Why this matters
+
+By this point, the chatbot had several strong prompt families:
+
+- role-grounded student questions
+- counsellor burden and monitoring questions
+- grouped risk breakdowns
+- ambiguity explanation
+- comparison and diagnostic prompts
+- grouped follow-up continuity
+
+But those strengths were spread across several independent verifier scripts.
+
+That is risky because:
+
+- a future change can break one area quietly
+- and the team may only notice after manual UAT
+
+The signoff runner now replays the strongest current families in one place:
+
+- [tmp_live_chatbot_prompt_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_live_chatbot_prompt_sweep.py)
+- [tmp_chatbot_followup_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_followup_sweep.py)
+- [tmp_chatbot_comparison_ambiguity_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_comparison_ambiguity_sweep.py)
+- [tmp_live_chatbot_uat_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_live_chatbot_uat_sweep.py)
+- [tmp_live_chatbot_mixed_role_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_live_chatbot_mixed_role_sweep.py)
+- [tmp_chatbot_cross_signal_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_cross_signal_sweep.py)
+- [tmp_student_dynamic_action_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_student_dynamic_action_verify.py)
+
+### What the live-UAT sweep checks
+
+The live UAT sweep deliberately uses more natural prompts, not only neat benchmark phrasing.
+
+Examples:
+
+- student:
+  - `am i safe or should i worry?`
+  - `what exactly is hurting me most and what should i do first?`
+  - `do i still have any uncleared grade issue from older sems?`
+- counsellor:
+  - `even if they are doing fine now, who still needs weekly monitoring?`
+  - `show my students high risk semester wise`
+- admin:
+  - `can you show me all the students who are at high risk semester wise, year wise`
+  - follow-up:
+    - `branch wise also`
+
+This is useful because it catches the kind of phrasing gaps that often appear only in real use.
+
+### Honest signoff status
+
+The chatbot is now much stronger than it was when grouped and diagnostic questions first started failing.
+
+What is strong now:
+
+- role scope is much better aligned
+- generic `high risk` phrasing is treated more honestly
+- grouped breakdowns are broader than just semester/year
+- comparison questions and `which is worse and why` are grounded
+- grouped follow-ups now continue more naturally
+- student/counsellor/admin prompt coverage is backed by live regression scripts
+
+What is still not perfect:
+
+- extremely long conversations with repeated dimension switching can still produce edge cases
+- unsupported analytics outside the grounded dataset should still clarify or refuse instead of improvising
+- future changes can still regress behavior if the signoff runner is not kept in the workflow
+
+## 26. Cross-Signal Reasoning Hardening
+
+This pass addresses an important production-readiness gap:
+
+- a chatbot can be grounded and still feel weak if it answers from only one data slice at a time
+
+Example:
+
+- attendance may look `SAFE`
+- but prediction risk may still be `HIGH`
+
+If the chatbot stops at attendance, the answer feels wrong even when the database is technically correct.
+
+### What changed
+
+The chatbot now tries harder to synthesize these signal families together when the data exists:
+
+- prediction history
+- LMS engagement
+- ERP academic performance
+- finance context
+- attendance-policy posture
+- active academic burden
+
+### Where this shows up now
+
+Student:
+
+- `What data do you have about me?`
+  - now reports which signal families are actually available on the student record
+- `Am I safe or should I worry?`
+  - now explains when safe attendance and high prediction risk are not contradictory
+
+Counsellor and admin student drilldowns:
+
+- student drilldown answers now include:
+  - dominant cross-signal explanation
+  - LMS snapshot
+  - ERP snapshot
+  - finance snapshot when available
+  - trigger or stability context when available
+
+### Verification
+
+This pass adds:
+
+- [tmp_chatbot_cross_signal_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_cross_signal_sweep.py)
+
+It checks:
+
+- student data-inventory wording
+- student safety-check reconciliation wording
+- counsellor student drilldown cross-signal explanation
+- admin student drilldown cross-signal explanation
+
+The signoff runner now includes this sweep too:
+
+- [tmp_chatbot_signoff_regression.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_signoff_regression.py)
+
+## 27. Promised Student Follow-Ups
+
+Another real-world weakness showed up in student chat:
+
+- the chatbot could answer a first-turn attendance question correctly
+- then invite a very specific next step
+- but still fail on a short natural follow-up like `ok tell`
+
+That behavior feels artificial, because a real assistant should remember the thread it just opened.
+
+### What changed
+
+Student answers now store a small pending follow-up hint when they explicitly offer a next analytical step.
+
+Examples:
+
+- attendance answer can leave a pending follow-up for:
+  - safe / I-grade / R-grade territory
+- weekly focus answer can leave a pending follow-up for:
+  - breakdown into attendance / coursework / recovery
+
+So short natural replies like:
+
+- `ok tell`
+- `tell me`
+- `continue`
+- `go on`
+
+can now continue the promised student thread instead of dropping into unsupported intent fallback.
+
+### Verification
+
+This is now covered inside:
+
+- [tmp_chatbot_followup_sweep.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_followup_sweep.py)
+
+The sweep now checks:
+
+- student weekly-plan follow-up:
+  - `Can you plan my next few weeks?`
+  - `yes, break it down`
+- student attendance follow-up:
+  - `what is my current attendance`
+  - `ok tell`
+
+## 28. Student Conversational Continuity Hardening
+
+Another important student-chat gap showed up in live use:
+
+- the first answer could be correct
+- the second answer could also be correct
+- but a short natural continuation like `Ok` could still collapse into unsupported-intent fallback
+
+That does not feel like a real chatbot.
+
+### What changed
+
+The student layer now keeps a stricter pending-next-step memory for conversational continuations such as:
+
+- attendance answer
+  - next step: safe / I-grade / R-grade territory
+- subject-risk answer
+  - next step: simple action plan
+- weekly focus answer
+  - next step: breakdown into attendance / coursework / recovery
+
+This means natural chains like:
+
+- `what is my current attendance`
+- `ok tell`
+- `Ok`
+
+now continue across:
+
+- attendance
+- attendance-risk / eligibility
+- next-step action guidance
+
+instead of dropping into `Did you mean ...` fallback too early.
+
+### Additional reasoning fix
+
+The student chatbot now also treats prompts like:
+
+- `my current attendance is in SAFE mode right but why i have been put into HIGH alert?`
+
+as a real cross-signal explanation question, not just a plain attendance lookup.
+
+So the answer now explains:
+
+- attendance is SAFE
+- prediction is HIGH
+- why those are not contradictory
+- which non-attendance signals are still driving concern
+
+### Verification
+
+This is now verified in:
+
+- [tmp_student_promised_followup_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_student_promised_followup_verify.py)
+
+It checks:
+
+- `what is my current attendance`
+- `ok tell`
+- `Ok`
+- `my current attendance is in SAFE mode right but why i have been put into HIGH alert?`
+
+## 29. Student Dynamic Advisory Layer
+
+This pass fixes an important weakness in student chat:
+
+- the system could explain the current situation
+- but once the student shifted into:
+  - `continue`
+  - `proceed`
+  - `how can i recover from high alert`
+  - `how can i remove the HIGH label risk`
+
+it could fall back into either:
+
+- a plain risk restatement
+- or a generic clarification
+
+That feels like a predefined Q&A bot, not a data-aware assistant.
+
+### What changed
+
+Student plan handling now uses a broader grounded advisory layer with these modes:
+
+- weekly first-step advice
+- attendance / coursework / overall recovery focus
+- simple day-by-day weekly recovery plan
+
+The system chooses between those modes using:
+
+- the current student data
+- the last assistant memory context
+- the current message language
+
+instead of requiring one exact hardcoded prompt every time.
+
+### Why this matters
+
+This makes the student chatbot behave more like a data-first assistant:
+
+- first explain the current state
+- then explain safety / I-grade / R-grade posture
+- then move naturally into actions
+- then continue into recovery detail without forcing the student to restate the full request
+
+### Verification
+
+This pass adds:
+
+- [tmp_student_dynamic_action_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_student_dynamic_action_verify.py)
+
+It checks a real student chain such as:
+
+- `what is my current attendance`
+- `continue`
+- `ok`
+- `proceed`
+- `proceed with overall recovery priorities`
+- `how can i recover from high alert`
+- `in what way i can remove the "HIGH" label risk?`
+
+## 30. Counsellor And Admin Operational Advisory Layer
+
+This pass closes an important cross-role gap.
+
+Before this pass:
+
+- student chat could move from explanation to actions more naturally
+- counsellor and admin were still stronger at:
+  - counts
+  - grouped breakdowns
+  - comparisons
+  - attention ranking
+
+but weaker at the next natural question:
+
+- `what should i do first`
+- `what should we do first`
+- `continue`
+- `proceed`
+- `how do we reduce this`
+
+That is not enough for a production assistant, because real users do not stop after one summary.
+
+### What changed
+
+Counsellor and admin now have a grounded operational-advisory layer on top of the existing:
+
+- grouped risk breakdowns
+- attention ranking
+- diagnostic comparison
+- priority queue
+- unresolved burden monitoring
+
+The operational layer now uses:
+
+- current priority queue
+- current attendance pressure
+- current subject hotspots
+- active I/R-grade carry-forward burden
+- remembered grouped bucket context when available
+
+So a follow-up can continue from:
+
+- `show my students high risk semester wise`
+- `which branch needs attention first and why`
+- `which students need attention first this week`
+
+into:
+
+- scoped counsellor action priorities
+- institution-level admin action priorities
+
+instead of dropping back into generic clarification.
+
+### Routing and memory
+
+This pass also adds:
+
+- fresh action-style routing for counsellor/admin prompts
+- local semantic follow-up continuation for short prompts like:
+  - `ok`
+  - `continue`
+  - `proceed`
+  - `what next`
+  - `how do we reduce this`
+
+So operational follow-ups are driven by:
+
+- last assistant memory context
+- grounded role scope
+- current scope analytics
+
+not by memorizing one exact question.
+
+### Verification
+
+This pass adds:
+
+- [tmp_role_operational_planner_verify.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_role_operational_planner_verify.py)
+- [tmp_role_operational_live_smoke.py](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_role_operational_live_smoke.py)
+
+What was verified cleanly from this environment:
+
+- planner detects fresh counsellor/admin action requests
+- local semantic continuation rewrites:
+  - `ok`
+  - `continue`
+  into grounded action requests
+
+What still depends on live environment timing:
+
+- the tiny DB-backed smoke script exists for counsellor/admin
+- but full unattended remote-DB completion can still be slow from this environment
+
+So the code path is implemented, the routing is verified, and final confidence should still include normal live browser UAT.
+## 31. Shared Core Default-Assumption Pass
+
+The chatbot now applies a shared-core interpretation layer before role-specific answering:
+
+- student `assignment rate` -> `assignment submission rate`
+- student `attendance` -> `overall attendance`
+- student `risk` -> `current risk level`
+- student `lms details` / `lms activity` -> `current LMS activity summary`
+- student `erp details` -> `current ERP academic-performance summary`
+- student `finance details` / `fee status` -> `current finance summary`
+- counsellor `risk` -> `which students are high risk`
+- admin `risk` -> `how many students are high risk`
+
+This pass is meant to reduce repeated clarification loops for simple queries. It also treats short continuation replies like `yes`, `ok`, `continue`, and `proceed` as follow-ups when the previous turn left a valid memory context.
+
+Verification scripts added for this pass:
+
+- [tmp_shared_core_default_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_shared_core_default_verify.py)
+- [tmp_student_assignment_rate_live_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_student_assignment_rate_live_verify.py)
+
+## 32. Student Role Hardening Pass
+
+The student role now has a stronger end-to-end behavior across:
+
+- direct data questions
+- cross-signal risk explanations
+- recovery/action questions
+- short follow-ups like `ok` after a risk explanation
+- assignment-rate defaults without repeated clarification
+
+In this pass, student risk explanations now leave a direct action follow-up in memory, so a short continuation can move into recovery guidance instead of restarting or clarifying.
+
+Verification script added:
+
+- [tmp_student_role_hardening_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_student_role_hardening_verify.py)
+
+## 33. Counsellor Role Hardening Pass
+
+The counsellor role now behaves more like a real scoped decision-support assistant across:
+
+- simple defaults like `students?` and `risk`
+- current assigned-student listing
+- current high-risk student listing
+- student-specific explanations such as `why is student 880001 high risk`
+- student-specific action planning such as `what action should i take for student 880001`
+- cross-signal contradiction questions such as `attendance is good but why is student 880001 risky`
+- short follow-ups like `ok` after a student explanation
+- grouped follow-ups like:
+  - `show only CSE`
+  - `what about top 5`
+
+This pass keeps counsellor answers:
+
+- role-scoped
+- student-aware when a specific student is named
+- operational when the counsellor asks what to do next
+
+Verification script added:
+
+- [tmp_counsellor_role_hardening_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_counsellor_role_hardening_verify.py)
+
+## 34. Admin Role Hardening Pass
+
+The admin role now behaves more like a real institutional analysis and strategy assistant across:
+
+- simple defaults like `stats` and `trend`
+- institution-wide counts
+- institution-level action prompts like `what strategy should we take`
+- grouped analysis like:
+  - `branch-wise risk`
+  - `show prediction high risk and attendance risk semester wise and year wise`
+- grouped follow-ups like:
+  - `only CSE`
+  - `continue`
+
+This pass also reduced admin latency for common questions by avoiding the heaviest academic hotspot aggregation when the user only needs:
+
+- simple institution risk counts
+- recent-entry trend
+- institution-level action guidance
+
+Verification added or used for this pass:
+
+- [tmp_admin_role_targeted_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_admin_role_targeted_verify.py)
+- [tmp_admin_role_followup_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_admin_role_followup_verify.py)
+- [tmp_admin_debug_single.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_admin_debug_single.py)
+- [tmp_admin_debug_components.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_admin_debug_components.py)
+
+What was confirmed live against the imported database:
+
+- `stats` returns the current high-risk / I-grade / R-grade snapshot
+- `trend` returns newly entered high-risk students for the last 30 days
+- `what strategy should we take` returns a grounded institution-level action list
+- `branch-wise risk` works as a grouped breakdown
+- after `only CSE`, a short `continue` now advances into admin actions instead of repeating the subset list
+
+## 35. Fresh Topic-Switch Hardening Across All Roles
+
+This pass closes another "predefined bot" feeling:
+
+- the first answer could be correct
+- but a fresh question on a new data topic could still repeat the old thread
+
+That is not acceptable for a real assistant.
+
+### What changed
+
+The chatbot now treats fresh first-class data questions as genuine topic switches instead of blindly clinging to the previous memory context.
+
+This is now hardened for:
+
+- student
+  - risk -> LMS
+  - risk -> ERP
+  - risk -> finance
+- counsellor
+  - assigned-student view -> I-grade risk view -> scoped operational actions
+- admin
+  - risk snapshot -> recent trend -> subject hotspot -> institution strategy
+
+### Why this matters
+
+Without this pass, the bot could still feel "stuck":
+
+- a new prompt could be answered as if it were just another follow-up to the old topic
+- or the system could over-trust stale grouped/subset memory
+
+Now the behavior is more honest:
+
+- short replies like `ok` still continue the active thread
+- but clear fresh questions like `what is my LMS details` or `which students have i grade risk` switch to the new grounded topic immediately
+
+### Verification
+
+This pass adds live DB-backed verifiers:
+
+- [tmp_student_lms_live_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_student_lms_live_verify.py)
+- [tmp_student_topic_switch_live_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_student_topic_switch_live_verify.py)
+- [tmp_counsellor_topic_switch_live_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_counsellor_topic_switch_live_verify.py)
+- [tmp_admin_topic_switch_live_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_admin_topic_switch_live_verify.py)
+
+And the permanent signoff runner now includes them too:
+
+- [tmp_chatbot_signoff_regression.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_chatbot_signoff_regression.py)
+
+### What was confirmed live
+
+Student:
+
+- `am i falling into risk zone or not`
+- `what is my LMS details`
+- `what is my erp details`
+- `what is my finance details`
+- `ok`
+
+Counsellor:
+
+- `which students are high risk`
+- `show my assigned students`
+- `which students have i grade risk`
+- `what should i do for high risk students`
+
+Admin:
+
+- `risk`
+- `trend`
+- `what subject is hurting us the most attendance wise`
+- `what strategy should we take`
+
+This is important because it proves the assistant can now:
+
+- continue when the user really means "continue"
+- switch when the user really means "new topic"
+
+instead of treating every new turn like the same old memory thread.
+
+## 36. Student Module Pass 1
+
+This pass revisits the student role in a stricter, system-design-first way.
+
+The goal was not:
+
+- memorize one more student question
+
+The goal was:
+
+- control student behavior families more cleanly
+- reduce unnecessary clarification
+- separate data / explanation / action flow better
+- keep short follow-ups moving naturally
+
+### What changed
+
+The student layer now carries a clearer lightweight control state in memory:
+
+- `last_intent`
+- `last_topic`
+- `response_type`
+- `pending_student_follow_up`
+
+Why this matters:
+
+- a short reply like `yes` or `ok` can now continue the current student thread more safely
+- fresh student topic switches are less likely to get trapped inside stale older memory
+- action-style student questions are easier to keep in action mode instead of repeating raw data
+
+### Student default assumptions now verified more broadly
+
+- `attendance` -> grounded current attendance
+- `assignment rate` -> grounded assignment submission rate
+- `risk` -> grounded current risk level
+
+### Student follow-up behavior now verified more broadly
+
+Examples covered in the student pass:
+
+- direct data:
+  - `attendance`
+  - `assignment rate`
+  - `what is my lms activity`
+  - `what is my erp data`
+  - `fee status`
+- explanation:
+  - `why am i high risk`
+  - `attendance is good but why risk`
+- action:
+  - `how can i improve`
+  - `how can i recover from high alert`
+- chained follow-ups:
+  - `attendance` -> `yes` -> `continue` -> `proceed` -> `yes`
+  - `assignment rate` -> `ok`
+
+This last family was important because it exposed two real student issues:
+
+- assignment-rate wording was being hijacked by the broader ERP path
+- coursework follow-ups like `assignment rate` -> `ok` were still clarifying instead of continuing into the coursework-to-risk explanation
+
+Both of those are now fixed.
+
+### Verification
+
+This pass adds:
+
+- [tmp_student_pass1_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_student_pass1_verify.py)
+
+What it checks live against the imported database:
+
+- direct student queries
+- explanation queries
+- action queries
+- cross-feature contradictions
+- short follow-up chains
+- ambiguous/simple defaults
+
+It also checks that:
+
+- no repeated clarification loop appears
+- `response_type` stays sensible
+- fresh student topic switches still work
+- coursework / LMS / ERP / finance follow-ups stay grounded
+
+## 37. Counsellor Module Pass 2
+
+This pass applies the same controlled-chatbot discipline to the counsellor role.
+
+The goal was not:
+
+- memorize a few counsellor prompts
+
+The goal was:
+
+- keep counsellor answers scoped to assigned students
+- separate data / explanation / action modes more clearly
+- keep filtering and follow-up continuity stable
+- reduce clarification on short operational prompts
+
+### What changed
+
+Counsellor memory now preserves a clearer lightweight control state:
+
+- `last_intent`
+- `last_topic`
+- `response_type`
+- `pending_role_follow_up`
+
+Why this matters:
+
+- a short reply like `yes` or `ok` can continue from cohort data into counsellor action guidance
+- student-specific explanation can continue into student-specific action instead of restarting
+- grouped counsellor flows can preserve branch / subset context more safely
+
+### Counsellor defaults now verified more broadly
+
+- `students?` -> current assigned-student view
+- `risk` -> current high-risk student view
+
+### Counsellor response modes now verified more broadly
+
+- data:
+  - `students?`
+  - `risk`
+- explanation:
+  - `why is student 880001 high risk`
+  - `attendance is good but why is student 880001 risky`
+- action:
+  - `what action should i take for student 880001`
+  - `what should i do for high risk students`
+- grouped / filter follow-ups:
+  - `show my students high risk branch wise`
+  - `show only CSE`
+  - `what about top 5`
+- short continuation:
+  - `yes`
+  - `ok`
+  - `continue`
+  - `proceed`
+
+This also closes an important asymmetry from the earlier shared engine work:
+
+- counsellor/admin local follow-up handling now treats `yes`, `yeah`, and `yep` as real continuation signals, not just `ok` / `continue`
+
+### Verification
+
+This pass adds:
+
+- [tmp_counsellor_pass2_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_counsellor_pass2_verify.py)
+
+What it checks live against the imported database:
+
+- direct defaults
+- student-specific explanations
+- student-specific actions
+- counsellor cohort actions
+- grouped branch filtering
+- top-N follow-ups
+- short continuation from both student-specific and cohort-level counsellor answers
+
+It also checks that:
+
+- no repeated clarification loop appears
+- `response_type` stays sensible
+- `last_topic` stays aligned with the current counsellor thread
+- counsellor follow-ups continue the existing safe scope instead of resetting badly
+
+## 38. Admin Module Pass 3
+
+This pass applies the same controlled-chatbot contract to the admin role.
+
+The goal was not:
+
+- memorize a few admin prompts
+
+The goal was:
+
+- keep institution-wide defaults direct and safe
+- separate aggregated data, explanation, and action answers more clearly
+- preserve grouped analysis context across admin follow-ups
+- make strategy continuations feel like a real thread instead of a reset
+
+### What changed
+
+Admin memory now preserves the same lightweight control state:
+
+- `last_intent`
+- `last_topic`
+- `response_type`
+- `pending_role_follow_up`
+
+Why this matters:
+
+- grouped admin answers can continue into focused subset views and then into strategy
+- simple admin prompts like `stats` and `trend` are less likely to feel like unrelated custom branches
+- strategy answers now keep their own action identity in memory instead of looking like generic data
+
+### Admin defaults now verified more broadly
+
+- `stats` -> current institution high-risk snapshot
+- `trend` -> recent high-risk-entry view for the last 30 days
+
+### Admin response modes now verified more broadly
+
+- data:
+  - `stats`
+  - `trend`
+  - `which subjects are causing the most attendance issues`
+- action:
+  - `what strategy should we take`
+- grouped follow-up chain:
+  - `branch-wise risk`
+  - `only CSE`
+  - `continue`
+
+### Verification
+
+This pass adds:
+
+- [tmp_admin_pass3_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_admin_pass3_verify.py)
+
+It checks live against the imported database:
+
+- direct admin defaults
+- subject hotspot data
+- institution strategy actions
+- grouped branch breakdown
+- grouped subset narrowing
+- grouped continuation into institutional strategy
+
+It also checks that:
+
+- no repeated clarification loop appears
+- `response_type` stays sensible
+- `last_topic` stays aligned with the current admin thread
+- grouped admin follow-ups continue the same analytical context instead of resetting into stale memory
+
+## 39. Structured Conversation Test Runner
+
+We now also have a reusable conversation-simulation runner instead of relying only on scattered one-off verifier scripts.
+
+Runner:
+
+- [tests/chatbot_test_runner.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tests/chatbot_test_runner.py)
+
+What it does:
+
+- builds real role-aware chat sessions
+- sends multiple-turn conversations through the same planner + memory + grounded answer pipeline
+- stores structured JSON results under `tests/artifacts/`
+- validates common failure patterns automatically
+
+Current validation families:
+
+- unnecessary clarification
+- response-type mismatch
+- repeated answer reuse
+- follow-up continuity failure
+- role-scope student-id leakage
+
+Execution modes:
+
+- `--role student`
+- `--role counsellor`
+- `--role admin`
+- `--role all`
+- `--label <conversation_label>` to isolate one conversation family
+- `--deterministic` to keep local memory/fallback behavior but block external semantic-provider noise during regression runs
+
+The purpose of this runner is not to prove infinite prompt coverage.
+Its purpose is to simulate realistic conversation patterns for each role and catch behavior-class failures early and repeatably.
+
+Recent admin hardening also added deterministic fixture verifiers for the new institution-level reasoning families:
+
+- [tmp_admin_fixture_family_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_admin_fixture_family_verify.py)
+- [tmp_admin_fixture_conversation_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_admin_fixture_conversation_verify.py)
+- [tmp_admin_fixture_deepchains_verify.py](/c:/Users/Sai%20Nikhil/Desktop/Student_Retention/tmp_admin_fixture_deepchains_verify.py)
+
+These fixture checks specifically protect:
+
+- institution-level signal explanations like `compare lms vs erp impact`
+- finance-to-risk explanations
+- institution-wide dominant-factor explanations
+- hidden-risk explanations across departments
+- grouped branch/year breakdown prompts such as `risk by department`, `performance by branch`, and `compare 1st year vs final year`
+- admin explanation-to-action follow-up continuity after institution-health answers
+- admin deep analytical follow-up chains across comparison, breakdown, ambiguous-stress, cross-feature, and strategy/consequence flows

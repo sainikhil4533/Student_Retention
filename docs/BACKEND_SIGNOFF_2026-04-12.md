@@ -19,6 +19,10 @@ After this signoff, the chatbot/coplaner system continued to evolve substantiall
 - deterministic planner baseline `cb22`
 - optional semantic layer `CB19`
 - frontend contract freeze
+- generalized academic import foundation
+- role-scoped academic dashboards and chatbot upgrades
+- counsellor scope hardening and route verification
+- startup/readiness cleanup for full local stack use
 
 So if you want the **current chatbot state**, do not rely on this file alone.
 
@@ -27,6 +31,9 @@ Read these docs as well:
 - [CHATBOT.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/CHATBOT.md)
 - [CHATBOT_FULL_IMPLEMENTATION_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/CHATBOT_FULL_IMPLEMENTATION_GUIDE.md)
 - [CHATBOT_FRONTEND_INTEGRATION_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/CHATBOT_FRONTEND_INTEGRATION_GUIDE.md)
+- [GENERALIZED_INSTITUTION_IMPORT_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/GENERALIZED_INSTITUTION_IMPORT_GUIDE.md)
+- [LOCAL_STARTUP_AND_READINESS_GUIDE.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/LOCAL_STARTUP_AND_READINESS_GUIDE.md)
+- [DEPLOYMENT_READINESS_CHECKLIST.md](c:/Users/Sai%20Nikhil/Desktop/Student_Retention/docs/DEPLOYMENT_READINESS_CHECKLIST.md)
 
 ### Why This Note Was Added
 
@@ -143,3 +150,4 @@ Today, this statement should be read like this:
 - the import/reporting backend was already stable enough at that time
 - later chatbot phases built on top of that stable backend foundation
 - the current frontend work should now use the dedicated chatbot frontend contract guide, not only this older signoff snapshot
+- current generalized academic behavior and launch-readiness decisions now live in newer docs, not only in this older backend signoff

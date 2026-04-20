@@ -153,17 +153,33 @@ class AuthLoginRequest(BaseModel):
 class AuthTokenResponse(BaseModel):
     access_token: str
     token_type: str
+    subject: str
+    username: str
     role: str
     student_id: int | None = None
     display_name: str | None = None
+    auth_provider: str | None = None
+    password_reset_required: bool = False
 
 
 class AuthMeResponse(BaseModel):
     role: str
     subject: str
+    username: str | None = None
     student_id: int | None = None
     display_name: str | None = None
     auth_provider: str | None = None
+
+
+class AuthResetPasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+
+class AuthResetPasswordResponse(BaseModel):
+    status: str
+    message: str
+    password_reset_required: bool = False
 
 
 class StudentGuidance(BaseModel):
@@ -492,6 +508,10 @@ class FacultyPriorityQueueItem(BaseModel):
     faculty_alert_status: str | None = None
     faculty_alert_type: str | None = None
     latest_intervention_status: str | None = None
+    has_active_academic_burden: bool = False
+    academic_risk_band: str | None = None
+    monitoring_cadence: str | None = None
+    active_burden_count: int = 0
     repeat_high_risk_count: int
     high_risk_cycle_count: int
     has_relapsed_after_recovery: bool
@@ -516,6 +536,41 @@ class FacultySummaryStudentItem(BaseModel):
     note: str | None = None
 
 
+class AcademicSubjectPressureItem(BaseModel):
+    subject_name: str
+    total_students: int
+    students_below_threshold: int
+    i_grade_students: int
+    r_grade_students: int
+    average_attendance_percent: float | None = None
+    summary: str
+
+
+class AcademicPressureBucketItem(BaseModel):
+    bucket_label: str
+    total_students: int
+    students_with_overall_shortage: int
+    students_with_i_grade_risk: int
+    students_with_r_grade_risk: int
+    average_overall_attendance_percent: float | None = None
+    summary: str
+
+
+class FacultyDashboardSummaryResponse(BaseModel):
+    generated_at: datetime | None = None
+    total_active_high_risk_students: int
+    total_critical_unattended_cases: int
+    total_students_with_overall_shortage: int = 0
+    total_students_with_i_grade_risk: int = 0
+    total_students_with_r_grade_risk: int = 0
+    total_students_with_active_academic_burden: int = 0
+    total_students_with_active_i_grade_burden: int = 0
+    total_students_with_active_r_grade_burden: int = 0
+    top_subject_pressure: list[AcademicSubjectPressureItem] = []
+    branch_pressure: list[AcademicPressureBucketItem] = []
+    semester_pressure: list[AcademicPressureBucketItem] = []
+
+
 class FacultySummaryResponse(BaseModel):
     generated_at: datetime | None = None
     total_active_high_risk_students: int
@@ -528,6 +583,15 @@ class FacultySummaryResponse(BaseModel):
     total_critical_unattended_cases: int
     total_repeated_risk_students: int
     total_unhandled_escalations: int
+    total_students_with_overall_shortage: int = 0
+    total_students_with_i_grade_risk: int = 0
+    total_students_with_r_grade_risk: int = 0
+    total_students_with_active_academic_burden: int = 0
+    total_students_with_active_i_grade_burden: int = 0
+    total_students_with_active_r_grade_burden: int = 0
+    top_subject_pressure: list[AcademicSubjectPressureItem] = []
+    branch_pressure: list[AcademicPressureBucketItem] = []
+    semester_pressure: list[AcademicPressureBucketItem] = []
     active_recovery_students: list[FacultySummaryStudentItem]
     expired_recovery_students: list[FacultySummaryStudentItem]
     escalated_students: list[FacultySummaryStudentItem]
@@ -537,6 +601,7 @@ class FacultySummaryResponse(BaseModel):
     critical_unattended_case_students: list[FacultySummaryStudentItem]
     repeated_risk_students: list[FacultySummaryStudentItem]
     unhandled_escalation_students: list[FacultySummaryStudentItem]
+    academic_burden_monitoring_students: list[FacultySummaryStudentItem] = []
 
 
 class RepeatedRiskResponse(BaseModel):
@@ -678,6 +743,9 @@ class InstitutionRiskOverviewResponse(BaseModel):
     total_dropped_students: int
     total_studying_students: int
     total_graduated_students: int
+    total_students_with_overall_shortage: int = 0
+    total_students_with_i_grade_risk: int = 0
+    total_students_with_r_grade_risk: int = 0
     department_buckets: list[InstitutionBucketSummary]
     semester_buckets: list[InstitutionBucketSummary]
     category_buckets: list[InstitutionBucketSummary] = []
@@ -685,6 +753,9 @@ class InstitutionRiskOverviewResponse(BaseModel):
     income_buckets: list[InstitutionBucketSummary] = []
     heatmap_cells: list[InstitutionHeatmapCell]
     top_risk_types: list[RiskTypeDistributionItem]
+    top_subject_pressure: list[AcademicSubjectPressureItem] = []
+    branch_pressure: list[AcademicPressureBucketItem] = []
+    semester_pressure: list[AcademicPressureBucketItem] = []
     outcome_distribution: list[OutcomeDistributionItem]
     summary: str
 
@@ -728,6 +799,8 @@ class AIRecoveryPlanResponse(BaseModel):
 class StudentCaseStateResponse(BaseModel):
     student_id: int
     current_case_state: str
+    priority_score: int | None = None
+    priority_label: str | None = None
     risk_level: str | None = None
     final_risk_probability: float | None = None
     latest_prediction_created_at: datetime | None = None
@@ -787,6 +860,88 @@ class StudentOperationalContextResponse(BaseModel):
     activity_summary: ActivitySummary
     milestone_flags: MilestoneFlagsSummary
     sla_summary: SLASummary
+    academic_context: dict | None = None
+
+
+class StudentSubjectAttendanceItem(BaseModel):
+    year: int | None = None
+    semester: int | None = None
+    subject_code: str | None = None
+    subject_name: str
+    subject_type: str | None = None
+    overall_attendance_percent: float | None = None
+    subject_attendance_percent: float | None = None
+    required_percent: float | None = None
+    overall_status: str | None = None
+    subject_status: str | None = None
+    grade_consequence: str | None = None
+    condonation_required: bool = False
+    summer_repeat_required: bool = False
+    internals_repeat_required: bool = False
+    end_sem_eligible: bool = True
+    classes_conducted: int | None = None
+    classes_attended: int | None = None
+    consecutive_absences: int | None = None
+    missed_days: int | None = None
+    trend: str | None = None
+
+
+class StudentSemesterProgressItem(BaseModel):
+    year: int | None = None
+    semester: int | None = None
+    overall_attendance_percent: float | None = None
+    overall_status: str | None = None
+    subjects_below_75_count: int | None = None
+    subjects_below_65_count: int | None = None
+    has_i_grade_risk: bool = False
+    has_r_grade_risk: bool = False
+    current_eligibility: str | None = None
+    semester_mode: str | None = None
+
+
+class ActiveAcademicBurdenItem(BaseModel):
+    subject_code: str | None = None
+    subject_name: str | None = None
+    year: int | None = None
+    semester: int | None = None
+    raw_result_status: str | None = None
+    raw_grade: str | None = None
+    attendance_linked_status: str | None = None
+    effective_result_status: str | None = None
+    effective_grade: str | None = None
+    subject_attendance_percent: float | None = None
+
+
+class StudentAcademicProgressSummary(BaseModel):
+    institution_name: str | None = None
+    branch: str | None = None
+    batch: str | None = None
+    current_year: int | None = None
+    current_semester: int | None = None
+    current_academic_status: str | None = None
+    semester_mode: str | None = None
+    expected_graduation_year: int | None = None
+    standing_label: str | None = None
+    total_backlogs: int | None = None
+    current_overall_attendance_percent: float | None = None
+    current_overall_status: str | None = None
+    current_subjects_below_75_count: int = 0
+    current_subjects_below_65_count: int = 0
+    has_i_grade_risk: bool = False
+    has_r_grade_risk: bool = False
+    weakest_subject_name: str | None = None
+    weakest_subject_percent: float | None = None
+    academic_risk_band: str | None = None
+    active_burden_count: int = 0
+    has_active_i_grade_burden: bool = False
+    has_active_r_grade_burden: bool = False
+    monitoring_cadence: str | None = None
+    academic_burden_summary: str | None = None
+    active_i_grade_subjects: list[ActiveAcademicBurdenItem] = []
+    active_r_grade_subjects: list[ActiveAcademicBurdenItem] = []
+    attendance_summary: str
+    subject_attendance: list[StudentSubjectAttendanceItem] = []
+    semester_progress: list[StudentSemesterProgressItem] = []
 
 
 class StudentSelfOverviewResponse(BaseModel):
@@ -795,18 +950,32 @@ class StudentSelfOverviewResponse(BaseModel):
     latest_prediction: PredictionHistoryItem
     warning_history: StudentWarningHistoryResponse
     recovery_plan: AIRecoveryPlanResponse
+    academic_progress: StudentAcademicProgressSummary
 
 
-class VignanImportResponse(BaseModel):
+class InstitutionImportResponse(BaseModel):
     status: str
+    import_type: str = "institution"
+    institution_name: str | None = None
     total_students: int
     profiles_upserted: int
     support_mappings_applied: int = 0
+    accounts_provisioned: int = 0
+    attendance_policies_upserted: int = 0
+    subject_catalog_rows_upserted: int = 0
+    academic_progress_rows_upserted: int = 0
+    semester_progress_rows_upserted: int = 0
+    attendance_rows_upserted: int = 0
+    academic_rows_upserted: int = 0
     lms_events_ingested: int
     erp_events_ingested: int
     finance_events_ingested: int
     scoring_triggered: int
     errors: list[str] = []
+
+
+class VignanImportResponse(InstitutionImportResponse):
+    import_type: str = "vignan_legacy"
 
 
 class ImportCoverageStudentItem(BaseModel):

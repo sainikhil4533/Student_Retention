@@ -1,0 +1,1025 @@
+{
+  "role_filter": "admin",
+  "generated_at": "2026-04-17T16:38:43.500400+00:00",
+  "conversation_count": 3,
+  "passed_conversations": 3,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "admin",
+      "label": "admin_defaults_strategy_chain",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "stats",
+          "response_type": "data",
+          "last_topic": "institution_risk",
+          "last_intent": "cohort_summary",
+          "answer": "There are 3 currently high-risk students, 63 students with I-grade attendance risk, and 6 with R-grade attendance risk across the institution.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "cohort_summary",
+              "last_intent": "cohort_summary",
+              "response_type": "data",
+              "last_topic": "institution_risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "stats",
+              "normalized_message": "how many students are high risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "stats",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "trend",
+          "response_type": "data",
+          "last_topic": "trend",
+          "last_intent": "cohort_recent_entry",
+          "answer": "3 students newly entered high risk in the last 30 days.\n\nWhat I found:\n- Sample student_ids: 880082, 880073, 880001",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_recent_entry",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "scope": "recent_entry_30d",
+              "last_intent": "cohort_recent_entry",
+              "response_type": "data",
+              "last_topic": "trend"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "trend",
+              "normalized_message": "how many students just entered risk in the last 30 days",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": 30,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "trend",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what strategy should we take",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded institution-level action list from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "what strategy should we take",
+              "normalized_message": "show institutional operational priorities",
+              "primary_intent": "admin_governance",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "load_priority_queue",
+                "load_attendance_pressure_and_subject_hotspots",
+                "load_carry_forward_burden_counts",
+                "compose_grounded_institution_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner mapped an admin action-style question to a grounded institutional operational advisory response."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what strategy should we take",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "continue",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the branch-specific admin action list from the current retention picture.\n\nWhat I found:\n- Focus the next admin pass on branch `CSE` first. It currently shows prediction high risk 3, overall shortage 31, I-grade risk 63, and R-grade risk 6.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this further into a semester-specific or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "branch",
+              "focus_bucket": "CSE",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "continue",
+              "normalized_message": "show a branch-specific admin action list",
+              "primary_intent": "admin_governance",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "load_priority_queue",
+                "load_attendance_pressure_and_subject_hotspots",
+                "load_carry_forward_burden_counts",
+                "compose_grounded_institution_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner mapped an admin action-style question to a grounded institutional operational advisory response.",
+                "CB19 semantic planner rewrite: Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "continue",
+              "rewritten_message": "show a branch-specific admin action list",
+              "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+              "confidence": 0.87
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_grouped_subset_chain",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "branch-wise risk",
+          "response_type": "explanation",
+          "last_topic": "grouped_branch",
+          "last_intent": "grouped_risk_breakdown",
+          "answer": "I am separating two different layers for the institution. Prediction high risk is currently 3 students from the risk model, while the attendance-policy layer shows 31 overall-shortage students, 63 with I-grade risk, and 6 with R-grade risk.\n\nWhat I found:\n- Generic 'high risk' can mean either the prediction model or the attendance-policy risk layer, so I am showing both separately.\n- Branch-wise breakdown:\n- CSE: prediction high risk 3, overall shortage 31, I-grade 63, R-grade 6.\n\nIf you want, I can next list the exact students inside any one grouped bucket or turn this into an operational action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "grouped_risk_breakdown",
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "role_scope": "admin",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "grouped_risk_breakdown",
+              "response_type": "explanation",
+              "last_topic": "grouped_branch"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "branch-wise risk",
+              "normalized_message": "show grouped institutional risk breakdown",
+              "primary_intent": "cohort_summary",
+              "user_goal": "grouped_risk_breakdown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [
+                "branch"
+              ],
+              "metrics": [
+                "prediction_high_risk",
+                "overall_shortage",
+                "i_grade_risk",
+                "r_grade_risk"
+              ],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grouped_breakdown",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "group_students_by_requested_academic_dimensions",
+                "compute_prediction_and_attendance_risk_layers",
+                "compose_grounded_grouped_breakdown"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.95,
+              "notes": [
+                "Planner recognized that generic high-risk phrasing is ambiguous and should separate prediction risk from attendance-policy risk."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "branch-wise risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "only CSE",
+          "response_type": "data",
+          "last_topic": "grouped_bucket_focus_follow_up",
+          "last_intent": "grouped_bucket_focus_follow_up",
+          "answer": "Kept only the `CSE` bucket from the previous grouped result.\n\nWhat I found:\n- focused the previous grouped result on the `CSE` bucket\n- Matching students: 100\n- 880001 (STU001)\n- 880002 (STU002)\n- 880003 (STU003)\n- 880004 (STU004)\n- Additional grounded details were condensed to keep this answer readable (5 more).\n- 880010 (STU010)",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "grouped_bucket_focus_follow_up",
+              "student_ids": [
+                880001,
+                880002,
+                880003,
+                880004,
+                880005,
+                880006,
+                880007,
+                880008,
+                880009,
+                880010,
+                880011,
+                880012,
+                880013,
+                880014,
+                880015,
+                880016,
+                880017,
+                880018,
+                880019,
+                880020,
+                880021,
+                880022,
+                880023,
+                880024,
+                880025,
+                880026,
+                880027,
+                880028,
+                880029,
+                880030,
+                880031,
+                880032,
+                880033,
+                880034,
+                880035,
+                880036,
+                880037,
+                880038,
+                880039,
+                880040,
+                880041,
+                880042,
+                880043,
+                880044,
+                880045,
+                880046,
+                880047,
+                880048,
+                880049,
+                880050,
+                880051,
+                880052,
+                880053,
+                880054,
+                880055,
+                880056,
+                880057,
+                880058,
+                880059,
+                880060,
+                880061,
+                880062,
+                880063,
+                880064,
+                880065,
+                880066,
+                880067,
+                880068,
+                880069,
+                880070,
+                880071,
+                880072,
+                880073,
+                880074,
+                880075,
+                880076,
+                880077,
+                880078,
+                880079,
+                880080,
+                880081,
+                880082,
+                880083,
+                880084,
+                880085,
+                880086,
+                880087,
+                880088,
+                880089,
+                880090,
+                880091,
+                880092,
+                880093,
+                880094,
+                880095,
+                880096,
+                880097,
+                880098,
+                880099,
+                880100
+              ],
+              "outcome_status": null,
+              "branch": null,
+              "category": null,
+              "region": null,
+              "income": null,
+              "grouped_by": "branch",
+              "bucket_values": [
+                "CSE"
+              ],
+              "role_scope": "admin",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "grouped_bucket_focus_follow_up",
+              "response_type": "data",
+              "last_topic": "grouped_bucket_focus_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "only CSE",
+              "normalized_message": "only CSE",
+              "primary_intent": "unsupported",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [
+                  "CSE"
+                ],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": "follow_up",
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.8,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "kept",
+              "source_message": "only CSE",
+              "rewritten_message": "only CSE",
+              "rationale": "Normalized a bucket-specific grouped follow-up using local conversation memory.",
+              "confidence": 0.83
+            }
+          }
+        },
+        {
+          "prompt": "continue",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded institution-level action list from the current retention picture.\n\nWhat I found:\n- Start with the most pressured `branch` bucket in the current view: `CSE`. It currently shows prediction high risk 3, overall shortage 31, I-grade risk 63, and R-grade risk 6.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "branch",
+              "focus_bucket": "CSE",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "continue",
+              "normalized_message": "what should we do first institution wide",
+              "primary_intent": "admin_governance",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "load_priority_queue",
+                "load_attendance_pressure_and_subject_hotspots",
+                "load_carry_forward_burden_counts",
+                "compose_grounded_institution_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner mapped an admin action-style question to a grounded institutional operational advisory response.",
+                "CB19 semantic planner rewrite: Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "continue",
+              "rewritten_message": "what should we do first institution wide",
+              "rationale": "Continued a counsellor/admin operational follow-up into the grounded role action layer using local conversation memory.",
+              "confidence": 0.87
+            }
+          }
+        },
+        {
+          "prompt": "year wise also",
+          "response_type": "explanation",
+          "last_topic": "grouped_year",
+          "last_intent": "grouped_risk_breakdown",
+          "answer": "Here is the grouped attendance-policy risk breakdown for the institution.\n\nWhat I found:\n- Year-wise breakdown:\n- Year 1: overall shortage 1, I-grade 9, R-grade 0.\n- Year 3: overall shortage 14, I-grade 22, R-grade 2.\n- Year 2: overall shortage 6, I-grade 20, R-grade 2.\n- Year 4: overall shortage 10, I-grade 12, R-grade 2.\n\nIf you want, I can next list the exact students inside any one grouped bucket or turn this into an operational action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "import_coverage",
+              "intent": "grouped_risk_breakdown",
+              "grouped_by": "year",
+              "bucket_values": [
+                "Year 1",
+                "Year 3",
+                "Year 2",
+                "Year 4"
+              ],
+              "role_scope": "admin",
+              "pending_role_follow_up": "operational_actions",
+              "last_intent": "grouped_risk_breakdown",
+              "response_type": "explanation",
+              "last_topic": "grouped_year"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "year wise also",
+              "normalized_message": "show attendance risk year wise",
+              "primary_intent": "cohort_summary",
+              "user_goal": "grouped_risk_breakdown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [
+                "year"
+              ],
+              "metrics": [
+                "overall_shortage",
+                "i_grade_risk",
+                "r_grade_risk"
+              ],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "grouped_breakdown",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "group_students_by_requested_academic_dimensions",
+                "compute_prediction_and_attendance_risk_layers",
+                "compose_grounded_grouped_breakdown"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.95,
+              "notes": [
+                "CB19 semantic planner rewrite: Extended the previous grouped attendance analysis into another requested dimension using local conversation memory."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "local_fallback",
+              "model": null,
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": true,
+              "status": "rewritten",
+              "source_message": "year wise also",
+              "rewritten_message": "show attendance risk year wise",
+              "rationale": "Extended the previous grouped attendance analysis into another requested dimension using local conversation memory.",
+              "confidence": 0.84
+            }
+          }
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "label": "admin_hotspot_and_strategy_chain",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "which subjects are causing the most attendance issues",
+          "response_type": "explanation",
+          "last_topic": "attendance_pressure",
+          "last_intent": "admin_attendance_pressure_summary",
+          "answer": "These subjects are currently causing the most attendance issues across the institution. Right now, 31 students are below the overall attendance requirement, 63 have I-grade risk, and 6 have R-grade risk.\n\nWhat I found:\n- Big Data Analytics: 10 students below policy, with 1 R-grade and 9 I-grade cases.\n- Department Elective - 3: 10 students below policy, with 1 R-grade and 9 I-grade cases.\n- Cryptography and Network Security: 10 students below policy, with 1 R-grade and 9 I-grade cases.\n- Department Elective - 4: 10 students below policy, with 1 R-grade and 9 I-grade cases.\n- Data Mining Techniques: 8 students below policy, with 1 R-grade and 7 I-grade cases.\n- Most pressured branch right now: CSE.\n- Most pressured semester slice right now: Year 4 Sem 7.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_attendance_pressure_summary",
+              "last_intent": "admin_attendance_pressure_summary",
+              "response_type": "explanation",
+              "last_topic": "attendance_pressure"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "which subjects are causing the most attendance issues",
+              "normalized_message": "which subjects are causing the most attendance issues",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "which subjects are causing the most attendance issues",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "what strategy should we take",
+          "response_type": "action",
+          "last_topic": "institution_actions",
+          "last_intent": "admin_operational_actions",
+          "answer": "Here is the grounded institution-level action list from the current retention picture.\n\nWhat I found:\n- Start with the most pressured branch right now: `CSE`.\n- First operational move: review the top prediction high-risk students first: student_id 880001 (probability 0.5976); student_id 880073 (probability 0.5976); student_id 880082 (probability 0.5976)\n- Academic operations move: review the semester slice `Year 1 Sem 1` because it currently shows overall shortage 0, I-grade risk 4, and R-grade risk 0.\n- Operational strategy should focus on concrete blockers first: the highest-risk students needing intervention, the most pressured bucket in the current view, and the branch or semester slice where attendance-policy burden is stacking up.\n\nIf you want, I can narrow this into a branch-specific, semester-specific, or subject-specific admin action list.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "admin_operational_actions",
+              "role_scope": "admin",
+              "grouped_by": "",
+              "focus_bucket": "",
+              "pending_role_follow_up": "operational_actions",
+              "planner_version": "cb22",
+              "last_intent": "admin_operational_actions",
+              "response_type": "action",
+              "last_topic": "institution_actions"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "what strategy should we take",
+              "normalized_message": "show institutional operational priorities",
+              "primary_intent": "admin_governance",
+              "user_goal": "role_action_request",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "operational_advisory",
+              "orchestration_steps": [
+                "resolve_institution_scope",
+                "load_priority_queue",
+                "load_attendance_pressure_and_subject_hotspots",
+                "load_carry_forward_burden_counts",
+                "compose_grounded_institution_action_list"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": [
+                "Planner mapped an admin action-style question to a grounded institutional operational advisory response."
+              ]
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "what strategy should we take",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "risk",
+          "response_type": "data",
+          "last_topic": "institution_risk",
+          "last_intent": "cohort_summary",
+          "answer": "There are 3 currently high-risk students, 63 students with I-grade attendance risk, and 6 with R-grade attendance risk across the institution.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "admin_academic",
+              "intent": "cohort_summary",
+              "last_intent": "cohort_summary",
+              "response_type": "data",
+              "last_topic": "institution_risk"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "risk",
+              "normalized_message": "how many students are high risk",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "risk",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "trend",
+          "response_type": "data",
+          "last_topic": "trend",
+          "last_intent": "cohort_recent_entry",
+          "answer": "3 students newly entered high risk in the last 30 days.\n\nWhat I found:\n- Sample student_ids: 880082, 880073, 880001",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "cohort_recent_entry",
+              "student_ids": [
+                880082,
+                880073,
+                880001
+              ],
+              "scope": "recent_entry_30d",
+              "last_intent": "cohort_recent_entry",
+              "response_type": "data",
+              "last_topic": "trend"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "admin",
+              "original_message": "trend",
+              "normalized_message": "how many students just entered risk in the last 30 days",
+              "primary_intent": "cohort_summary",
+              "user_goal": "unknown",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": 30,
+              "follow_up_action": null,
+              "analysis_mode": null,
+              "orchestration_steps": [],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.55,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "trend",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

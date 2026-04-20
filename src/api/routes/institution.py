@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from src.api.academic_pressure import build_academic_pressure_snapshot
 from src.api.auth import AuthContext, require_roles
 from src.api.institutional_analytics import (
     build_institution_risk_overview,
@@ -8,6 +9,8 @@ from src.api.institutional_analytics import (
     resolve_semester_label,
 )
 from src.api.schemas import (
+    AcademicPressureBucketItem,
+    AcademicSubjectPressureItem,
     InstitutionBucketSummary,
     InstitutionHeatmapCell,
     InstitutionRiskOverviewResponse,
@@ -21,6 +24,30 @@ from src.db.repository import EventRepository
 
 
 router = APIRouter(prefix="/institution", tags=["institution"])
+
+
+def _academic_pressure_summary(repository: EventRepository, *, student_ids: set[int] | None = None) -> dict:
+    snapshot = build_academic_pressure_snapshot(
+        repository,
+        student_ids=student_ids,
+        subject_limit=8,
+        bucket_limit=8,
+        top_student_limit=8,
+    )
+    return {
+        "total_students_with_overall_shortage": int(snapshot["total_students_with_overall_shortage"]),
+        "total_students_with_i_grade_risk": int(snapshot["total_students_with_i_grade_risk"]),
+        "total_students_with_r_grade_risk": int(snapshot["total_students_with_r_grade_risk"]),
+        "top_subject_pressure": [
+            AcademicSubjectPressureItem(**item) for item in snapshot["top_subjects"]
+        ],
+        "branch_pressure": [
+            AcademicPressureBucketItem(**item) for item in snapshot["branch_pressure"]
+        ],
+        "semester_pressure": [
+            AcademicPressureBucketItem(**item) for item in snapshot["semester_pressure"]
+        ],
+    }
 
 
 @router.get("/risk-overview", response_model=InstitutionRiskOverviewResponse)
@@ -122,6 +149,10 @@ def get_institution_risk_overview(
         )
 
     summary = build_institution_risk_overview(student_rows=student_rows)
+    academic_pressure = _academic_pressure_summary(
+        repository,
+        student_ids={int(row["student_id"]) for row in student_rows},
+    )
 
     return InstitutionRiskOverviewResponse(
         generated_at=to_ist(summary["generated_at"]),
@@ -135,6 +166,9 @@ def get_institution_risk_overview(
         total_dropped_students=int(summary["total_dropped_students"]),
         total_studying_students=int(summary["total_studying_students"]),
         total_graduated_students=int(summary["total_graduated_students"]),
+        total_students_with_overall_shortage=int(academic_pressure["total_students_with_overall_shortage"]),
+        total_students_with_i_grade_risk=int(academic_pressure["total_students_with_i_grade_risk"]),
+        total_students_with_r_grade_risk=int(academic_pressure["total_students_with_r_grade_risk"]),
         department_buckets=[
             InstitutionBucketSummary(**item) for item in summary["department_buckets"]
         ],
@@ -156,6 +190,9 @@ def get_institution_risk_overview(
         top_risk_types=[
             RiskTypeDistributionItem(**item) for item in summary["top_risk_types"]
         ],
+        top_subject_pressure=list(academic_pressure["top_subject_pressure"]),
+        branch_pressure=list(academic_pressure["branch_pressure"]),
+        semester_pressure=list(academic_pressure["semester_pressure"]),
         outcome_distribution=[
             OutcomeDistributionItem(**item) for item in summary["outcome_distribution"]
         ],

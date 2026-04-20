@@ -1,0 +1,99 @@
+INFO:     Started server process [16304]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\applications.py", line 1160, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\cors.py", line 87, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 130, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 116, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 670, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\fastapi\routing.py", line 326, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 2470, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\Sai Nikhil\AppData\Local\Programs\Python\Python313\Lib\site-packages\anyio\_backends\_asyncio.py", line 967, in run
+    result = context.run(func, *args)
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\routes\copilot.py", line 173, in send_copilot_message
+    grounded_answer, tools_used, limitations, memory_context = generate_grounded_copilot_answer(
+                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        auth=auth,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        query_plan=query_plan.to_dict(),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\copilot_tools.py", line 215, in generate_grounded_copilot_answer
+    answer, tools_used, limitations, memory_context = _answer_counsellor_question(
+                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        auth=auth,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        query_plan=planner,
+        ^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\copilot_tools.py", line 6024, in _answer_counsellor_question
+    latest_erp_by_student = _latest_erp_by_student()
+  File "C:\Users\Sai Nikhil\Desktop\Student_Retention\src\api\copilot_tools.py", line 5553, in _latest_erp_by_student
+    int(row.student_id): row
+        ^^^^^^^^^^^^^^
+AttributeError: 'int' object has no attribute 'student_id'

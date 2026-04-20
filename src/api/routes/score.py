@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.api.auth import AuthContext, require_roles, require_same_student_or_roles
+from src.api.scope import ensure_student_scope_access
 from src.api.dependencies import prediction_service
 from src.api.prediction_history_serialization import build_prediction_history_item_from_row
 from src.api.scoring_service import score_student_from_db
@@ -74,6 +75,7 @@ def get_student_prediction_history(
     auth: AuthContext = Depends(require_same_student_or_roles("counsellor", "admin", "system")),
 ) -> PredictionHistoryResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     history_rows = repository.get_prediction_history_for_student(student_id)
     lms_events = repository.get_lms_events_for_student(student_id)
     erp_event = repository.get_latest_erp_event(student_id)
@@ -115,6 +117,7 @@ def get_latest_student_prediction(
     auth: AuthContext = Depends(require_same_student_or_roles("counsellor", "admin", "system")),
 ) -> PredictionHistoryItem:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     row = repository.get_latest_prediction_for_student(student_id)
 
     if not row:

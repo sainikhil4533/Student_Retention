@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from "react";
+import { CSSProperties, HTMLAttributes, PropsWithChildren, ReactNode } from "react";
 import clsx from "clsx";
 
 export function Button({
@@ -16,9 +16,9 @@ export function Button({
       className={clsx(
         "inline-flex items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold transition duration-200",
         variant === "primary" &&
-          "bg-ink text-white shadow-soft hover:-translate-y-0.5 hover:bg-slate-800",
+          "bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-900 text-white shadow-soft hover:-translate-y-0.5 hover:shadow-lift",
         variant === "secondary" &&
-          "border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50",
+          "border border-slate-200 bg-white/92 text-slate-700 shadow-[0_10px_24px_rgba(15,23,42,0.05)] hover:border-slate-300 hover:bg-slate-50",
         variant === "ghost" && "text-slate-600 hover:bg-slate-100",
         className,
       )}
@@ -32,11 +32,20 @@ export function Button({
 export function Card({
   children,
   className,
-}: PropsWithChildren<{
-  className?: string;
-}>) {
+  style,
+  ...props
+}: PropsWithChildren<
+  HTMLAttributes<HTMLDivElement> & {
+    className?: string;
+    style?: CSSProperties;
+  }
+>) {
   return (
-    <div className={clsx("glass rounded-[28px] border border-white/70 p-5 shadow-soft", className)}>
+    <div
+      className={clsx("glass rounded-[30px] border border-white/80 p-5 shadow-soft", className)}
+      style={style}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -56,9 +65,9 @@ export function SectionTitle({
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div className="space-y-1">
-        {eyebrow ? <p className="text-xs font-semibold uppercase tracking-[0.22em] text-teal-700">{eyebrow}</p> : null}
-        <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">{title}</h2>
-        {description ? <p className="max-w-3xl text-sm leading-6 text-slate-600">{description}</p> : null}
+        {eyebrow ? <p className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-700">{eyebrow}</p> : null}
+        <h2 className="text-2xl font-extrabold tracking-tight text-slate-950 sm:text-[1.95rem]">{title}</h2>
+        {description ? <p className="max-w-3xl text-sm leading-7 text-slate-600">{description}</p> : null}
       </div>
       {action}
     </div>
@@ -84,10 +93,15 @@ export function StatCard({
   }[accent];
 
   return (
-    <Card className={clsx("bg-gradient-to-br", accentClass)}>
-      <p className="text-sm font-medium text-slate-500">{label}</p>
-      <p className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900">{value}</p>
-      {note ? <p className="mt-2 text-sm leading-6 text-slate-600">{note}</p> : null}
+    <Card className={clsx("bg-gradient-to-br from-white via-white to-white/70", accentClass)}>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-medium text-slate-500">{label}</p>
+        <span className="rounded-full border border-white/70 bg-white/80 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          Live
+        </span>
+      </div>
+      <p className="mt-4 text-3xl font-extrabold tracking-tight text-slate-950">{value}</p>
+      {note ? <p className="mt-3 text-sm leading-7 text-slate-600">{note}</p> : null}
     </Card>
   );
 }
@@ -100,9 +114,9 @@ export function EmptyState({
   description: string;
 }) {
   return (
-    <Card className="border-dashed border-slate-200 bg-white/70 text-center">
+    <Card className="border-dashed border-slate-200 bg-white/80 text-center">
       <h3 className="text-lg font-bold text-slate-900">{title}</h3>
-      <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+      <p className="mt-2 text-sm leading-7 text-slate-600">{description}</p>
     </Card>
   );
 }

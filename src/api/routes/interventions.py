@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from src.api.auth import AuthContext, require_roles
 from src.api.intervention_analytics import build_intervention_effectiveness_summary
+from src.api.scope import ensure_student_scope_access
 from src.api.schemas import (
     InterventionActionCreateRequest,
     InterventionActionItem,
@@ -49,6 +50,11 @@ def create_intervention_action(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> InterventionActionItem:
     repository = EventRepository(db)
+    ensure_student_scope_access(
+        auth=auth,
+        repository=repository,
+        student_id=payload.student_id,
+    )
     row = repository.add_intervention_action(payload.model_dump())
     return _serialize_intervention_action(row)
 
@@ -60,6 +66,14 @@ def review_intervention_action(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> InterventionActionItem:
     repository = EventRepository(db)
+    existing = repository.get_intervention_action(payload.intervention_id)
+    if existing is None:
+        raise HTTPException(status_code=404, detail="Intervention action not found.")
+    ensure_student_scope_access(
+        auth=auth,
+        repository=repository,
+        student_id=int(existing.student_id),
+    )
     row = repository.update_intervention_action(
         payload.intervention_id,
         {
@@ -81,6 +95,14 @@ def record_intervention_outcome(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> InterventionActionItem:
     repository = EventRepository(db)
+    existing = repository.get_intervention_action(payload.intervention_id)
+    if existing is None:
+        raise HTTPException(status_code=404, detail="Intervention action not found.")
+    ensure_student_scope_access(
+        auth=auth,
+        repository=repository,
+        student_id=int(existing.student_id),
+    )
     row = repository.update_intervention_action(
         payload.intervention_id,
         {
@@ -102,6 +124,7 @@ def get_intervention_history(
     auth: AuthContext = Depends(require_roles("counsellor", "admin", "system")),
 ) -> InterventionHistoryResponse:
     repository = EventRepository(db)
+    ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
     rows = repository.get_intervention_history_for_student(student_id)
     return InterventionHistoryResponse(
         student_id=student_id,

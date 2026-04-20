@@ -1,0 +1,474 @@
+{
+  "role_filter": "counsellor",
+  "generated_at": "2026-04-18T10:06:52.302206+00:00",
+  "conversation_count": 1,
+  "passed_conversations": 1,
+  "failed_conversations": 0,
+  "failure_summary": {},
+  "conversations": [
+    {
+      "role": "counsellor",
+      "label": "counsellor_natural_language_queries",
+      "passed": true,
+      "failure_count": 0,
+      "turns": [
+        {
+          "prompt": "who needs attention",
+          "response_type": "data",
+          "last_topic": "high_risk_students",
+          "last_intent": "counsellor_priority_follow_up",
+          "answer": "Here are the students in your counsellor scope who currently need attention first.\n\nWhat I found:\n- Attention summary: this is the current highest-pressure student set inside your counsellor scope.\n- student_id 880001 (STU001): CSE, current prediction HIGH at 0.5976\n- student_id 880073 (STU073): CSE, current prediction HIGH at 0.5976\n- student_id 880082 (STU082): CSE, current prediction HIGH at 0.5976\n- Current prediction high-risk students in this scoped attention view: 3.\n- Unresolved I-grade burden still needing monitoring: 26.\n- Unresolved R-grade burden still needing monitoring: 5.\n- Immediate attendance-pressure hotspot: Big Data Analytics is currently pulling 3 students below threshold.\n\nIf you want, I can next explain one student or turn this into a counsellor action plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_priority_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "scope": "counsellor_attention_summary",
+              "response_type": "data",
+              "last_topic": "high_risk_students",
+              "planner_version": "cb22",
+              "last_intent": "counsellor_priority_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "who needs attention",
+              "normalized_message": "priority queue",
+              "primary_intent": "cohort_summary",
+              "user_goal": "priority_queue",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "attention_queue",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_priority_queue",
+                "rank_priority_students",
+                "compose_grounded_priority_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "who needs attention",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which students are struggling",
+          "response_type": "data",
+          "last_topic": "high_risk_students",
+          "last_intent": "counsellor_priority_follow_up",
+          "answer": "Here are the students in your counsellor scope who are currently struggling most.\n\nWhat I found:\n- Struggle summary: the visible pressure is clustering in a small high-risk group rather than being evenly spread.\n- student_id 880001 (STU001): CSE, current prediction HIGH at 0.5976\n- student_id 880073 (STU073): CSE, current prediction HIGH at 0.5976\n- student_id 880082 (STU082): CSE, current prediction HIGH at 0.5976\n- Current prediction high-risk students in this scoped attention view: 3.\n- Unresolved I-grade burden still needing monitoring: 26.\n- Unresolved R-grade burden still needing monitoring: 5.\n- Immediate attendance-pressure hotspot: Big Data Analytics is currently pulling 3 students below threshold.\n\nIf you want, I can next explain one student or turn this into a counsellor action plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_priority_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "scope": "counsellor_attention_summary",
+              "response_type": "data",
+              "last_topic": "high_risk_students",
+              "planner_version": "cb22",
+              "last_intent": "counsellor_priority_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "which students are struggling",
+              "normalized_message": "priority queue",
+              "primary_intent": "cohort_summary",
+              "user_goal": "priority_queue",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "attention_queue",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_priority_queue",
+                "rank_priority_students",
+                "compose_grounded_priority_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which students are struggling",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "any critical cases",
+          "response_type": "data",
+          "last_topic": "high_risk_students",
+          "last_intent": "counsellor_priority_follow_up",
+          "answer": "Here are the critical cases in your current counsellor scope right now.\n\nWhat I found:\n- Critical-case summary: these students sit closest to the current intervention threshold and should not be left unattended.\n- student_id 880001 (STU001): CSE, current prediction HIGH at 0.5976\n- student_id 880073 (STU073): CSE, current prediction HIGH at 0.5976\n- student_id 880082 (STU082): CSE, current prediction HIGH at 0.5976\n- Current prediction high-risk students in this scoped attention view: 3.\n- Unresolved I-grade burden still needing monitoring: 26.\n- Unresolved R-grade burden still needing monitoring: 5.\n- Immediate attendance-pressure hotspot: Big Data Analytics is currently pulling 3 students below threshold.\n\nIf you want, I can next explain one student or turn this into a counsellor action plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_priority_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "scope": "counsellor_attention_summary",
+              "response_type": "data",
+              "last_topic": "high_risk_students",
+              "planner_version": "cb22",
+              "last_intent": "counsellor_priority_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "any critical cases",
+              "normalized_message": "priority queue",
+              "primary_intent": "cohort_summary",
+              "user_goal": "priority_queue",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "attention_queue",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_priority_queue",
+                "rank_priority_students",
+                "compose_grounded_priority_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "any critical cases",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "who should I focus on",
+          "response_type": "action",
+          "last_topic": "high_risk_students",
+          "last_intent": "counsellor_priority_follow_up",
+          "answer": "Here is where you should focus first inside your current counsellor scope.\n\nWhat I found:\n- Focus order: start with the most pressured students before spreading effort across the full cohort.\n- student_id 880001 (STU001): CSE, current prediction HIGH at 0.5976\n- student_id 880073 (STU073): CSE, current prediction HIGH at 0.5976\n- student_id 880082 (STU082): CSE, current prediction HIGH at 0.5976\n- Current prediction high-risk students in this scoped attention view: 3.\n- Unresolved I-grade burden still needing monitoring: 26.\n- Unresolved R-grade burden still needing monitoring: 5.\n- Immediate attendance-pressure hotspot: Big Data Analytics is currently pulling 3 students below threshold.\n\nIf you want, I can next turn this into a counsellor action plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_priority_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "scope": "counsellor_attention_summary",
+              "response_type": "action",
+              "last_topic": "high_risk_students",
+              "planner_version": "cb22",
+              "last_intent": "counsellor_priority_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "who should I focus on",
+              "normalized_message": "priority queue",
+              "primary_intent": "cohort_summary",
+              "user_goal": "priority_queue",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "attention_queue",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_priority_queue",
+                "rank_priority_students",
+                "compose_grounded_priority_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "who should I focus on",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "which students are not doing well",
+          "response_type": "data",
+          "last_topic": "high_risk_students",
+          "last_intent": "counsellor_priority_follow_up",
+          "answer": "Here are the students in your counsellor scope who are currently struggling most.\n\nWhat I found:\n- Struggle summary: the visible pressure is clustering in a small high-risk group rather than being evenly spread.\n- student_id 880001 (STU001): CSE, current prediction HIGH at 0.5976\n- student_id 880073 (STU073): CSE, current prediction HIGH at 0.5976\n- student_id 880082 (STU082): CSE, current prediction HIGH at 0.5976\n- Current prediction high-risk students in this scoped attention view: 3.\n- Unresolved I-grade burden still needing monitoring: 26.\n- Unresolved R-grade burden still needing monitoring: 5.\n- Immediate attendance-pressure hotspot: Big Data Analytics is currently pulling 3 students below threshold.\n\nIf you want, I can next explain one student or turn this into a counsellor action plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_priority_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "scope": "counsellor_attention_summary",
+              "response_type": "data",
+              "last_topic": "high_risk_students",
+              "planner_version": "cb22",
+              "last_intent": "counsellor_priority_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "which students are not doing well",
+              "normalized_message": "priority queue",
+              "primary_intent": "cohort_summary",
+              "user_goal": "priority_queue",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "attention_queue",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_priority_queue",
+                "rank_priority_students",
+                "compose_grounded_priority_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "not_needed",
+              "source_message": "which students are not doing well",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        },
+        {
+          "prompt": "who is in trouble",
+          "response_type": "data",
+          "last_topic": "high_risk_students",
+          "last_intent": "counsellor_priority_follow_up",
+          "answer": "Here are the students in your counsellor scope who are currently in trouble.\n\nWhat I found:\n- Trouble signal: these students are not just under mild pressure, they are the cases most likely to worsen without timely support.\n- student_id 880001 (STU001): CSE, current prediction HIGH at 0.5976\n- student_id 880073 (STU073): CSE, current prediction HIGH at 0.5976\n- student_id 880082 (STU082): CSE, current prediction HIGH at 0.5976\n- Current prediction high-risk students in this scoped attention view: 3.\n- Unresolved I-grade burden still needing monitoring: 26.\n- Unresolved R-grade burden still needing monitoring: 5.\n- Immediate attendance-pressure hotspot: Big Data Analytics is currently pulling 3 students below threshold.\n\nIf you want, I can next explain one student or turn this into a counsellor action plan.",
+          "failures": [],
+          "metadata": {
+            "memory_context": {
+              "kind": "cohort",
+              "intent": "counsellor_priority_follow_up",
+              "student_ids": [
+                880001,
+                880073,
+                880082
+              ],
+              "scope": "counsellor_attention_summary",
+              "response_type": "data",
+              "last_topic": "high_risk_students",
+              "planner_version": "cb22",
+              "last_intent": "counsellor_priority_follow_up"
+            },
+            "query_plan": {
+              "version": "cb22",
+              "role": "counsellor",
+              "original_message": "who is in trouble",
+              "normalized_message": "priority queue",
+              "primary_intent": "cohort_summary",
+              "user_goal": "priority_queue",
+              "filters": {
+                "outcome_status": null,
+                "branches": [],
+                "genders": [],
+                "age_bands": [],
+                "batches": [],
+                "program_types": [],
+                "categories": [],
+                "regions": [],
+                "incomes": []
+              },
+              "grouping": [],
+              "metrics": [],
+              "comparison": {},
+              "time_window_days": null,
+              "follow_up_action": null,
+              "analysis_mode": "attention_queue",
+              "orchestration_steps": [
+                "resolve_counsellor_assignment_scope",
+                "load_scoped_priority_queue",
+                "rank_priority_students",
+                "compose_grounded_priority_summary"
+              ],
+              "clarification_needed": false,
+              "clarification_question": null,
+              "default_follow_up_rewrite": null,
+              "refusal_reason": null,
+              "confidence": 0.88,
+              "notes": []
+            },
+            "semantic_planner": {
+              "phase": "CB19",
+              "enabled": true,
+              "provider": "gemini",
+              "model": "gemini-2.5-flash",
+              "local_fallback_enabled": true,
+              "cache_enabled": true,
+              "cache_hit": false,
+              "used": false,
+              "status": "provider_unavailable",
+              "source_message": "who is in trouble",
+              "rewritten_message": null,
+              "rationale": null,
+              "confidence": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
