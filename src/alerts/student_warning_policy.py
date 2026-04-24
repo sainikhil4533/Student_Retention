@@ -40,7 +40,7 @@ def evaluate_student_warning_decision(
 ) -> StudentWarningDecision:
     created_at = _as_utc(getattr(current_prediction, "created_at", None)) or datetime.now(UTC)
 
-    if int(current_prediction.final_predicted_class) != 1:
+    if float(current_prediction.final_risk_probability) < 0.50:
         return StudentWarningDecision(
             should_send=False,
             warning_type=None,
@@ -68,7 +68,7 @@ def should_escalate_to_faculty(
     current_prediction,
     active_warning_event=None,
 ) -> tuple[bool, str]:
-    if int(current_prediction.final_predicted_class) != 1:
+    if float(current_prediction.final_risk_probability) < 0.50:
         return False, "Student is not currently high risk."
 
     if active_warning_event is None:

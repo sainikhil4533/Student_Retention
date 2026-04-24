@@ -2,7 +2,7 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import { AppShell, PublicLayout } from "./components/layout";
 import { useAuth } from "./lib/auth";
-import { AdminDashboardPage, AdminImportsPage, AdminOperationsPage, AdminReportsPage } from "./pages/admin";
+import { AdminDashboardPage, AdminImportsPage, AdminOperationsPage, AdminReportsPage, AdminStudentsPage } from "./pages/admin";
 import { RoleChatPage } from "./pages/chat";
 import { CounsellorCasesPage, CounsellorDashboardPage, CounsellorReportsPage } from "./pages/counsellor";
 import { HomePage } from "./pages/home";
@@ -39,6 +39,7 @@ export function App() {
         <Route path="admin/reports" element={<RoleGuard allowed={["admin", "system"]}><AdminReportsPage /></RoleGuard>} />
         <Route path="admin/operations" element={<RoleGuard allowed={["admin", "system"]}><AdminOperationsPage /></RoleGuard>} />
         <Route path="admin/imports" element={<RoleGuard allowed={["admin", "system"]}><AdminImportsPage /></RoleGuard>} />
+        <Route path="admin/students" element={<RoleGuard allowed={["admin", "system"]}><AdminStudentsPage /></RoleGuard>} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

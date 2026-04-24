@@ -1,4 +1,4 @@
-import { BarChart3, Bot, Compass, LayoutDashboard, ListTodo, LogOut, Menu, Upload } from "lucide-react";
+import { BarChart3, Bot, Compass, LayoutDashboard, ListTodo, LogOut, Menu, Upload, Users } from "lucide-react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 
@@ -32,6 +32,7 @@ function roleNav(role: string): NavItem[] {
   }
   return [
     { label: "Dashboard", to: "/app/admin/dashboard", icon: LayoutDashboard },
+    { label: "Students", to: "/app/admin/students", icon: Users },
     { label: "Reports", to: "/app/admin/reports", icon: BarChart3 },
     { label: "Operations", to: "/app/admin/operations", icon: Compass },
     { label: "Imports", to: "/app/admin/imports", icon: Upload },
@@ -87,6 +88,8 @@ export function AppShell() {
   const isResetRoute = location.pathname === "/app/reset-password";
   const workspaceTitle = isResetRoute
     ? "Password Reset"
+    : location.pathname.includes("students")
+      ? "Student Directory"
     : location.pathname.includes("reports")
       ? "Reports"
       : location.pathname.includes("chat")

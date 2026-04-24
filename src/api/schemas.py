@@ -735,6 +735,9 @@ class InstitutionRiskOverviewResponse(BaseModel):
     generated_at: datetime | None = None
     total_students: int
     total_high_risk_students: int
+    total_medium_risk_students: int
+    total_low_risk_students: int
+    total_safe_students: int
     total_critical_trigger_students: int
     total_followup_overdue_students: int
     total_guardian_escalation_students: int
@@ -758,6 +761,47 @@ class InstitutionRiskOverviewResponse(BaseModel):
     semester_pressure: list[AcademicPressureBucketItem] = []
     outcome_distribution: list[OutcomeDistributionItem]
     summary: str
+
+
+class StudentDirectoryItem(BaseModel):
+    student_id: int
+    risk_level: str
+    risk_probability: float
+    counsellor_name: str | None = None
+    counsellor_email: str | None = None
+    branch: str | None = None
+    year: str | None = None
+    semester: str | None = None
+    overall_attendance_percent: float | None = None
+    top_risk_reasons: list[str] = []
+    latest_intervention_status: str | None = None
+    case_state: str | None = None
+    has_overdue_followup: bool = False
+
+
+class StudentDirectoryResponse(BaseModel):
+    total_students: int
+    page: int
+    page_size: int
+    total_pages: int
+    students: list[StudentDirectoryItem]
+
+
+class CounsellorAccountabilityItem(BaseModel):
+    counsellor_name: str
+    counsellor_email: str | None = None
+    total_assigned: int
+    high_risk_count: int
+    medium_risk_count: int
+    pending_interventions: int
+    overdue_followups: int
+    last_action_date: datetime | None = None
+    performance_label: str  # "on_track" | "needs_attention" | "overdue"
+
+
+class CounsellorAccountabilityResponse(BaseModel):
+    total_counsellors: int
+    counsellors: list[CounsellorAccountabilityItem]
 
 
 class AICaseSummaryResponse(BaseModel):

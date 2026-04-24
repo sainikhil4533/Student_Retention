@@ -24,6 +24,10 @@ def _has_real_secret(env_name: str) -> bool:
     value = os.getenv(env_name, "").strip()
     return bool(value) and not value.startswith("PASTE_YOUR_")
 
+
+_LLM_PROVIDER = os.getenv("LLM_PROVIDER", "groq").strip().lower()
+_GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+
 _INSIGHTS_SCHEMA: dict[str, Any] = {
     "name": "student_retention_ai_insights",
     "schema": {
@@ -107,6 +111,10 @@ def _is_gemini_available() -> bool:
     return _has_real_secret("GEMINI_API_KEY")
 
 
+def _is_groq_available() -> bool:
+    return _has_real_secret("GROQ_API_KEY")
+
+
 
 def _call_gemini_json(
     *,
@@ -177,6 +185,31 @@ def _call_gemini_with_retries(
     raise last_error
 
 
+def _call_groq_json(
+    *,
+    prompt: str,
+) -> dict:
+    from groq import Groq
+
+    client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+    response = client.chat.completions.create(
+        model=_GROQ_MODEL,
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a specialized student retention analyst. Always return valid JSON only.",
+            },
+            {"role": "user", "content": prompt},
+        ],
+        response_format={"type": "json_object"},
+    )
+    content = response.choices[0].message.content
+    if not content:
+        raise ValueError("Groq response did not include content output.")
+
+    return json.loads(content)
+
+
 def _should_retry_gemini_error(error: Exception) -> bool:
     text = str(error).lower()
     non_retriable_markers = (
@@ -232,6 +265,7 @@ def generate_ai_insights(
         "9. Return valid JSON only."
     )
 
+    # ── Attempt 1: Gemini ──
     if _is_gemini_available():
         try:
             parsed = _call_gemini_with_retries(
@@ -239,25 +273,28 @@ def generate_ai_insights(
                 schema=_INSIGHTS_SCHEMA["schema"],
                 schema_name=_INSIGHTS_SCHEMA["name"],
             )
-            required_keys = {
-                "confidence",
-                "reasoning",
-                "actions",
-                "urgency",
-                "timeline",
-                "student_guidance",
-            }
-            if not required_keys.issubset(parsed):
-                raise ValueError("Gemini response missing required insight keys.")
             parsed["source"] = "gemini"
             print("[llm] Gemini success", flush=True)
             return parsed
         except Exception as error:
             print(
-                f"[llm] Gemini failed -> using fallback ({type(error).__name__}: {error})",
+                f"[llm] Gemini failed -> trying Groq fallback ({type(error).__name__}: {error})",
                 flush=True,
             )
-            return fallback
 
-    print("[llm] no Gemini provider configured -> using fallback", flush=True)
+    # ── Attempt 2: Groq ──
+    if _is_groq_available():
+        try:
+            print(f"[llm] Groq attempt with model={_GROQ_MODEL}", flush=True)
+            parsed = _call_groq_json(prompt=prompt)
+            parsed["source"] = "groq"
+            print("[llm] Groq success", flush=True)
+            return parsed
+        except Exception as error:
+            print(
+                f"[llm] Groq failed -> using deterministic fallback ({type(error).__name__}: {error})",
+                flush=True,
+            )
+
+    print("[llm] no LLM providers available -> using deterministic fallback", flush=True)
     return fallback

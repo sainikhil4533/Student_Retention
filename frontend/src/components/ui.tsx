@@ -19,9 +19,9 @@ export function Button({
       className={clsx(
         "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors",
         variant === "primary" &&
-          "bg-blue-600 text-white hover:bg-blue-700 shadow-sm",
+        "bg-blue-600 text-white hover:bg-blue-700 shadow-sm",
         variant === "secondary" &&
-          "border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 shadow-sm",
+        "border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 shadow-sm",
         variant === "ghost" && "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
         className,
       )}
@@ -88,6 +88,7 @@ export function StatCard({
   note?: string;
   accent?: string;
 }) {
+  const isVeryLong = value.length > 14;
   const isLong = value.length > 8;
   return (
     <Card className="flex flex-col relative overflow-hidden group">
@@ -97,7 +98,7 @@ export function StatCard({
           Live
         </span>
       </div>
-      <p className={clsx("mt-3 font-semibold tracking-tight text-slate-900 break-words", isLong ? "text-xl leading-snug lg:text-2xl" : "text-3xl")}>{value}</p>
+      <p className={clsx("mt-3 font-semibold tracking-tight text-slate-900", isVeryLong ? "text-lg leading-tight lg:text-xl" : isLong ? "text-xl leading-snug lg:text-2xl" : "text-3xl")}>{value}</p>
       {note ? <p className="mt-2 text-[13px] text-slate-500 leading-snug">{note}</p> : null}
     </Card>
   );

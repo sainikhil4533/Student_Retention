@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
 
-from src.db.database import SessionLocal
+from src.db.database import SessionLocal, run_with_retry
 from src.db.repository import EventRepository
 from src.reporting.faculty_summary_snapshot_service import (
     create_faculty_summary_snapshot,
@@ -33,33 +33,34 @@ SUMMARY_SNAPSHOT_HOUR_IST = int(os.getenv("SUMMARY_SNAPSHOT_HOUR_IST", "8"))
 IST = ZoneInfo("Asia/Kolkata")
 
 
-def run_summary_snapshot_pass() -> dict[str, int]:
-    db = SessionLocal()
-    try:
-        now_ist = datetime.now(IST)
-        if now_ist.hour < SUMMARY_SNAPSHOT_HOUR_IST:
+def _do_summary_pass(db) -> dict[str, int]:
+    """Inner function: runs one summary snapshot pass on a given DB session."""
+    now_ist = datetime.now(IST)
+    if now_ist.hour < SUMMARY_SNAPSHOT_HOUR_IST:
+        return {"snapshot_count": 0, "email_count": 0}
+
+    repository = EventRepository(db)
+    latest_daily = repository.get_latest_faculty_summary_snapshot(snapshot_type="daily")
+    if latest_daily is not None and latest_daily.generated_at is not None:
+        latest_daily_ist = latest_daily.generated_at.astimezone(IST)
+        if latest_daily_ist.date() == now_ist.date():
             return {"snapshot_count": 0, "email_count": 0}
 
-        repository = EventRepository(db)
-        latest_daily = repository.get_latest_faculty_summary_snapshot(snapshot_type="daily")
-        if latest_daily is not None and latest_daily.generated_at is not None:
-            latest_daily_ist = latest_daily.generated_at.astimezone(IST)
-            if latest_daily_ist.date() == now_ist.date():
-                return {"snapshot_count": 0, "email_count": 0}
+    snapshot = create_faculty_summary_snapshot(db, snapshot_type="daily")
+    email_count = 0
+    if ENABLE_FACULTY_DAILY_SUMMARY_EMAIL:
+        delivered = deliver_faculty_summary_snapshot_email(db, snapshot_id=snapshot.id)
+        if delivered.email_delivery_status in {"sent", "skipped", "failed"}:
+            email_count = 1
+    print(
+        "[summary.monitor] created daily faculty summary snapshot",
+        flush=True,
+    )
+    return {"snapshot_count": 1, "email_count": email_count}
 
-        snapshot = create_faculty_summary_snapshot(db, snapshot_type="daily")
-        email_count = 0
-        if ENABLE_FACULTY_DAILY_SUMMARY_EMAIL:
-            delivered = deliver_faculty_summary_snapshot_email(db, snapshot_id=snapshot.id)
-            if delivered.email_delivery_status in {"sent", "skipped", "failed"}:
-                email_count = 1
-        print(
-            "[summary.monitor] created daily faculty summary snapshot",
-            flush=True,
-        )
-        return {"snapshot_count": 1, "email_count": email_count}
-    finally:
-        db.close()
+
+def run_summary_snapshot_pass() -> dict[str, int]:
+    return run_with_retry(_do_summary_pass, max_retries=3, label="summary.monitor")
 
 
 async def summary_snapshot_monitor_loop() -> None:
@@ -67,6 +68,8 @@ async def summary_snapshot_monitor_loop() -> None:
         f"[summary.monitor] started interval={SUMMARY_SNAPSHOT_CHECK_SECONDS}s",
         flush=True,
     )
+    # Initial sleep: avoids DB burst at startup alongside job_queue and recovery monitors
+    await asyncio.sleep(5)
     try:
         while True:
             try:

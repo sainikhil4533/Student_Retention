@@ -10,13 +10,13 @@ from dotenv import load_dotenv
 from src.alerts.alert_dispatcher import dispatch_alert_email
 from src.alerts.guardian_alert_dispatcher import dispatch_guardian_alert
 from src.alerts.student_warning_dispatcher import dispatch_student_warning_email
-from src.db.database import SessionLocal
+from src.db.database import SessionLocal, run_with_retry
 from src.db.repository import EventRepository
 
 
 load_dotenv()
 
-JOB_QUEUE_POLL_SECONDS = float(os.getenv("JOB_QUEUE_POLL_SECONDS", "2"))
+JOB_QUEUE_POLL_SECONDS = float(os.getenv("JOB_QUEUE_POLL_SECONDS", "5"))
 ENABLE_BACKGROUND_JOB_WORKER = (
     os.getenv("ENABLE_BACKGROUND_JOB_WORKER", "true").strip().lower()
     not in {"0", "false", "no", "off"}
@@ -98,62 +98,65 @@ def enqueue_guardian_alert_delivery_job(
         db.close()
 
 
-def run_background_job_pass() -> dict[str, int]:
-    db = SessionLocal()
+
+def _do_job_pass(db) -> dict[str, int]:
+    """Inner function that runs one job-queue pass on a given DB session."""
     processed = 0
+    repository = EventRepository(db)
+    job = repository.claim_next_background_job(reference_time=datetime.now(UTC))
+    if job is None:
+        return {"processed_count": 0}
+
+    payload = job.payload or {}
     try:
-        repository = EventRepository(db)
-        job = repository.claim_next_background_job(reference_time=datetime.now(UTC))
-        if job is None:
-            return {"processed_count": 0}
-
-        payload = job.payload or {}
-        try:
-            if job.job_type == JOB_TYPE_STUDENT_WARNING_EMAIL:
-                dispatch_student_warning_email(
-                    warning_event_id=int(payload["warning_event_id"]),
-                    student_id=int(payload["student_id"]),
-                    prediction_history_id=int(payload["prediction_history_id"]),
-                    warning_type=str(payload["warning_type"]),
-                    recipient=str(payload["recipient"]),
-                )
-            elif job.job_type == JOB_TYPE_FACULTY_ALERT_EMAIL:
-                dispatch_alert_email(
-                    alert_event_id=int(payload["alert_event_id"]),
-                    student_id=int(payload["student_id"]),
-                    prediction_history_id=int(payload["prediction_history_id"]),
-                    alert_type=str(payload["alert_type"]),
-                )
-            elif job.job_type == JOB_TYPE_GUARDIAN_ALERT_DELIVERY:
-                dispatch_guardian_alert(
-                    guardian_alert_event_id=int(payload["guardian_alert_event_id"]),
-                )
-            else:
-                raise ValueError(f"Unknown background job type: {job.job_type}")
-
-            repository.update_background_job(
-                job.id,
-                {
-                    "status": "completed",
-                    "last_error": None,
-                    "completed_at": datetime.now(UTC),
-                    "updated_at": datetime.now(UTC),
-                },
+        if job.job_type == JOB_TYPE_STUDENT_WARNING_EMAIL:
+            dispatch_student_warning_email(
+                warning_event_id=int(payload["warning_event_id"]),
+                student_id=int(payload["student_id"]),
+                prediction_history_id=int(payload["prediction_history_id"]),
+                warning_type=str(payload["warning_type"]),
+                recipient=str(payload["recipient"]),
             )
-            processed = 1
-        except Exception as error:
-            repository.update_background_job(
-                job.id,
-                {
-                    "status": "failed",
-                    "last_error": str(error),
-                    "updated_at": datetime.now(UTC),
-                },
+        elif job.job_type == JOB_TYPE_FACULTY_ALERT_EMAIL:
+            dispatch_alert_email(
+                alert_event_id=int(payload["alert_event_id"]),
+                student_id=int(payload["student_id"]),
+                prediction_history_id=int(payload["prediction_history_id"]),
+                alert_type=str(payload["alert_type"]),
             )
-            print(f"[worker.queue] job_id={job.id} failed: {error}", flush=True)
-        return {"processed_count": processed}
-    finally:
-        db.close()
+        elif job.job_type == JOB_TYPE_GUARDIAN_ALERT_DELIVERY:
+            dispatch_guardian_alert(
+                guardian_alert_event_id=int(payload["guardian_alert_event_id"]),
+            )
+        else:
+            raise ValueError(f"Unknown background job type: {job.job_type}")
+
+        repository.update_background_job(
+            job.id,
+            {
+                "status": "completed",
+                "last_error": None,
+                "completed_at": datetime.now(UTC),
+                "updated_at": datetime.now(UTC),
+            },
+        )
+        processed = 1
+    except Exception as error:
+        repository.update_background_job(
+            job.id,
+            {
+                "status": "failed",
+                "last_error": str(error),
+                "updated_at": datetime.now(UTC),
+            },
+        )
+        print(f"[worker.queue] job_id={job.id} failed: {error}", flush=True)
+    return {"processed_count": processed}
+
+
+def run_background_job_pass() -> dict[str, int]:
+    return run_with_retry(_do_job_pass, max_retries=3, label="worker.queue")
+
 
 
 async def background_job_worker_loop() -> None:
@@ -161,6 +164,8 @@ async def background_job_worker_loop() -> None:
         f"[worker.queue] started interval={JOB_QUEUE_POLL_SECONDS}s",
         flush=True,
     )
+    # Initial sleep: let the API server finish startup before first DB hit
+    await asyncio.sleep(5)
     try:
         while True:
             try:
@@ -175,6 +180,7 @@ async def background_job_worker_loop() -> None:
     except asyncio.CancelledError:
         print("[worker.queue] stopped", flush=True)
         raise
+
 
 
 async def start_background_job_worker_if_enabled() -> asyncio.Task | None:

@@ -28,14 +28,14 @@ def evaluate_alert_decision(
     previous_prediction=None,
     last_alert_event=None,
 ) -> AlertDecision:
-    if int(current_prediction.final_predicted_class) != 1:
+    if float(current_prediction.final_risk_probability) < 0.50:
         return AlertDecision(
             should_send=False,
             alert_type=None,
             reason="Student is not currently high risk.",
         )
 
-    if previous_prediction is None or int(previous_prediction.final_predicted_class) != 1:
+    if previous_prediction is None or float(previous_prediction.final_risk_probability) < 0.50:
         return AlertDecision(
             should_send=True,
             alert_type="initial_high",

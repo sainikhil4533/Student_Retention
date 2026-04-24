@@ -17,6 +17,7 @@ from src.api.feature_summaries import (
     build_lms_summary_from_events,
 )
 from src.api.feature_assembler import FeatureAssembler
+from src.api.risk_classification import classify_risk_level
 from src.api.student_intelligence import build_current_student_intelligence
 from src.db.repository import EventRepository
 
@@ -77,7 +78,7 @@ def score_student_from_db(
     final_predicted_class = int(
         finance_result["final_probability"] >= prediction_service.threshold
     )
-    risk_level = "HIGH" if final_predicted_class == 1 else "LOW"
+    risk_level = classify_risk_level(finance_result["final_probability"])
     current_prediction = repository.add_prediction_history(
         {
             "student_id": student_id,

@@ -6,11 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from src.api.auth import AuthContext, require_roles
-from src.api.copilot_intents import detect_copilot_intent
-from src.api.copilot_memory import resolve_copilot_memory_context
 from src.api.copilot_runtime import COPILOT_PHASE_LABEL, COPILOT_SYSTEM_PROMPT_VERSION
-from src.api.copilot_semantic_planner import plan_copilot_query_with_semantic_assist
-from src.api.copilot_tools import generate_grounded_copilot_answer
 from src.api.schemas import (
     CopilotAuditEventItem,
     CopilotAuditListResponse,
@@ -22,7 +18,7 @@ from src.api.schemas import (
     CopilotChatSessionListResponse,
     CopilotChatSessionResponse,
 )
-from src.db.database import SessionLocal, get_db
+from src.db.database import get_db
 from src.db.repository import EventRepository
 
 
@@ -143,45 +139,32 @@ def send_copilot_message(
     if not content:
         raise HTTPException(status_code=400, detail="Message content cannot be empty.")
 
-    with SessionLocal() as planner_db:
-        planner_repository = EventRepository(planner_db)
-        _get_authorized_session(planner_repository, session_id, auth)
-        session_messages = planner_repository.list_copilot_chat_messages(session_id)
-        if auth.role == "admin":
-            profiles = planner_repository.get_imported_student_profiles()
-        elif auth.role == "counsellor":
-            profiles = planner_repository.get_imported_student_profiles_for_counsellor_identity(
-                subject=auth.subject,
-                display_name=auth.display_name,
-            )
-        else:
-            profiles = []
-
-    memory = resolve_copilot_memory_context(
-        message=content,
-        session_messages=session_messages,
-    )
-    query_plan, semantic_planner = plan_copilot_query_with_semantic_assist(
-        role=auth.role,
-        message=content,
-        session_messages=session_messages,
-        profiles=profiles,
-    )
-
     repository = EventRepository(db)
     session = _get_authorized_session(repository, session_id, auth)
-    grounded_answer, tools_used, limitations, memory_context = generate_grounded_copilot_answer(
-        auth=auth,
-        repository=repository,
+
+    # Build chat history from existing messages
+    session_messages = repository.list_copilot_chat_messages(session_id)
+    chat_history = [
+        {"role": str(msg.role), "content": str(msg.content)}
+        for msg in session_messages
+    ]
+
+    # ── New two-tier engine ──
+    from src.api.chatbot_engine import generate_chatbot_response
+
+    result = generate_chatbot_response(
+        role=auth.role,
         message=content,
-        session_messages=session_messages,
-        memory=memory,
-        query_plan=query_plan.to_dict(),
+        repository=repository,
+        chat_history=chat_history,
+        session_id=session_id,
+        auth_subject=auth.subject,
+        auth_display_name=auth.display_name,
+        auth_student_id=auth.student_id,
     )
-    detected_intent = detect_copilot_intent(role=auth.role, message=content)
-    resolved_intent = str(memory_context.get("intent") or query_plan.primary_intent or detected_intent)
-    memory_applied = bool(memory.get("is_follow_up")) or resolved_intent != detected_intent
-    refusal_reason = _resolve_copilot_refusal_reason(resolved_intent, limitations)
+    grounded_answer = result["content"]
+    answer_source = result["source"]
+
     try:
         user_message = repository.add_copilot_chat_message(
             {
@@ -192,11 +175,6 @@ def send_copilot_message(
                 "metadata_json": {
                     "owner_role": auth.role,
                     "owner_student_id": auth.student_id,
-                    "memory_resolution": {
-                        "is_follow_up": bool(memory.get("is_follow_up")),
-                        "requested_outcome_status": memory.get("requested_outcome_status"),
-                        "explicit_student_id": memory.get("explicit_student_id"),
-                    },
                 },
             },
             commit=False,
@@ -210,25 +188,7 @@ def send_copilot_message(
                 "metadata_json": {
                     "phase": COPILOT_PHASE_LABEL,
                     "response_mode": "grounded_tool_answer",
-                    "detected_intent": detected_intent,
-                    "resolved_intent": resolved_intent,
-                    "memory_applied": memory_applied,
-                    "query_plan": query_plan.to_dict(),
-                    "semantic_planner": semantic_planner,
-                    "planner_execution": {
-                        "planner_version": query_plan.version,
-                        "analysis_mode": query_plan.analysis_mode,
-                        "orchestration_steps": list(query_plan.orchestration_steps),
-                        "confidence": query_plan.confidence,
-                        "notes": list(query_plan.notes),
-                    },
-                    "grounded_tools_used": tools_used,
-                    "limitations": limitations,
-                    "memory_context": memory_context,
-                    "safety_marker": {
-                        "role_scope": auth.role,
-                        "refusal_reason": refusal_reason,
-                    },
+                    "answer_source": answer_source,
                 },
             },
             commit=False,
@@ -240,11 +200,11 @@ def send_copilot_message(
                 "owner_subject": auth.subject,
                 "owner_role": auth.role,
                 "owner_student_id": auth.student_id,
-                "detected_intent": detected_intent,
-                "resolved_intent": resolved_intent,
-                "memory_applied": memory_applied,
-                "tool_summaries": tools_used,
-                "refusal_reason": refusal_reason,
+                "detected_intent": "v2_engine",
+                "resolved_intent": answer_source,
+                "memory_applied": False,
+                "tool_summaries": [],
+                "refusal_reason": None,
             },
             commit=False,
         )

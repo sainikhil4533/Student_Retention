@@ -455,7 +455,7 @@ def _priority_for_student(
 
     if score >= 90:
         label = "CRITICAL"
-    elif score >= 70:
+    elif score >= 60:
         label = "HIGH"
     else:
         label = "MEDIUM"
@@ -611,7 +611,7 @@ def _build_faculty_priority_queue_items(
         has_current_i_grade_risk = bool(getattr(semester_progress, "has_i_grade_risk", False))
         current_overall_status = str(getattr(semester_progress, "overall_status", "") or "").strip().upper()
         has_current_overall_shortage = current_overall_status == "SHORTAGE"
-        is_currently_high_risk = int(prediction.final_predicted_class) == 1
+        is_currently_high_risk = float(prediction.final_risk_probability) >= 0.50
         if (
             not is_currently_high_risk
             and not has_active_burden
@@ -647,48 +647,91 @@ def _build_faculty_priority_queue_items(
                 is_critical_unattended_case=is_critical_unattended_case,
             )
         else:
+            # Compute subject-level counts for intelligent scoring
+            _att_rows = attendance_rows_by_student.get(student_id, [])
+            _cur_r_subjects = [
+                r for r in _att_rows
+                if str(getattr(r, "subject_status", "") or "").strip().upper() == "R_GRADE"
+            ]
+            _cur_i_subjects = [
+                r for r in _att_rows
+                if str(getattr(r, "subject_status", "") or "").strip().upper() == "I_GRADE"
+            ]
+
+            # Detect same subject failing both this semester AND as carry-forward
+            # (student repeating the same subject again → red flag)
+            _carry_r_names = {
+                str(s.get("subject_name") or "").strip().lower()
+                for s in academic_burden["active_r_grade_subjects"]
+                if s.get("subject_name")
+            }
+            _cur_r_names = {
+                str(getattr(r, "subject_name", "") or "").strip().lower()
+                for r in _cur_r_subjects
+                if getattr(r, "subject_name", None)
+            }
+            _has_repeated_subject = bool(_carry_r_names & _cur_r_names)
+
             if has_current_r_grade_risk:
-                priority_score = 62
-                priority_label = "CURRENT_R_GRADE"
+                # Current semester attendance < 65% → below R-grade threshold (recoverable)
+                # Must stay below 60 (the ML HIGH risk floor)
+                r_count = len(_cur_r_subjects)
+                base = 52 if r_count <= 2 else 57
+                if _has_repeated_subject:
+                    base = min(base + 5, 59)  # same subject failing again
+                if has_active_burden:
+                    base = min(base + 2, 59)  # also has carry-forward burden
+                priority_score = base
+                priority_label = "CURRENT_R_SHORTAGE"
                 weakest_subject = next(
                     (
                         row
-                        for row in attendance_rows_by_student.get(student_id, [])
-                        if str(getattr(row, "subject_status", "") or "").strip().upper() == "R_GRADE"
+                        for row in _cur_r_subjects
+                        if getattr(row, "subject_attendance_percent", None) is not None
                     ),
                     None,
                 )
                 queue_reason = (
-                    f"Current semester has already reached R-grade attendance risk"
+                    f"Current semester attendance has fallen below 65% (R-grade threshold)"
                     + (
                         f" in `{weakest_subject.subject_name}` at {float(weakest_subject.subject_attendance_percent or 0.0):.2f}%."
                         if weakest_subject is not None
                         else "."
                     )
                 )
+                if _has_repeated_subject:
+                    queue_reason += " Same subject also has a carry-forward burden — repeated failure pattern."
+
             elif has_current_i_grade_risk:
-                priority_score = 56
-                priority_label = "CURRENT_I_GRADE"
+                # Current semester attendance 65–75% → below I-grade threshold (recoverable)
+                i_count = len(_cur_i_subjects)
+                base = 46 if i_count <= 2 else 51
+                if has_active_burden:
+                    base = min(base + 2, 59)
+                priority_score = base
+                priority_label = "CURRENT_I_SHORTAGE"
                 weakest_subject = next(
                     (
                         row
-                        for row in attendance_rows_by_student.get(student_id, [])
-                        if str(getattr(row, "subject_status", "") or "").strip().upper() == "I_GRADE"
+                        for row in _cur_i_subjects
+                        if getattr(row, "subject_attendance_percent", None) is not None
                     ),
                     None,
                 )
                 queue_reason = (
-                    f"Current semester is sitting in I-grade attendance risk"
+                    f"Current semester attendance is between 65–75% (I-grade risk threshold)"
                     + (
                         f" in `{weakest_subject.subject_name}` at {float(weakest_subject.subject_attendance_percent or 0.0):.2f}%."
                         if weakest_subject is not None
                         else "."
                     )
                 )
+
             elif has_current_overall_shortage:
-                priority_score = 52
-                priority_label = "CURRENT_SHORTAGE"
+                # Overall attendance below safe threshold but no subject-level grade risk yet
                 overall_percent = getattr(semester_progress, "overall_attendance_percent", None)
+                priority_score = 40
+                priority_label = "CURRENT_SHORTAGE"
                 queue_reason = (
                     "Current semester overall attendance is below the safe threshold"
                     + (
@@ -697,12 +740,22 @@ def _build_faculty_priority_queue_items(
                         else "."
                     )
                 )
+
             elif bool(academic_burden["has_active_r_grade_burden"]):
-                priority_score = 58
+                # Carry-forward R-grades from past semesters (need supplementary exam)
+                r_carry = len(academic_burden["active_r_grade_subjects"])
+                base = 32 if r_carry <= 3 else 38
+                if _has_repeated_subject:
+                    base = min(base + 8, 42)  # same subject failing repeatedly
+                priority_score = base
                 priority_label = "ACADEMIC_SEVERE"
                 queue_reason = _academic_burden_note(academic_burden)
+
             else:
-                priority_score = 46
+                # Carry-forward I-grades only from past semesters
+                i_carry = len(academic_burden["active_i_grade_subjects"])
+                base = 22 if i_carry <= 5 else 28
+                priority_score = base
                 priority_label = "ACADEMIC_WATCHLIST"
                 queue_reason = _academic_burden_note(academic_burden)
 
@@ -713,13 +766,14 @@ def _build_faculty_priority_queue_items(
                     else queue_reason
                 )
 
+        from src.api.risk_classification import classify_risk_level
         queue.append(
             FacultyPriorityQueueItem(
                 student_id=student_id,
                 priority_score=priority_score,
                 priority_label=priority_label,
                 queue_reason=queue_reason,
-                current_risk_level="HIGH" if is_currently_high_risk else "LOW",
+                current_risk_level=classify_risk_level(float(prediction.final_risk_probability)),
                 final_risk_probability=float(prediction.final_risk_probability),
                 risk_trend_score=int(round(float(prediction.final_risk_probability) * 100)),
                 risk_trend_label="high_risk_active" if is_currently_high_risk else "monitoring",

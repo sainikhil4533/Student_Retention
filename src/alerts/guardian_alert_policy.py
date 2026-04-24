@@ -57,7 +57,7 @@ def evaluate_guardian_escalation_decision(
             severity="none",
         )
 
-    if int(current_prediction.final_predicted_class) != 1:
+    if float(current_prediction.final_risk_probability) < 0.50:
         return GuardianEscalationDecision(
             should_send=False,
             alert_type=None,

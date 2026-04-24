@@ -95,6 +95,16 @@ def generate_grounded_copilot_answer(
             },
         )
 
+    # ── 4-tier risk listing handler ──────────────────────────────────
+    if auth.role in ("admin", "counsellor", "system"):
+        tier_match = _detect_risk_tier_listing_request(lowered)
+        if tier_match:
+            return _answer_risk_tier_listing(
+                tier=tier_match,
+                auth=auth,
+                repository=repository,
+            )
+
     if (
         auth.role == "admin"
         and any(token in lowered for token in {"newly entered risk", "just entered risk", "entered risk lately", "lately"})
@@ -13564,3 +13574,139 @@ def _build_admin_governance_answer(
         )
 
     return None
+
+
+# ── 4-tier risk listing chatbot helpers ─────────────────────────────
+
+
+def _detect_risk_tier_listing_request(lowered: str) -> str | None:
+    """Return 'HIGH', 'MEDIUM', 'LOW', 'SAFE', or None."""
+    tier_patterns = {
+        "HIGH": [
+            "high risk", "high-risk", "show high", "list high", "who are high",
+            "high r", "highrisk", "how many high",
+        ],
+        "MEDIUM": [
+            "medium risk", "medium-risk", "show medium", "list medium", "who are medium",
+            "medium r", "mediumrisk", "how many medium", "moderate risk",
+        ],
+        "LOW": [
+            "low risk", "low-risk", "show low", "list low", "who are low",
+            "low r", "lowrisk", "how many low",
+        ],
+        "SAFE": [
+            "safe student", "show safe", "list safe", "who are safe",
+            "safe risk", "no risk",
+        ],
+    }
+    # Check for tier-listing intent (not just mentioning the word)
+    listing_signals = [
+        "show", "list", "who", "how many", "give me", "tell me",
+        "which student", "display", "get me", "risk student",
+        "risk r", " r$",  # handles truncated queries like "medium r"
+    ]
+    has_listing_signal = any(s in lowered for s in listing_signals) or lowered.strip().endswith(" r")
+
+    for tier, patterns in tier_patterns.items():
+        if any(p in lowered for p in patterns):
+            if has_listing_signal or lowered.strip() in patterns:
+                return tier
+    return None
+
+
+def _answer_risk_tier_listing(
+    *,
+    tier: str,
+    auth: AuthContext,
+    repository: EventRepository,
+) -> tuple[str, list[dict], list[str], dict]:
+    from src.api.risk_classification import classify_risk_level
+
+    all_predictions = repository.get_latest_predictions_for_all_students()
+    imported_ids = {
+        int(p.student_id) for p in repository.get_imported_student_profiles()
+    }
+
+    tier_students: list[dict] = []
+    tier_counts = {"HIGH": 0, "MEDIUM": 0, "LOW": 0, "SAFE": 0}
+
+    for prediction in all_predictions:
+        sid = int(prediction.student_id)
+        if sid not in imported_ids:
+            continue
+        level = classify_risk_level(float(prediction.final_risk_probability))
+        tier_counts[level] = tier_counts.get(level, 0) + 1
+        if level == tier:
+            profile = repository.get_student_profile(sid)
+            branch = "unknown"
+            latest_erp = repository.get_latest_erp_event(sid)
+            if latest_erp:
+                ctx = getattr(latest_erp, "context_fields", None) or {}
+                branch = ctx.get("branch") or ctx.get("department") or "unknown"
+            if profile:
+                profile_ctx = getattr(profile, "profile_context", None) or {}
+                branch = profile_ctx.get("branch") or branch
+
+            counsellor = getattr(profile, "counsellor_name", None) or "Unassigned"
+            prob = float(prediction.final_risk_probability)
+
+            tier_students.append({
+                "student_id": sid,
+                "probability": prob,
+                "branch": branch,
+                "counsellor": counsellor,
+            })
+
+    tier_students.sort(key=lambda s: -s["probability"])
+    shown = tier_students[:10]
+    total = len(tier_students)
+
+    tier_label = {"HIGH": "High Risk", "MEDIUM": "Medium Risk", "LOW": "Low Risk", "SAFE": "Safe"}.get(tier, tier)
+
+    overview_line = (
+        f"Institution-wide breakdown: "
+        f"HIGH={tier_counts['HIGH']}, MEDIUM={tier_counts['MEDIUM']}, "
+        f"LOW={tier_counts['LOW']}, SAFE={tier_counts['SAFE']}."
+    )
+
+    if total == 0:
+        return (
+            build_grounded_response(
+                opening=f"There are currently **0 {tier_label}** students in the system.",
+                key_points=[overview_line],
+                closing="You can ask about a different tier or check the dashboard for the full breakdown.",
+                tools_used=[{"tool_name": "risk_tier_listing", "summary": f"Queried all predictions for {tier} tier students"}],
+                limitations=[],
+            ),
+            [{"tool_name": "risk_tier_listing", "summary": f"Queried all predictions for {tier} tier students"}],
+            [],
+            {"kind": "risk_tier_listing", "intent": f"list_{tier.lower()}_risk_students", "tier": tier},
+        )
+
+    student_lines = []
+    for s in shown:
+        student_lines.append(
+            f"**Student {s['student_id']}** — {s['probability']*100:.1f}% risk probability · "
+            f"Branch: {s['branch']} · Counsellor: {s['counsellor']}"
+        )
+
+    key_points = [
+        f"**{total} students** are currently classified as **{tier_label}**.",
+        overview_line,
+    ]
+    key_points.extend(student_lines)
+    if total > 10:
+        key_points.append(f"... and {total - 10} more. Visit the **Students** page in the dashboard for the full list.")
+
+    return (
+        build_grounded_response(
+            opening=f"Here are the **{tier_label}** students ({total} total):",
+            key_points=key_points,
+            closing="You can ask me about a specific student by ID, or click the tier cards on the dashboard to see the full directory.",
+            tools_used=[{"tool_name": "risk_tier_listing", "summary": f"Queried all predictions and filtered {total} students in the {tier} tier"}],
+            limitations=["Showing up to 10 students in chat. Visit the Students page for the full paginated list."] if total > 10 else [],
+        ),
+        [{"tool_name": "risk_tier_listing", "summary": f"Queried all predictions and filtered {total} students in the {tier} tier"}],
+        ["Showing up to 10 students in chat."] if total > 10 else [],
+        {"kind": "risk_tier_listing", "intent": f"list_{tier.lower()}_risk_students", "tier": tier, "total_found": total},
+    )

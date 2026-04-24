@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 from src.alerts.email_service import get_alert_recipient, is_smtp_configured
 from src.alerts.guardian_alert_service import queue_guardian_escalation_if_eligible
-from src.db.database import SessionLocal
+from src.db.database import SessionLocal, run_with_retry
 from src.db.repository import EventRepository
 from src.worker.job_queue import enqueue_faculty_alert_email_job
 
@@ -17,7 +17,7 @@ from src.worker.job_queue import enqueue_faculty_alert_email_job
 load_dotenv()
 
 RECOVERY_ESCALATION_CHECK_SECONDS = int(
-    os.getenv("RECOVERY_ESCALATION_CHECK_SECONDS", "60")
+    os.getenv("RECOVERY_ESCALATION_CHECK_SECONDS", "120")
 )
 ENABLE_RECOVERY_ESCALATION_MONITOR = (
     os.getenv("ENABLE_RECOVERY_ESCALATION_MONITOR", "true").strip().lower()
@@ -182,116 +182,117 @@ def _maybe_queue_guardian_escalations(repository: EventRepository) -> int:
     return guardian_count
 
 
-def run_recovery_escalation_pass() -> dict[str, int]:
-    db = SessionLocal()
+def _do_recovery_pass(db) -> dict[str, int]:
+    """Inner function: runs one recovery escalation pass on a given DB session."""
     escalated_count = 0
     reminder_count = 0
     guardian_count = 0
-    try:
-        repository = EventRepository(db)
-        reference_time = datetime.now(UTC)
-        expired_warnings = repository.get_expired_active_student_warnings(
-            reference_time=reference_time
-        )
+    repository = EventRepository(db)
+    reference_time = datetime.now(UTC)
+    expired_warnings = repository.get_expired_active_student_warnings(
+        reference_time=reference_time
+    )
 
-        for warning in expired_warnings:
-            latest_prediction = repository.get_latest_prediction_for_student(warning.student_id)
-            if latest_prediction is None:
-                repository.update_student_warning_event(
-                    warning.id,
-                    {
-                        "resolved_at": datetime.now(UTC),
-                        "resolution_status": "missing_prediction",
-                        "error_message": "No latest prediction found during scheduled escalation.",
-                    },
-                )
-                continue
-
-            latest_intervention = repository.get_latest_intervention_for_student(
-                warning.student_id
-            )
-            if _is_faculty_resolved_for_current_case(
-                latest_prediction=latest_prediction,
-                latest_intervention=latest_intervention,
-            ):
-                repository.update_student_warning_event(
-                    warning.id,
-                    {
-                        "resolved_at": datetime.now(UTC),
-                        "resolution_status": "faculty_resolved",
-                    },
-                )
-                continue
-
-            if int(latest_prediction.final_predicted_class) != 1:
-                repository.update_student_warning_event(
-                    warning.id,
-                    {
-                        "resolved_at": datetime.now(UTC),
-                        "resolution_status": "recovered",
-                    },
-                )
-                continue
-
-            profile = repository.get_student_profile(warning.student_id)
-            recipient = get_alert_recipient(profile)
-            if recipient is None:
-                alert_status = "skipped"
-                error_message = "Faculty alert recipient is not configured."
-            elif not is_smtp_configured():
-                alert_status = "skipped"
-                error_message = "SMTP configuration is incomplete."
-            else:
-                alert_status = "pending"
-                error_message = None
-
-            alert_event = repository.add_alert_event(
-                {
-                    "student_id": warning.student_id,
-                    "prediction_history_id": latest_prediction.id,
-                    "alert_type": "post_warning_escalation",
-                    "risk_level": "HIGH",
-                    "final_risk_probability": float(latest_prediction.final_risk_probability),
-                    "recipient": recipient or "unconfigured",
-                    "email_status": alert_status,
-                    "error_message": error_message,
-                }
-            )
+    for warning in expired_warnings:
+        latest_prediction = repository.get_latest_prediction_for_student(warning.student_id)
+        if latest_prediction is None:
             repository.update_student_warning_event(
                 warning.id,
                 {
                     "resolved_at": datetime.now(UTC),
-                    "resolution_status": "escalated_to_faculty",
+                    "resolution_status": "missing_prediction",
+                    "error_message": "No latest prediction found during scheduled escalation.",
                 },
             )
+            continue
 
-            if alert_status == "pending":
-                enqueue_faculty_alert_email_job(
-                    alert_event_id=alert_event.id,
-                    student_id=warning.student_id,
-                    prediction_history_id=latest_prediction.id,
-                    alert_type="post_warning_escalation",
-                )
+        latest_intervention = repository.get_latest_intervention_for_student(
+            warning.student_id
+        )
+        if _is_faculty_resolved_for_current_case(
+            latest_prediction=latest_prediction,
+            latest_intervention=latest_intervention,
+        ):
+            repository.update_student_warning_event(
+                warning.id,
+                {
+                    "resolved_at": datetime.now(UTC),
+                    "resolution_status": "faculty_resolved",
+                },
+            )
+            continue
 
-            escalated_count += 1
-            print(
-                f"[recovery.monitor] student_id={warning.student_id} "
-                f"alert_status={alert_status}",
-                flush=True,
+        if int(latest_prediction.final_predicted_class) != 1:
+            repository.update_student_warning_event(
+                warning.id,
+                {
+                    "resolved_at": datetime.now(UTC),
+                    "resolution_status": "recovered",
+                },
+            )
+            continue
+
+        profile = repository.get_student_profile(warning.student_id)
+        recipient = get_alert_recipient(profile)
+        if recipient is None:
+            alert_status = "skipped"
+            error_message = "Faculty alert recipient is not configured."
+        elif not is_smtp_configured():
+            alert_status = "skipped"
+            error_message = "SMTP configuration is incomplete."
+        else:
+            alert_status = "pending"
+            error_message = None
+
+        alert_event = repository.add_alert_event(
+            {
+                "student_id": warning.student_id,
+                "prediction_history_id": latest_prediction.id,
+                "alert_type": "post_warning_escalation",
+                "risk_level": "HIGH",
+                "final_risk_probability": float(latest_prediction.final_risk_probability),
+                "recipient": recipient or "unconfigured",
+                "email_status": alert_status,
+                "error_message": error_message,
+            }
+        )
+        repository.update_student_warning_event(
+            warning.id,
+            {
+                "resolved_at": datetime.now(UTC),
+                "resolution_status": "escalated_to_faculty",
+            },
+        )
+
+        if alert_status == "pending":
+            enqueue_faculty_alert_email_job(
+                alert_event_id=alert_event.id,
+                student_id=warning.student_id,
+                prediction_history_id=latest_prediction.id,
+                alert_type="post_warning_escalation",
             )
 
-        reminder_count = _maybe_create_followup_reminder(
-            repository=repository,
-            reference_time=reference_time,
+        escalated_count += 1
+        print(
+            f"[recovery.monitor] student_id={warning.student_id} "
+            f"alert_status={alert_status}",
+            flush=True,
         )
-        guardian_count = _maybe_queue_guardian_escalations(repository)
-        return {
-            "escalated_count": escalated_count,
-            "reminder_count": reminder_count,
-            "guardian_count": guardian_count,
-        }
-    finally:
-        db.close()
+
+    reminder_count = _maybe_create_followup_reminder(
+        repository=repository,
+        reference_time=reference_time,
+    )
+    guardian_count = _maybe_queue_guardian_escalations(repository)
+    return {
+        "escalated_count": escalated_count,
+        "reminder_count": reminder_count,
+        "guardian_count": guardian_count,
+    }
+
+
+def run_recovery_escalation_pass() -> dict[str, int]:
+    return run_with_retry(_do_recovery_pass, max_retries=3, label="recovery.monitor")
 
 
 async def recovery_escalation_monitor_loop() -> None:
@@ -299,6 +300,8 @@ async def recovery_escalation_monitor_loop() -> None:
         f"[recovery.monitor] started interval={RECOVERY_ESCALATION_CHECK_SECONDS}s",
         flush=True,
     )
+    # Initial sleep: avoids DB burst at startup alongside job_queue and summary monitors
+    await asyncio.sleep(5)
     try:
         while True:
             try:

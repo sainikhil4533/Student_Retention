@@ -95,7 +95,6 @@ export function RoleLoginPage() {
   return (
     <div className="mx-auto grid min-h-[calc(100vh-110px)] max-w-7xl items-center gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:px-8 lg:py-12">
       <div className="space-y-6">
-        <BrandLockup />
         <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/80 px-4 py-2 text-sm font-semibold text-indigo-700 shadow-soft">
           <Sparkles className="h-4 w-4" />
           {copy.subtitle}
@@ -142,29 +141,29 @@ export function RoleLoginPage() {
           <div>
             <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Username</label>
             <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 outline-none transition-all focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <UserRound className="h-4 w-4 text-slate-400" />
-                <input
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
-                  placeholder="Enter institution-issued username"
-                  className="w-full border-0 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
-                />
-              </div>
+              <UserRound className="h-4 w-4 text-slate-400" />
+              <input
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                placeholder="Enter institution-issued username"
+                className="w-full border-0 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
+              />
+            </div>
             <p className="mt-2 text-xs leading-6 text-slate-500">Examples: registration number style login, staff login ID, or institution-managed account name.</p>
           </div>
 
           <div>
             <label className="mb-1.5 block text-[13px] font-medium text-slate-700">Password</label>
             <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 outline-none transition-all focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <LockKeyhole className="h-4 w-4 text-slate-400" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  placeholder="Enter password"
-                  className="w-full border-0 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
-                />
-              </div>
+              <LockKeyhole className="h-4 w-4 text-slate-400" />
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter password"
+                className="w-full border-0 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
+              />
+            </div>
             <div className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
               <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
               Sign-in is limited to institution-provisioned accounts only. There is no public registration flow on this product.
@@ -331,15 +330,15 @@ function PasswordField({
     <div>
       <label className="mb-1.5 block text-[13px] font-medium text-slate-700">{label}</label>
       <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 outline-none transition-all focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20">
-          <LockKeyhole className="h-4 w-4 text-slate-400" />
-          <input
-            type="password"
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
-            placeholder={placeholder}
-            className="w-full border-0 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
-          />
-        </div>
+        <LockKeyhole className="h-4 w-4 text-slate-400" />
+        <input
+          type="password"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          placeholder={placeholder}
+          className="w-full border-0 bg-transparent text-slate-900 outline-none placeholder:text-slate-400"
+        />
+      </div>
     </div>
   );
 }

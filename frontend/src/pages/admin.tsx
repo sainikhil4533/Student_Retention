@@ -1,13 +1,31 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { UploadCloud } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { AlertTriangle, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, Download, ShieldAlert, ShieldCheck, UploadCloud, Users } from "lucide-react";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
 import { BarChartCard, PieChartCard } from "../components/charts";
 import { Button, Card, EmptyState, LoadingCard, SectionTitle, StatCard } from "../components/ui";
 import { API_BASE_URL, apiRequest } from "../lib/api";
 import { useAuth } from "../lib/auth";
-import { ImportCoverage, InstitutionOverview, OperationalOverview } from "../types";
+import { CounsellorAccountabilityResponse, ImportCoverage, InstitutionOverview, OperationalOverview, StudentDirectoryResponse } from "../types";
+
+/* ─────────────────────── helpers ─────────────────────── */
+
+const TIER_CONFIG: Record<string, { label: string; color: string; bg: string; border: string; icon: typeof AlertTriangle; textColor: string }> = {
+  HIGH:   { label: "High Risk",   color: "text-rose-600",   bg: "bg-rose-50",   border: "border-rose-200", icon: AlertTriangle, textColor: "text-rose-700" },
+  MEDIUM: { label: "Medium Risk", color: "text-amber-600",  bg: "bg-amber-50",  border: "border-amber-200", icon: ShieldAlert,  textColor: "text-amber-700" },
+  LOW:    { label: "Low Risk",    color: "text-blue-600",   bg: "bg-blue-50",   border: "border-blue-200", icon: ShieldCheck,  textColor: "text-blue-700" },
+  SAFE:   { label: "Safe",        color: "text-emerald-600",bg: "bg-emerald-50",border: "border-emerald-200", icon: CheckCircle2, textColor: "text-emerald-700" },
+};
+
+function tierCount(overview: InstitutionOverview, tier: string): number {
+  if (tier === "HIGH") return overview.total_high_risk_students;
+  if (tier === "MEDIUM") return overview.total_medium_risk_students;
+  if (tier === "LOW") return overview.total_low_risk_students;
+  if (tier === "SAFE") return overview.total_safe_students;
+  return 0;
+}
 
 function DashboardSkeleton() {
   return (
@@ -20,8 +38,14 @@ function DashboardSkeleton() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════
+   ADMIN DASHBOARD — 4-tier risk overview + clickable cards
+   ═══════════════════════════════════════════════════════════ */
+
 export function AdminDashboardPage() {
   const { auth } = useAuth();
+  const navigate = useNavigate();
+
   const institutionQuery = useQuery({
     queryKey: ["institution-overview", auth?.accessToken],
     queryFn: () => apiRequest<InstitutionOverview>("/institution/risk-overview", { token: auth?.accessToken }),
@@ -43,64 +67,83 @@ export function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <Card className="bg-slate-900 border-none text-white shadow-none p-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="animate-rise">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-blue-400">Admin dashboard</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight">Institution-wide visibility with clean operational depth.</h2>
-              <p className="mt-3 max-w-3xl text-[13px] leading-6 text-slate-400">
-                The admin landing experience stays executive-first. Uploads and full reports remain available, but the first screen is designed for quick institutional understanding before deeper operational work.
-              </p>
-            </div>
-            <NavLink to="/app/admin/imports" className="animate-rise">
-              <Button className="bg-white text-slate-950 hover:bg-slate-100">
-                <UploadCloud className="mr-2 h-4 w-4" />
-                Upload new cohort
-              </Button>
-            </NavLink>
+      {/* ── Hero banner ── */}
+      <Card className="bg-slate-900 border-none text-white shadow-none p-8">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="animate-rise">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-blue-400">Admin dashboard</p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight">Institution Risk Overview</h2>
+            <p className="mt-3 max-w-3xl text-[13px] leading-6 text-slate-400">
+              {overview.total_students} students tracked · {coverage.scored_students} scored · Click any risk tier below to see individual students, their reasons, and counsellor assignments.
+            </p>
           </div>
-          <div className="mt-6 grid gap-4 sm:grid-cols-3 animate-rise" style={{ animationDelay: '100ms' }}>
-            <div className="rounded border border-white/10 bg-white/5 p-4">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Imported students</p>
-              <p className="mt-1 text-sm font-medium text-white">{coverage.total_imported_students} currently visible in the imported cohort</p>
-            </div>
-            <div className="rounded border border-white/10 bg-white/5 p-4">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Scoring readiness</p>
-              <p className="mt-1 text-sm font-medium text-white">{coverage.scored_students} students already have prediction output</p>
-            </div>
-            <div className="rounded border border-white/10 bg-white/5 p-4">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Outcome posture</p>
-              <p className="mt-1 text-sm font-medium text-white">{overview.total_high_risk_students} students are currently high risk</p>
-            </div>
-          </div>
-        </Card>
+          <NavLink to="/app/admin/imports" className="animate-rise">
+            <Button className="bg-white text-slate-950 hover:bg-slate-100">
+              <UploadCloud className="mr-2 h-4 w-4" />
+              Upload new cohort
+            </Button>
+          </NavLink>
+        </div>
+      </Card>
 
-        <Card className="space-y-4 bg-white/92">
-          <SectionTitle
-            eyebrow="Executive reading"
-            title="What admins should see first"
-            description="The first screen stays summary-first so institution leaders can orient quickly before moving into reports, imports, or operations."
-          />
-          <div className="space-y-3">
-            <AdminInfoRow label="Why uploads are separate" value="Imports are operational tasks, so they should not dominate the executive landing screen." />
-            <AdminInfoRow label="Why reports are a dedicated route" value="Heavy charts belong in their own analytics workspace instead of overloading the first admin view." />
-            <AdminInfoRow label="Copilot role" value="Use the admin copilot for institution-scoped questions, comparisons, and reporting follow-ups grounded to backend data." />
-          </div>
-        </Card>
-      </div>
-
+      {/* ── 4 clickable tier cards ── */}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Total students" value={String(overview.total_students)} note="Current institution-wide live student count in the risk overview." />
-        <StatCard label="High risk" value={String(overview.total_high_risk_students)} note="Students currently classified as high risk." accent="rose" />
-        <StatCard label="I-grade risk" value={String(overview.total_students_with_i_grade_risk)} note="Students currently below the safe subject-wise attendance band." accent="teal" />
-        <StatCard label="R-grade risk" value={String(overview.total_students_with_r_grade_risk)} note="Students currently in repeat-grade attendance territory." accent="gold" />
+        {(["HIGH", "MEDIUM", "LOW", "SAFE"] as const).map((tier, i) => {
+          const cfg = TIER_CONFIG[tier];
+          const Icon = cfg.icon;
+          const count = tierCount(overview, tier);
+          const pct = overview.total_students > 0 ? ((count / overview.total_students) * 100).toFixed(1) : "0";
+          return (
+            <motion.div
+              key={tier}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08, duration: 0.35 }}
+            >
+              <button
+                onClick={() => navigate(`/app/admin/students?tier=${tier}`)}
+                className={`w-full rounded-xl border-2 ${cfg.border} ${cfg.bg} p-5 text-left transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Icon className={`h-5 w-5 ${cfg.color}`} />
+                    <span className={`text-xs font-bold uppercase tracking-wider ${cfg.color}`}>{cfg.label}</span>
+                  </div>
+                  <ArrowRight className={`h-4 w-4 ${cfg.color} opacity-60`} />
+                </div>
+                <p className={`mt-3 text-4xl font-extrabold tracking-tight ${cfg.textColor}`}>{count}</p>
+                <p className="mt-1 text-sm text-slate-500">{pct}% of all students</p>
+              </button>
+            </motion.div>
+          );
+        })}
       </div>
 
+      {/* ── Quick stats row ── */}
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Total students" value={String(overview.total_students)} note="Current institution-wide live student count." />
+        <StatCard label="I-grade risk" value={String(overview.total_students_with_i_grade_risk)} note="Students below safe subject-wise attendance." accent="teal" />
+        <StatCard label="R-grade risk" value={String(overview.total_students_with_r_grade_risk)} note="Students in repeat-grade attendance territory." accent="gold" />
+        <StatCard label="Overdue follow-ups" value={String(overview.total_followup_overdue_students)} note="Students with pending counsellor action." accent="rose" />
+      </div>
+
+      {/* ── Risk tier pie chart + department bar ── */}
       <div className="grid gap-6 xl:grid-cols-2">
+        <PieChartCard
+          title="Risk tier distribution"
+          description="Institution-wide breakdown across all 4 risk tiers."
+          data={[
+            { label: "High", value: overview.total_high_risk_students },
+            { label: "Medium", value: overview.total_medium_risk_students },
+            { label: "Low", value: overview.total_low_risk_students },
+            { label: "Safe", value: overview.total_safe_students },
+          ]}
+          nameKey="label"
+          dataKey="value"
+        />
         <BarChartCard
           title="Department risk distribution"
-          description="Shows which departments carry the most high-risk load."
+          description="Which departments carry the most high-risk students."
           data={overview.department_buckets.map((item) => ({
             label: item.bucket_label,
             value: item.high_risk_students,
@@ -108,23 +151,12 @@ export function AdminDashboardPage() {
           xKey="label"
           dataKey="value"
         />
-        <PieChartCard
-          title="Attendance policy posture"
-          description="A quick institution-wide view of overall shortage, I-grade pressure, and R-grade pressure."
-          data={[
-            { label: "Overall shortage", value: overview.total_students_with_overall_shortage },
-            { label: "I-grade", value: overview.total_students_with_i_grade_risk },
-            { label: "R-grade", value: overview.total_students_with_r_grade_risk },
-            { label: "High risk", value: overview.total_high_risk_students },
-          ]}
-          nameKey="label"
-          dataKey="value"
-        />
       </div>
 
+      {/* ── Subject pressure bar ── */}
       <BarChartCard
         title="Subject pressure hotspots"
-        description="Shows which subjects are currently pulling the most students below the institutional attendance policy."
+        description="Subjects currently pulling the most students below the institutional attendance policy."
         data={overview.top_subject_pressure.map((item) => ({
           label: item.subject_name,
           value: item.students_below_threshold,
@@ -133,6 +165,7 @@ export function AdminDashboardPage() {
         dataKey="value"
       />
 
+      {/* ── Executive summary ── */}
       <Card className="bg-slate-950 text-white">
         <p className="text-xs uppercase tracking-[0.22em] text-slate-300">Executive summary</p>
         <p className="mt-3 text-lg font-bold">{overview.summary}</p>
@@ -141,14 +174,192 @@ export function AdminDashboardPage() {
   );
 }
 
-function AdminInfoRow({ label, value }: { label: string; value: string }) {
+
+/* ═══════════════════════════════════════════════════════════
+   ADMIN STUDENTS — Tier drill-down directory with table
+   ═══════════════════════════════════════════════════════════ */
+
+export function AdminStudentsPage() {
+  const { auth } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedTier, setSelectedTier] = useState(searchParams.get("tier") || "ALL");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 25;
+
+  const studentsQuery = useQuery({
+    queryKey: ["admin-students", auth?.accessToken, selectedTier, currentPage],
+    queryFn: () =>
+      apiRequest<StudentDirectoryResponse>(
+        `/institution/students?risk_level=${selectedTier}&page=${currentPage}&page_size=${pageSize}`,
+        { token: auth?.accessToken }
+      ),
+  });
+
+  function handleTierChange(tier: string) {
+    setSelectedTier(tier);
+    setCurrentPage(1);
+    setSearchParams(tier === "ALL" ? {} : { tier });
+  }
+
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{label}</p>
-      <p className="mt-2 text-sm leading-7 text-slate-700">{value}</p>
+    <div className="space-y-6">
+      <SectionTitle
+        eyebrow="Student directory"
+        title="Drill down by risk tier"
+        description="See exactly who is in each risk category, why they were flagged, and which counsellor is assigned."
+      />
+
+      {/* ── Tier filter pills ── */}
+      <div className="flex flex-wrap gap-2">
+        {["ALL", "HIGH", "MEDIUM", "LOW", "SAFE"].map((tier) => {
+          const isActive = selectedTier === tier;
+          const cfg = tier === "ALL" ? null : TIER_CONFIG[tier];
+          return (
+            <button
+              key={tier}
+              onClick={() => handleTierChange(tier)}
+              className={`rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+                isActive
+                  ? cfg
+                    ? `${cfg.bg} ${cfg.color} ${cfg.border} border-2`
+                    : "bg-slate-900 text-white border-2 border-slate-900"
+                  : "bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+              }`}
+            >
+              {tier === "ALL" ? "All Students" : TIER_CONFIG[tier].label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── Student table ── */}
+      {studentsQuery.isLoading ? (
+        <DashboardSkeleton />
+      ) : studentsQuery.isError || !studentsQuery.data ? (
+        <EmptyState title="Could not load students" description="The student directory API did not return data. Check that the backend is running." />
+      ) : studentsQuery.data.students.length === 0 ? (
+        <EmptyState
+          title={`No ${selectedTier === "ALL" ? "" : selectedTier.toLowerCase() + " risk "}students found`}
+          description="There are no students matching the current filter criteria."
+        />
+      ) : (
+        <Card className="overflow-hidden p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50/80">
+                  <th className="px-4 py-3 text-left font-semibold text-slate-600">Student ID</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-600">Risk Level</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-600">Probability</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-600">Branch</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-600">Attendance</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-600">Top Risk Reasons</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-600">Counsellor</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-600">Case State</th>
+                </tr>
+              </thead>
+              <tbody>
+                {studentsQuery.data.students.map((student, idx) => {
+                  const cfg = TIER_CONFIG[student.risk_level] || TIER_CONFIG.SAFE;
+                  return (
+                    <motion.tr
+                      key={student.student_id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.02 }}
+                      className="border-b border-slate-100 hover:bg-slate-50/60 transition"
+                    >
+                      <td className="px-4 py-3 font-medium text-slate-900">{student.student_id}</td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${cfg.bg} ${cfg.color} ${cfg.border} border`}>
+                          {student.risk_level}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-slate-700">
+                        {(student.risk_probability * 100).toFixed(1)}%
+                      </td>
+                      <td className="px-4 py-3 text-slate-600">{student.branch || "—"}</td>
+                      <td className="px-4 py-3">
+                        {student.overall_attendance_percent != null ? (
+                          <span className={student.overall_attendance_percent < 75 ? "text-rose-600 font-semibold" : "text-slate-700"}>
+                            {student.overall_attendance_percent.toFixed(1)}%
+                          </span>
+                        ) : (
+                          <span className="text-slate-400">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 max-w-xs">
+                        {student.top_risk_reasons.length > 0 ? (
+                          <ul className="space-y-0.5">
+                            {student.top_risk_reasons.map((reason, i) => (
+                              <li key={i} className="text-xs text-slate-600 leading-snug">• {reason}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <span className="text-xs text-slate-400">No specific reasons flagged</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-slate-600 text-xs">
+                        {student.counsellor_name || <span className="text-slate-400">Unassigned</span>}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${
+                          student.case_state === "high_risk_active" || student.case_state === "critical_unattended_case"
+                            ? "bg-rose-50 text-rose-700 border border-rose-200"
+                            : student.case_state === "resolved" || student.case_state === "low_risk_stable"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : "bg-slate-100 text-slate-600 border border-slate-200"
+                        }`}>
+                          {(student.case_state || "unknown").replace(/_/g, " ")}
+                        </span>
+                        {student.has_overdue_followup && (
+                          <span className="ml-1.5 inline-flex items-center rounded-md bg-rose-100 text-rose-700 px-1.5 py-0.5 text-[10px] font-bold">
+                            OVERDUE
+                          </span>
+                        )}
+                      </td>
+                    </motion.tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* ── Pagination ── */}
+          {studentsQuery.data.total_pages > 1 && (
+            <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3 bg-slate-50/50">
+              <p className="text-sm text-slate-500">
+                Showing page {studentsQuery.data.page} of {studentsQuery.data.total_pages} · {studentsQuery.data.total_students} total students
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="secondary"
+                  disabled={currentPage <= 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm font-medium text-slate-700">{currentPage}</span>
+                <Button
+                  variant="secondary"
+                  disabled={currentPage >= studentsQuery.data.total_pages}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </Card>
+      )}
     </div>
   );
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   ADMIN REPORTS — Fixed charts (no more undefined labels)
+   ═══════════════════════════════════════════════════════════ */
 
 export function AdminReportsPage() {
   const { auth } = useAuth();
@@ -170,8 +381,8 @@ export function AdminReportsPage() {
     <div className="space-y-6">
       <SectionTitle
         eyebrow="Admin reports"
-        title="A dedicated institutional analytics workspace"
-        description="The login dashboard stays compact. This route holds the denser institutional views that would otherwise make the first screen too heavy."
+        title="Institutional analytics workspace"
+        description="Deeper analytics views — risk distribution, attendance pressure, and subject hotspots."
         action={
           <div className="flex flex-wrap gap-2">
             <ExportButton token={auth?.accessToken} path="/reports/exports/institution-overview" label="Export overview" />
@@ -179,15 +390,19 @@ export function AdminReportsPage() {
           </div>
         }
       />
+
+      {/* ── Tier distribution + attendance posture ── */}
       <div className="grid gap-6 xl:grid-cols-2">
-        <BarChartCard
-          title="Region-wise high-risk load"
-          description="Administrative comparison view across imported profile regions."
-          data={overview.region_buckets.map((item) => ({
-            label: item.bucket_label,
-            value: item.high_risk_students,
-          }))}
-          xKey="label"
+        <PieChartCard
+          title="Risk tier distribution"
+          description="4-tier classification of all students: HIGH ≥65%, MEDIUM ≥40%, LOW ≥20%, SAFE <20%."
+          data={[
+            { label: "High", value: overview.total_high_risk_students },
+            { label: "Medium", value: overview.total_medium_risk_students },
+            { label: "Low", value: overview.total_low_risk_students },
+            { label: "Safe", value: overview.total_safe_students },
+          ]}
+          nameKey="label"
           dataKey="value"
         />
         <BarChartCard
@@ -197,24 +412,14 @@ export function AdminReportsPage() {
             { label: "Overall shortage", value: overview.total_students_with_overall_shortage },
             { label: "I-grade", value: overview.total_students_with_i_grade_risk },
             { label: "R-grade", value: overview.total_students_with_r_grade_risk },
-            { label: "High risk", value: overview.total_high_risk_students },
           ]}
           xKey="label"
           dataKey="value"
         />
       </div>
 
+      {/* ── Subject + branch pressure ── */}
       <div className="grid gap-6 xl:grid-cols-2">
-        <BarChartCard
-          title="Category-wise high-risk load"
-          description="Administrative comparison view across imported profile categories."
-          data={overview.category_buckets.map((item) => ({
-            label: item.bucket_label,
-            value: item.high_risk_students,
-          }))}
-          xKey="label"
-          dataKey="value"
-        />
         <BarChartCard
           title="Top subject hotspots"
           description="Subjects with the highest number of students below attendance policy."
@@ -225,12 +430,9 @@ export function AdminReportsPage() {
           xKey="label"
           dataKey="value"
         />
-      </div>
-
-      <div className="grid gap-6 xl:grid-cols-2">
         <BarChartCard
           title="Branch attendance pressure"
-          description="Shows which branches carry the strongest combined overall-shortage and repeat-grade pressure."
+          description="Which branches carry the strongest overall-shortage and repeat-grade pressure."
           data={overview.branch_pressure.map((item) => ({
             label: item.bucket_label,
             value: item.students_with_r_grade_risk + item.students_with_overall_shortage,
@@ -238,12 +440,26 @@ export function AdminReportsPage() {
           xKey="label"
           dataKey="value"
         />
+      </div>
+
+      {/* ── Semester pressure ── */}
+      <div className="grid gap-6 xl:grid-cols-2">
         <BarChartCard
           title="Semester attendance pressure"
-          description="Shows which semester slices currently need the most institution-wide recovery attention."
+          description="Which semester slices currently need the most institution-wide recovery attention."
           data={overview.semester_pressure.map((item) => ({
             label: item.bucket_label,
             value: item.students_with_r_grade_risk + item.students_with_overall_shortage,
+          }))}
+          xKey="label"
+          dataKey="value"
+        />
+        <BarChartCard
+          title="Outcome distribution"
+          description="How students are distributed across final outcomes."
+          data={overview.outcome_distribution.map((item) => ({
+            label: item.outcome_status,
+            value: item.student_count,
           }))}
           xKey="label"
           dataKey="value"
@@ -252,6 +468,11 @@ export function AdminReportsPage() {
     </div>
   );
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   ADMIN IMPORTS — unchanged from original
+   ═══════════════════════════════════════════════════════════ */
 
 export function AdminImportsPage() {
   const { auth } = useAuth();
@@ -347,6 +568,11 @@ export function AdminImportsPage() {
   );
 }
 
+
+/* ═══════════════════════════════════════════════════════════
+   ADMIN OPERATIONS — with 4-tier awareness
+   ═══════════════════════════════════════════════════════════ */
+
 export function AdminOperationsPage() {
   const { auth } = useAuth();
   const operationsQuery = useQuery({
@@ -356,6 +582,11 @@ export function AdminOperationsPage() {
   const importCoverageQuery = useQuery({
     queryKey: ["import-coverage", auth?.accessToken],
     queryFn: () => apiRequest<ImportCoverage>("/reports/import-coverage", { token: auth?.accessToken }),
+  });
+
+  const counsellorQuery = useQuery({
+    queryKey: ["counsellor-accountability", auth?.accessToken],
+    queryFn: () => apiRequest<CounsellorAccountabilityResponse>("/institution/counsellor-accountability", { token: auth?.accessToken }),
   });
 
   if (operationsQuery.isLoading || importCoverageQuery.isLoading) {
@@ -370,13 +601,14 @@ export function AdminOperationsPage() {
   const topBranch = operations.institution_overview.branch_pressure[0];
   const topSemester = operations.institution_overview.semester_pressure[0];
   const topSubject = operations.institution_overview.top_subject_pressure[0];
+  const counsellors = counsellorQuery.data?.counsellors ?? [];
 
   return (
     <div className="space-y-6">
       <SectionTitle
         eyebrow="Admin operations"
-        title="Operational depth beyond the dashboard snapshot"
-        description="This page is for the more serious administrative view: import health, intervention effectiveness, and the system-wide workflow posture."
+        title="Operational depth beyond the dashboard"
+        description="Import health, intervention effectiveness, counsellor workload, and system-wide workflow posture."
         action={<ExportButton token={auth?.accessToken} path="/reports/exports/intervention-effectiveness" label="Export intervention effectiveness" />}
       />
 
@@ -386,6 +618,71 @@ export function AdminOperationsPage() {
         <StatCard label="Improved cases" value={String(operations.intervention_effectiveness.total_improved_cases)} note={`${operations.intervention_effectiveness.improvement_rate_percent}% improvement rate`} accent="gold" />
         <StatCard label="Imported unscored" value={String(coverage.unscored_students)} note="Imported students who still do not have prediction output." accent="rose" />
       </div>
+
+      {/* ── Counsellor Accountability ── */}
+      <Card className="overflow-hidden p-0">
+        <div className="px-5 pt-5 pb-3">
+          <SectionTitle
+            eyebrow="Counsellor accountability"
+            title="Who is doing their duty?"
+            description="Workload distribution, pending tasks, and overdue follow-ups per counsellor."
+          />
+        </div>
+        {counsellorQuery.isLoading ? (
+          <div className="p-5"><LoadingCard /></div>
+        ) : counsellors.length === 0 ? (
+          <div className="p-5"><EmptyState title="No counsellor data" description="No counsellors found in the system." /></div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-t border-slate-200 bg-slate-50/80">
+                  <th className="px-4 py-3 text-left font-semibold text-slate-600">Counsellor</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-600">Email</th>
+                  <th className="px-4 py-3 text-center font-semibold text-slate-600">Assigned</th>
+                  <th className="px-4 py-3 text-center font-semibold text-slate-600">High Risk</th>
+                  <th className="px-4 py-3 text-center font-semibold text-slate-600">Medium Risk</th>
+                  <th className="px-4 py-3 text-center font-semibold text-slate-600">Pending</th>
+                  <th className="px-4 py-3 text-center font-semibold text-slate-600">Overdue</th>
+                  <th className="px-4 py-3 text-center font-semibold text-slate-600">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {counsellors.map((c) => (
+                  <tr key={c.counsellor_name} className="border-b border-slate-100 hover:bg-slate-50/60 transition">
+                    <td className="px-4 py-3 font-medium text-slate-900">{c.counsellor_name}</td>
+                    <td className="px-4 py-3 text-slate-500 text-xs">{c.counsellor_email || "—"}</td>
+                    <td className="px-4 py-3 text-center text-slate-700">{c.total_assigned}</td>
+                    <td className="px-4 py-3 text-center">
+                      <span className={c.high_risk_count > 0 ? "text-rose-600 font-bold" : "text-slate-400"}>{c.high_risk_count}</span>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <span className={c.medium_risk_count > 0 ? "text-amber-600 font-semibold" : "text-slate-400"}>{c.medium_risk_count}</span>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <span className={c.pending_interventions > 0 ? "text-amber-600 font-semibold" : "text-slate-400"}>{c.pending_interventions}</span>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <span className={c.overdue_followups > 0 ? "text-rose-600 font-bold" : "text-slate-400"}>{c.overdue_followups}</span>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold ${
+                        c.performance_label === "overdue"
+                          ? "bg-rose-50 text-rose-700 border border-rose-200"
+                          : c.performance_label === "needs_attention"
+                            ? "bg-amber-50 text-amber-700 border border-amber-200"
+                            : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                      }`}>
+                        {c.performance_label === "overdue" ? "⚠ Overdue" : c.performance_label === "needs_attention" ? "Needs Attention" : "✓ On Track"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
 
       <div className="grid gap-6 xl:grid-cols-2">
         <BarChartCard
@@ -471,7 +768,7 @@ export function AdminOperationsPage() {
         <SectionTitle
           eyebrow="Operational reading"
           title="How the backend currently summarizes the institution"
-          description="This is useful for admins because it turns a chart-heavy page back into a plain-language interpretation."
+          description="Turns chart-heavy data back into a plain-language interpretation."
         />
         <div className="grid gap-4 xl:grid-cols-2">
           <Card className="bg-slate-950 text-white">
@@ -487,6 +784,9 @@ export function AdminOperationsPage() {
     </div>
   );
 }
+
+
+/* ─────────────────────── shared ─────────────────────── */
 
 function ExportButton({
   token,
@@ -517,7 +817,7 @@ function ExportButton({
 
   return (
     <Button variant="secondary" onClick={handleExport}>
-      <UploadCloud className="mr-2 h-4 w-4" />
+      <Download className="mr-2 h-4 w-4" />
       {label}
     </Button>
   );

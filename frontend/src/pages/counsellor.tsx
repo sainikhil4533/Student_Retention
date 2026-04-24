@@ -22,18 +22,18 @@ export function CounsellorDashboardPage() {
   const { auth } = useAuth();
   const summaryQuery = useQuery({
     queryKey: ["faculty-dashboard-summary", auth?.accessToken],
-    queryFn: () => apiRequest<FacultyDashboardSummary>("/faculty/dashboard-summary", { token: auth?.accessToken, timeoutMs: 20000 }),
+    queryFn: () => apiRequest<FacultyDashboardSummary>("/faculty/dashboard-summary", { token: auth?.accessToken, timeoutMs: 45000 }),
     retry: 0,
   });
   const summaryFallbackQuery = useQuery({
     queryKey: ["faculty-dashboard-summary-fallback", auth?.accessToken],
-    queryFn: () => apiRequest<FacultySummary>("/faculty/summary", { token: auth?.accessToken, timeoutMs: 20000 }),
+    queryFn: () => apiRequest<FacultySummary>("/faculty/summary", { token: auth?.accessToken, timeoutMs: 45000 }),
     enabled: Boolean(auth?.accessToken && summaryQuery.isError),
     retry: 0,
   });
   const queueQuery = useQuery({
     queryKey: ["faculty-priority-queue", auth?.accessToken],
-    queryFn: () => apiRequest<FacultyPriorityQueue>("/faculty/priority-queue", { token: auth?.accessToken, timeoutMs: 20000 }),
+    queryFn: () => apiRequest<FacultyPriorityQueue>("/faculty/priority-queue", { token: auth?.accessToken, timeoutMs: 45000 }),
     enabled: Boolean(auth?.accessToken && (summaryQuery.data || summaryFallbackQuery.data)),
     retry: 0,
   });
@@ -159,12 +159,12 @@ export function CounsellorReportsPage() {
   const { auth } = useAuth();
   const summaryQuery = useQuery({
     queryKey: ["faculty-reports-summary", auth?.accessToken],
-    queryFn: () => apiRequest<FacultySummary>("/faculty/summary", { token: auth?.accessToken, timeoutMs: 20000 }),
+    queryFn: () => apiRequest<FacultySummary>("/faculty/summary", { token: auth?.accessToken, timeoutMs: 45000 }),
     retry: 0,
   });
   const dashboardFallbackQuery = useQuery({
     queryKey: ["faculty-reports-summary-fallback", auth?.accessToken],
-    queryFn: () => apiRequest<FacultyDashboardSummary>("/faculty/dashboard-summary", { token: auth?.accessToken, timeoutMs: 20000 }),
+    queryFn: () => apiRequest<FacultyDashboardSummary>("/faculty/dashboard-summary", { token: auth?.accessToken, timeoutMs: 45000 }),
     enabled: Boolean(auth?.accessToken && summaryQuery.isError),
     retry: 0,
   });
@@ -273,12 +273,12 @@ export function CounsellorCasesPage() {
 
   const casesQuery = useQuery({
     queryKey: ["active-cases", auth?.accessToken],
-    queryFn: () => apiRequest<ActiveCasesResponse>("/cases/active", { token: auth?.accessToken, timeoutMs: 20000 }),
+    queryFn: () => apiRequest<ActiveCasesResponse>("/cases/active", { token: auth?.accessToken, timeoutMs: 45000 }),
     retry: 0,
   });
   const queueFallbackQuery = useQuery({
     queryKey: ["active-cases-fallback-queue", auth?.accessToken],
-    queryFn: () => apiRequest<FacultyPriorityQueue>("/faculty/priority-queue", { token: auth?.accessToken, timeoutMs: 20000 }),
+    queryFn: () => apiRequest<FacultyPriorityQueue>("/faculty/priority-queue", { token: auth?.accessToken, timeoutMs: 45000 }),
     enabled: Boolean(auth?.accessToken && casesQuery.isError),
     retry: 0,
   });
@@ -299,14 +299,14 @@ export function CounsellorCasesPage() {
 
   const contextQuery = useQuery({
     queryKey: ["student-operational-context", studentId, auth?.accessToken],
-    queryFn: () => apiRequest<StudentOperationalContext>(`/operations/context/${studentId}`, { token: auth?.accessToken, timeoutMs: 20000 }),
+    queryFn: () => apiRequest<StudentOperationalContext>(`/operations/context/${studentId}`, { token: auth?.accessToken, timeoutMs: 45000 }),
     enabled: Boolean(studentId),
     retry: 0,
   });
 
   const historyQuery = useQuery({
     queryKey: ["student-interventions", studentId, auth?.accessToken],
-    queryFn: () => apiRequest<InterventionHistory>(`/interventions/history/${studentId}`, { token: auth?.accessToken, timeoutMs: 20000 }),
+    queryFn: () => apiRequest<InterventionHistory>(`/interventions/history/${studentId}`, { token: auth?.accessToken, timeoutMs: 45000 }),
     enabled: Boolean(studentId),
     retry: 0,
   });
@@ -353,50 +353,53 @@ export function CounsellorCasesPage() {
         description="This is the deeper counsellor page beyond the dashboard. It turns summary information into an actual working surface for reviewing case state, operational context, and intervention history."
       />
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-        <Card className="space-y-4">
-          <SectionTitle
-            eyebrow="Active cases"
-            title={`Open workload (${activeCases.total_students})`}
-            description="Cases are ordered by urgency using the same scoped counsellor queue. Selecting a case opens the operational context and intervention history."
-          />
-          <div className="space-y-3">
-            {activeCases.cases.length ? (
-              activeCases.cases.map((item) => {
-                const active = item.student_id === selectedCase?.student_id;
-                return (
-                  <button
-                    key={item.student_id}
-                    type="button"
-                    onClick={() => setSelectedStudentId(item.student_id)}
-                    className={`w-full rounded-3xl border px-4 py-4 text-left transition ${
-                      active ? "border-indigo-200 bg-indigo-50" : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <p className="font-bold text-slate-950">Student {item.student_id}</p>
-                      <div className="flex flex-wrap items-center gap-2">
-                        {item.priority_label ? (
-                          <span className="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
-                            {item.priority_label.replace(/_/g, " ")}
-                            {item.priority_score != null ? ` | ${item.priority_score}` : ""}
+        <Card className="flex flex-col" style={{ maxHeight: "calc(100vh - 120px)" }}>
+          <div className="shrink-0 p-4 border-b border-slate-100">
+            <SectionTitle
+              eyebrow="Active cases"
+              title={`Open workload (${activeCases.total_students})`}
+              description="Cases are ordered by urgency using the same scoped counsellor queue. Selecting a case opens the operational context and intervention history."
+            />
+          </div>
+          <div className="overflow-y-auto flex-1 p-4">
+            <div className="space-y-3">
+              {activeCases.cases.length ? (
+                activeCases.cases.map((item) => {
+                  const active = item.student_id === selectedCase?.student_id;
+                  return (
+                    <button
+                      key={item.student_id}
+                      type="button"
+                      onClick={() => setSelectedStudentId(item.student_id)}
+                      className={`w-full rounded-3xl border px-4 py-4 text-left transition ${active ? "border-indigo-200 bg-indigo-50" : "border-slate-200 bg-white hover:border-slate-300"
+                        }`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <p className="font-bold text-slate-950">Student {item.student_id}</p>
+                        <div className="flex flex-wrap items-center gap-2">
+                          {item.priority_label ? (
+                            <span className="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
+                              {item.priority_label.replace(/_/g, " ")}
+                              {item.priority_score != null ? ` | ${item.priority_score}` : ""}
+                            </span>
+                          ) : null}
+                          <span className="rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold text-white">
+                            {item.risk_level || "Unknown"}
                           </span>
-                        ) : null}
-                        <span className="rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold text-white">
-                          {item.risk_level || "Unknown"}
-                        </span>
+                        </div>
                       </div>
-                    </div>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{item.summary}</p>
-                  </button>
-                );
-              })
-            ) : (
-              <EmptyState title="No active cases" description="This workspace will populate as soon as the backend sees active cases that require counsellor/admin follow-up." />
-            )}
+                      <p className="mt-2 text-sm leading-6 text-slate-600">{item.summary}</p>
+                    </button>
+                  );
+                })
+              ) : (
+                <EmptyState title="No active cases" description="This workspace will populate as soon as the backend sees active cases that require counsellor/admin follow-up." />
+              )}
+            </div>
           </div>
         </Card>
 
-        <div className="space-y-6">
+        <div className="overflow-y-auto space-y-6" style={{ maxHeight: "calc(100vh - 120px)" }}>
           {selectedCase ? (
             <>
               <Card className="space-y-4">
@@ -405,12 +408,54 @@ export function CounsellorCasesPage() {
                   title={`Student ${selectedCase.student_id}`}
                   description="The backend computes this state from prediction history, warning workflow, alerts, milestone flags, and intervention history."
                 />
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                  <StatCard label="Case state" value={selectedCase.current_case_state.replace(/_/g, " ")} note={selectedCase.summary} accent="teal" />
-                  <StatCard label="Queue priority" value={selectedCase.priority_label?.replace(/_/g, " ") || "Unranked"} note={selectedCase.priority_score != null ? `Priority score ${selectedCase.priority_score}` : "This case is still visible because its workflow is active."} accent="indigo" />
-                  <StatCard label="Risk" value={selectedCase.risk_level || "Unknown"} note={`Probability ${selectedCase.final_risk_probability ?? "--"}`} />
-                  <StatCard label="SLA status" value={selectedCase.sla_status} note={selectedCase.followup_overdue ? "Follow-up overdue" : "No overdue follow-up"} accent="gold" />
-                  <StatCard label="Intervention" value={selectedCase.latest_intervention_status || "None"} note={selectedCase.candidate_for_resolution ? "Candidate for resolution" : "Still operational"} accent="rose" />
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
+                  <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Case State</span>
+                    <span className="text-base font-semibold text-slate-900 capitalize leading-tight">
+                      {selectedCase.current_case_state.replace(/_/g, " ")}
+                    </span>
+                    <span className="text-xs text-slate-500 leading-snug line-clamp-2" title={selectedCase.summary}>{selectedCase.summary}</span>
+                  </div>
+                  
+                  <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-500">Queue Priority</span>
+                    <span className="text-base font-semibold text-indigo-900 capitalize leading-tight">
+                      {selectedCase.priority_label?.replace(/_/g, " ") || "Unranked"}
+                    </span>
+                    <span className="text-xs text-indigo-600 leading-snug">
+                      {selectedCase.priority_score != null ? `Score ${selectedCase.priority_score}` : "Active workflow"}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Risk Level</span>
+                    <span className="text-base font-semibold text-slate-900 capitalize leading-tight">
+                      {selectedCase.risk_level || "Unknown"}
+                    </span>
+                    <span className="text-xs text-slate-500 leading-snug">
+                      Probability {selectedCase.final_risk_probability != null ? selectedCase.final_risk_probability.toFixed(4) : "--"}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-amber-50/50 border border-amber-100">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600">SLA Status</span>
+                    <span className="text-base font-semibold text-amber-900 capitalize leading-tight break-all">
+                      {selectedCase.sla_status.replace(/_/g, " ")}
+                    </span>
+                    <span className="text-xs text-amber-700 leading-snug">
+                      {selectedCase.followup_overdue ? "Follow-up overdue" : "No overdue follow-up"}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-rose-50/50 border border-rose-100">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500">Intervention</span>
+                    <span className="text-base font-semibold text-rose-900 capitalize leading-tight">
+                      {selectedCase.latest_intervention_status?.replace(/_/g, " ") || "None"}
+                    </span>
+                    <span className="text-xs text-rose-600 leading-snug">
+                      {selectedCase.candidate_for_resolution ? "Resolution candidate" : "Still operational"}
+                    </span>
+                  </div>
                 </div>
               </Card>
 

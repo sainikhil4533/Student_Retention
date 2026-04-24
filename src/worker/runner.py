@@ -17,9 +17,21 @@ from src.worker.job_queue import (
 
 
 async def _run() -> None:
-    recovery_task = await start_recovery_monitor_if_enabled()
-    summary_task = await start_summary_snapshot_monitor_if_enabled()
+    # Stagger monitor startup so all 3 don't hit the DB simultaneously.
+    # job_queue starts immediately (lightest query), then recovery after 10s,
+    # then summary after another 10s. This prevents the connection burst that
+    # causes "DbHandler exited" errors on Supabase Free Tier at boot.
+    print("[runner] starting job queue worker...", flush=True)
     queue_task = await start_background_job_worker_if_enabled()
+
+    print("[runner] waiting 10s before starting recovery monitor...", flush=True)
+    await asyncio.sleep(10)
+    recovery_task = await start_recovery_monitor_if_enabled()
+
+    print("[runner] waiting 10s before starting summary monitor...", flush=True)
+    await asyncio.sleep(10)
+    summary_task = await start_summary_snapshot_monitor_if_enabled()
+
     try:
         await asyncio.Event().wait()
     finally:

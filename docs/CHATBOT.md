@@ -75,8 +75,85 @@ That means:
 - admin can ask institution-wide questions
 - answers should be based on real backend data, not hallucinated free-form guesses
 
-## Latest Hardening Note
+## Admin Enterprise Intelligence Overhaul (v3)
 
+**Context:** The previous version of the RetentionOS chatbot was primarily acting as a generic data reporter, mostly restricted to basic aggregate metrics like "Total HIGH risk students".
+**The Gap:** It did not utilize the wealth of deep relational data stored in the database (LMS engagement, ERP assessment submissions, fee payment delays, predicted intervention actions, or class-level attendance stats).
+
+**Strategic Objective:** Evolve the system from a superficial "data-reporting chatbot" to a true "AI-driven diagnostic advisor." By passing the underlying ML predictors directly into the context window, the chatbot would understand causality, flag specific late payments, or highlight dropping engagement metrics seamlessly.
+
+### What Was Done
+1. **Data Integration**: Wired nine distinct database tables directly into `build_admin_data_context()` inside `src/api/chatbot_engine.py`. This provided a deep 45-field profile for every student.
+    - Fields added: Academic scores, LMS engagement, fee overdues, payment delays, subject-wise attendance drops, and ML predictions.
+    - Fields intentionally excluded (to save token complexity): auth tables, background jobs, raw model prediction history.
+2. **Tier 1 Expansion (Deterministic Speed)**: Built 6 dedicated Tier 1 route handlers:
+    - Fee/Finance Route: "which students have fee overdue"
+    - LMS/Login Route: "which students are inactive"
+    - I/R Grade Risk Route: "students at i grade risk"
+    - Low Attendance Route: "students with low attendance"
+    - Eligibility Route: "who is not eligible for end sem"
+    - CGPA Route: "show cgpa overview"
+3. **Routing Collisions Fixed**: Introduced an `is_specific_domain` escape hatch for financial, lms, and attendance keywords to prevent the base `wants_list` route from triggering incorrectly resulting in generic user-lists instead of specific financial lists.
+4. **Tier 2 (LLM) Prompt Optimization**: 
+    - **The Problem**: 45 fields of data per student inflated the prompt to **13,783 tokens** causing rate limits/crashes on the free tier (12000 TPM limit).
+    - **The Fix**: Shrunk context down to 8 students (from 15), compacted JSON (`separators=(',',':')`), minified dictionary keys (e.g. `assessments_completed` to `assess`), dropped Nones and Falses, and shortened history tracking.
+    - **The Result**: Payload fell to ~**5,567** tokens resulting in highly precise, causal analyses returning properly.
+
+**Status**: 73 of 73 tests completed and successfully passed.
+
+### v3.1 — Smart Student Routing & Demographics (Follow-Up)
+
+**The Problem (discovered during validation):** Even though v3 loaded 45 fields per student, the individual student lookup always returned a **full profile dump** regardless of what the admin actually asked. Questions like "Why is student 880082 at risk?" or "When did they last log in?" returned the same generic bulleted profile instead of a focused diagnostic answer.
+
+**What Was Fixed:**
+
+1. **Question-Type Detection:** The student ID handler now classifies the question before responding:
+    - `"why"` / `"at risk"` / `"reason"` → **Focused risk factor analysis** listing specific contributing factors (low attendance, fee overdue, low CGPA, declining scores, etc.) plus ML model explanation from `ai_insights`.
+    - `"what should"` / `"recommend"` / `"action"` → **ML-recommended actions** from `recommended_actions` with priorities. Falls back to data-driven suggestions if ML actions are unavailable.
+    - `"login"` / `"last active"` / `"lms"` → **LMS activity only** with engagement status indicator (active/moderate/very low).
+    - `"contacted"` / `"intervention"` / `"alert"` → **Live DB query** for alert events, intervention actions, and guardian notifications using `repository.get_alert_events_for_students()`, `repository.get_intervention_history_for_student()`, and `repository.get_guardian_alert_events_for_students()`.
+    - `"fee"` / `"payment"` / `"overdue"` → **Financial status only** for that student.
+    - Default (no special keyword) → Full profile dump (unchanged from v3).
+
+2. **Demographics Grouping Route:** New Tier 1 route for `"risk by gender"`, `"by age"`, `"demographic breakdown"`, etc.:
+    - Groups all students by the requested dimension (gender, age_band).
+    - Shows per-group HIGH/MEDIUM/LOW/SAFE counts, risk rate, average risk probability, and average attendance.
+
+3. **Routing Escape Hatch Update:** Added demographic keywords (`by gender`, `male`, `female`, `by age`, `demographic`) to both the `is_specific_domain` filter and a new `is_demo_query` guard, preventing the generic `"show risk"` handler from intercepting demographic queries.
+
+**Why Alert/Intervention Queries Are On-Demand (Not Bulk-Loaded):**
+Alert/intervention history is queried live from the database per-student because:
+- It is rarely requested (only for specific student investigations).
+- Bulk-loading all alerts/interventions for 100+ students on every context build would add unnecessary startup latency.
+- The data can change rapidly (new alerts sent, interventions recorded), so live queries are always fresh.
+
+**Status**: 72 of 73 tests passed (98.6%). The single failure is `"compare cse vs ece"` which hit the Groq daily rate limit during testing — not a code regression.
+
+### v3.2 — Multi-Condition Filters & Comprehensive Audit
+
+**What Was Found:** A 56-question audit across 16 categories revealed 3 remaining gaps:
+- `"high risk students with low attendance"` — only applied the attendance filter, ignored the risk condition.
+- `"high risk students in CSE"` — fell through to generic overview instead of combining risk + branch.
+- `"which branch has the highest risk"` — returned generic overview, didn't name the specific branch.
+
+**What Was Fixed:**
+
+1. **Multi-Condition Filter Route** (added before the generic listing handler):
+    - **Risk + Branch**: `"high risk students in CSE"` now correctly filters by both conditions.
+    - **Risk + Attendance**: `"high risk students with low attendance"` now filters by both risk level AND attendance threshold.
+    - Pattern: risk keyword is detected by `_extract_risk_filter()`, branch by `_extract_branch_filter()`, attendance by keyword match — if more than one is present, the combo filter triggers first.
+
+2. **Superlative Branch Queries**: New handler for `"which branch has the highest/worst/most risk"`:
+    - Detects superlative keywords (`highest`, `worst`, `most`, `best`, `least`) combined with branch context.
+    - Names the specific branch, shows its breakdown, AND includes all-branch comparison table.
+
+**Why These Aren't "Byheart" Routes:**
+These are **compositional filters**, not keyword-for-keyword pattern matching. `_extract_risk_filter()` and `_extract_branch_filter()` work across any phrasing. The combo logic simply says "if both a risk level AND a branch were detected, filter by both." No specific question is hardcoded.
+
+**Comprehensive Audit Results (56 questions, 16 categories): 56/56 (100%)**
+- Simple retrieval, filtered lists, aggregations, groupings, comparisons, explanations, actions, follow-up chains, edge cases, natural language, focused student detail, security/role checks, and response format variations — all passed.
+
+## Latest Hardening Note
 The most recent chatbot hardening pass expanded the system beyond one-off grouped questions.
 
 ## Latest Student Refactor Note

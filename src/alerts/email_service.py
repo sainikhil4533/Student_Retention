@@ -17,11 +17,16 @@ def get_default_alert_recipient() -> str | None:
 
 
 def get_alert_recipient(student_profile=None) -> str | None:
+    # FACULTY_ALERT_EMAIL in .env always takes priority
+    env_recipient = get_default_alert_recipient()
+    if env_recipient:
+        return env_recipient
+    # Fall back to the student's assigned faculty email only if env var is not set
     if student_profile is not None:
         faculty_email = getattr(student_profile, "faculty_email", None)
         if faculty_email is not None and str(faculty_email).strip():
             return str(faculty_email).strip()
-    return get_default_alert_recipient()
+    return None
 
 
 def is_smtp_configured() -> bool:
@@ -31,10 +36,10 @@ def is_smtp_configured() -> bool:
 
 def _subject_for_alert_type(alert_type: str) -> str:
     if alert_type == "faculty_followup_reminder":
-        return "Faculty Follow-Up Reminder - High Risk Student Case Still Open"
+        return "[RetentionOS] Follow-Up Reminder: High Risk Student Case Still Open"
     if alert_type == "post_warning_escalation":
-        return "High Risk Student Escalation - Follow-Up Required"
-    return "High Risk Student Alert - Immediate Attention Required"
+        return "[RetentionOS] Escalation Notice: Student Requires Faculty Attention"
+    return "[RetentionOS] Alert: High Risk Student Requires Attention"
 
 
 def _intro_for_alert_type(alert_type: str) -> str:
@@ -65,7 +70,10 @@ def _build_email_body(student_id: int, prediction_record, alert_type: str) -> st
         f"Urgency: {ai_insights.get('urgency', 'HIGH')}\n"
         f"Timeline: {ai_insights.get('timeline', 'Immediate')}\n\n"
         f"AI Reasoning:\n{ai_insights.get('reasoning', 'No reasoning available.')}\n\n"
-        f"Recommended Actions:\n{actions_text}\n"
+        f"Recommended Actions:\n{actions_text}\n\n"
+        f"---\nThis is an automated message from RetentionOS.\n"
+        f"Do not reply directly to this email.\n"
+        f"Log in to the RetentionOS dashboard to take action on this case.\n"
     )
 
 
@@ -86,10 +94,12 @@ def send_alert_email(student_id: int, prediction_record, alert_type: str, recipi
             "error_message": "SMTP configuration is incomplete.",
         }
 
+    from_addr = os.getenv("SMTP_FROM_EMAIL", "").strip()
     message = EmailMessage()
     message["Subject"] = _subject_for_alert_type(alert_type)
-    message["From"] = os.getenv("SMTP_FROM_EMAIL", "").strip()
+    message["From"] = f"RetentionOS Alerts <{from_addr}>"
     message["To"] = recipient
+    message["Reply-To"] = from_addr
     message.set_content(_build_email_body(student_id, prediction_record, alert_type))
 
     host = os.getenv("SMTP_HOST", "").strip()

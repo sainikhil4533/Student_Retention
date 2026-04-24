@@ -416,6 +416,9 @@ export type FacultyPriorityQueue = {
 export type InstitutionOverview = {
   total_students: number;
   total_high_risk_students: number;
+  total_medium_risk_students: number;
+  total_low_risk_students: number;
+  total_safe_students: number;
   total_dropped_students: number;
   total_studying_students: number;
   total_graduated_students: number;
@@ -456,6 +459,47 @@ export type InstitutionOverview = {
   }>;
   outcome_distribution: Array<{ outcome_status: string; student_count: number }>;
   summary: string;
+};
+
+export type StudentDirectoryItem = {
+  student_id: number;
+  risk_level: string;
+  risk_probability: number;
+  counsellor_name?: string | null;
+  counsellor_email?: string | null;
+  branch?: string | null;
+  year?: string | null;
+  semester?: string | null;
+  overall_attendance_percent?: number | null;
+  top_risk_reasons: string[];
+  latest_intervention_status?: string | null;
+  case_state?: string | null;
+  has_overdue_followup: boolean;
+};
+
+export type StudentDirectoryResponse = {
+  total_students: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+  students: StudentDirectoryItem[];
+};
+
+export type CounsellorAccountabilityItem = {
+  counsellor_name: string;
+  counsellor_email?: string | null;
+  total_assigned: number;
+  high_risk_count: number;
+  medium_risk_count: number;
+  pending_interventions: number;
+  overdue_followups: number;
+  last_action_date?: string | null;
+  performance_label: string;
+};
+
+export type CounsellorAccountabilityResponse = {
+  total_counsellors: number;
+  counsellors: CounsellorAccountabilityItem[];
 };
 
 export type ImportCoverage = {

@@ -52,6 +52,9 @@ def build_institution_risk_overview(
     heatmap_groups: dict[tuple[str, str], list[dict]] = defaultdict(list)
 
     total_high_risk_students = 0
+    total_medium_risk_students = 0
+    total_low_risk_students = 0
+    total_safe_students = 0
     total_critical_trigger_students = 0
     total_followup_overdue_students = 0
     total_guardian_escalation_students = 0
@@ -75,6 +78,13 @@ def build_institution_risk_overview(
 
         if row["risk_level"] == "HIGH":
             total_high_risk_students += 1
+        elif row["risk_level"] == "MEDIUM":
+            total_medium_risk_students += 1
+        elif row["risk_level"] == "LOW":
+            total_low_risk_students += 1
+        elif row["risk_level"] == "SAFE":
+            total_safe_students += 1
+
         if row["has_critical_trigger"]:
             total_critical_trigger_students += 1
         if row["followup_overdue"]:
@@ -162,6 +172,7 @@ def build_institution_risk_overview(
                 item[0],
             ),
         )
+        if label not in ("unknown_category", "undefined")
     ]
     region_buckets = [
         _bucket_summary(label, rows)
@@ -172,6 +183,7 @@ def build_institution_risk_overview(
                 item[0],
             ),
         )
+        if label not in ("unknown_region", "undefined")
     ]
     income_buckets = [
         _bucket_summary(label, rows)
@@ -182,6 +194,7 @@ def build_institution_risk_overview(
                 item[0],
             ),
         )
+        if label not in ("unknown_income", "undefined")
     ]
     heatmap_cells = [
         {
@@ -232,6 +245,9 @@ def build_institution_risk_overview(
         "generated_at": generated_at,
         "total_students": len(student_rows),
         "total_high_risk_students": total_high_risk_students,
+        "total_medium_risk_students": total_medium_risk_students,
+        "total_low_risk_students": total_low_risk_students,
+        "total_safe_students": total_safe_students,
         "total_critical_trigger_students": total_critical_trigger_students,
         "total_followup_overdue_students": total_followup_overdue_students,
         "total_guardian_escalation_students": total_guardian_escalation_students,

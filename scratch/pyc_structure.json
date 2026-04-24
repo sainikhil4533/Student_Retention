@@ -1,0 +1,3437 @@
+{
+  "name": "<module>",
+  "args": [],
+  "all_locals": [],
+  "strings": [
+    "\nChatbot Engine v3 €” Two-tier architecture with follow-up tracking.\n\nTier 1: Deterministic (always available, no API cost)\n  † Handles direct data questions, counts, comparisons, distributions, student listings\n\nTier 2: Gemini AI (when available, for reasoning/strategy/explanation)\n  † Falls back to Tier 1 with CONTEXTUAL answer if API fails\n",
+    "LLM_PROVIDER",
+    "groq",
+    "LLM_MAX_RETRIES",
+    "2",
+    "GEMINI_MODEL",
+    "gemini-2.0-flash",
+    "GROQ_MODEL",
+    "llama-3.3-70b-versatile",
+    "dict[str, Any]",
+    "_context_cache",
+    "dict[int, dict]",
+    "_session_context",
+    "You are the AI advisor for RetentionOS, an institutional student retention platform.\nYou are speaking to an ADMIN. You answer ONLY from the real data below. NEVER make up numbers.\n\nRULES:\n1. Every answer must be grounded in the data provided. You now have RICH per-student data including:\n   - Risk probability, attendance, CGPA, backlogs, I/R grade risk\n   - Assessment completion rates, submission rates, late submissions, score trends\n   - LMS engagement (last activity day), financial status (fee overdue, payment status)\n   - Subjects below 75%/65%, exam eligibility, academic standing\n   - ML-generated insights (ai_insights), recommended actions, risk trends, stability\n2. When explaining \"why\" students are at risk, USE the actual data: cite their attendance, CGPA, assessment score, LMS activity, fee status. Don't guess €” the data is right there.\n3. For strategy, be SPECIFIC with numbers: e.g. \"3 students have fee overdue >‚¹10,000 AND attendance <60% €” prioritize counsellor outreach for them.\"\n4. For follow-ups (\"ok\", \"why\", \"continue\"), seamlessly build on your previous answer.\n5. Use **bold** for key numbers, bullet points for lists. Be professional and insightful.\n6. If ML insights or recommended_actions are available for a student, USE them in your analysis.\n7. Be concise but deep. No unnecessary preamble. Focus on actionable intelligence.\n"
+  ],
+  "subfuncs": [
+    {
+      "name": "_is_llm_available",
+      "args": [],
+      "all_locals": [
+        "key"
+      ],
+      "strings": [
+        "groq",
+        "GROQ_API_KEY",
+        "",
+        "your_",
+        "GEMINI_API_KEY",
+        "PASTE_YOUR_"
+      ],
+      "subfuncs": []
+    },
+    {
+      "name": "_call_llm_text",
+      "args": [
+        "prompt",
+        "max_tokens"
+      ],
+      "all_locals": [
+        "prompt",
+        "max_tokens",
+        "requests",
+        "api_key",
+        "headers",
+        "data",
+        "resp",
+        "resp_json",
+        "genai",
+        "client",
+        "response",
+        "text"
+      ],
+      "strings": [
+        "Call the configured LLM and return plain text response.",
+        "groq",
+        "GROQ_API_KEY",
+        "GROQ_API_KEY not found in environment.",
+        "Bearer ",
+        "application/json",
+        "user",
+        "https://api.groq.com/openai/v1/chat/completions",
+        "Groq API error (",
+        "): ",
+        "choices",
+        "Groq returned empty response.",
+        "message",
+        "content",
+        "GEMINI_API_KEY",
+        "text",
+        "Gemini returned empty response."
+      ],
+      "subfuncs": []
+    },
+    {
+      "name": "_call_llm_with_retries",
+      "args": [
+        "prompt",
+        "max_tokens"
+      ],
+      "all_locals": [
+        "prompt",
+        "max_tokens",
+        "last_error",
+        "attempt",
+        "e",
+        "non_retriable",
+        "delay"
+      ],
+      "strings": [
+        "[chatbot] ",
+        " attempt ",
+        "/",
+        "[chatbot] Non-retriable LLM error: ",
+        "429",
+        "rate limit",
+        "exhausted",
+        "[chatbot] Rate limited, retry in ",
+        "s...",
+        "[chatbot] Retry in ",
+        "s: "
+      ],
+      "subfuncs": [
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "m"
+          ],
+          "strings": [],
+          "subfuncs": []
+        }
+      ]
+    },
+    {
+      "name": "build_admin_data_context",
+      "args": [
+        "repository"
+      ],
+      "all_locals": [
+        "repository",
+        "classify_risk_level",
+        "resolve_department_label",
+        "build_attendance_summary",
+        "all_predictions",
+        "imported_profiles",
+        "p",
+        "imported_ids",
+        "academic_records_by_student",
+        "rec",
+        "semester_progress_by_student",
+        "academic_progress_by_student",
+        "subject_attendance_by_student",
+        "lms_last_day_by_student",
+        "finance_by_student",
+        "prediction_details_by_student",
+        "pred",
+        "sid",
+        "risk_counts",
+        "branch_data",
+        "year_data",
+        "students_detail",
+        "total_students",
+        "prob_sum",
+        "att_total",
+        "att_count",
+        "grade_counts",
+        "backlog_students",
+        "prediction",
+        "prob",
+        "level",
+        "profile",
+        "erp",
+        "branch",
+        "context",
+        "year_label",
+        "k",
+        "v",
+        "sem_label",
+        "sv",
+        "att_pct",
+        "att_flag",
+        "att_summary",
+        "raw",
+        "grade",
+        "has_backlog",
+        "grade_upper",
+        "backlogs",
+        "counsellor",
+        "reg_id",
+        "acad_recs",
+        "cgpa",
+        "total_backlogs_db",
+        "subjects_grades",
+        "ar",
+        "g_upper",
+        "acad_prog",
+        "sem_prog",
+        "has_i_risk",
+        "has_r_risk",
+        "subjects_below_75",
+        "subjects_below_65",
+        "current_eligibility",
+        "assessments_completed",
+        "submission_rate",
+        "late_submissions",
+        "assessment_score",
+        "score_trend",
+        "subj_att_recs",
+        "subject_attendance",
+        "sa",
+        "lms_last_day",
+        "fin",
+        "fee_overdue",
+        "fee_delay_days",
+        "payment_status",
+        "standing_label",
+        "academic_status",
+        "pred_detail",
+        "gender",
+        "age_band",
+        "disability",
+        "prev_attempts",
+        "branch_summary",
+        "bname",
+        "bd",
+        "avg_p",
+        "avg_a",
+        "year_summary",
+        "yname",
+        "yd",
+        "c_load",
+        "s",
+        "cn",
+        "cd",
+        "counsellor_summary"
+      ],
+      "strings": [
+        "Build comprehensive institutional data snapshot.",
+        "ai_insights",
+        "recommended_actions",
+        "risk_trend",
+        "risk_type",
+        "context_fields",
+        "unknown",
+        "Year ",
+        "semester_number",
+        "Sem ",
+        "attendance_ratio",
+        "att_sum",
+        "att_count",
+        "attendance_flag",
+        "grade",
+        "final_grade",
+        "result",
+        "backlogs",
+        "backlog_count",
+        "arrears",
+        "total",
+        "prob_sum",
+        "counsellor_name",
+        "Unassigned",
+        "student_external_id",
+        "Unknown",
+        "unassigned",
+        "has_i_grade_risk",
+        "has_r_grade_risk",
+        "subjects_below_75_count",
+        "subjects_below_65_count",
+        "current_eligibility",
+        "total_assessments_completed",
+        "assessment_submission_rate",
+        "late_submission_count",
+        "weighted_assessment_score",
+        "assessment_score_trend",
+        "end_sem_eligible",
+        "fee_overdue_amount",
+        "fee_delay_days",
+        "payment_status",
+        "standing_label",
+        "current_academic_status",
+        "gender",
+        "age_band",
+        "disability_status",
+        "num_previous_attempts",
+        "id",
+        "reg_id",
+        "name",
+        "display_name",
+        "Student ",
+        "branch",
+        "year",
+        "semester",
+        "risk_level",
+        "probability",
+        "attendance",
+        "has_backlog",
+        "cgpa",
+        "total_backlogs",
+        "subjects_below_75",
+        "subjects_below_65",
+        "academic_status",
+        "assessments_completed",
+        "submission_rate",
+        "late_submissions",
+        "assessment_score",
+        "score_trend",
+        "subjects_grades",
+        "subject_attendance",
+        "lms_last_activity_day",
+        "fee_overdue",
+        "stability",
+        "trigger_alerts",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "SAFE",
+        "counsellor",
+        "high"
+      ],
+      "subfuncs": [
+        {
+          "name": "<lambda>",
+          "args": [],
+          "all_locals": [],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [],
+          "all_locals": [],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "probability"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "b"
+          ],
+          "all_locals": [
+            "b"
+          ],
+          "strings": [
+            "high_risk_pct"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [],
+          "all_locals": [],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "x"
+          ],
+          "all_locals": [
+            "x"
+          ],
+          "strings": [
+            "high"
+          ],
+          "subfuncs": []
+        }
+      ]
+    },
+    {
+      "name": "get_admin_data_context",
+      "args": [
+        "repository"
+      ],
+      "all_locals": [
+        "repository",
+        "now",
+        "ctx"
+      ],
+      "strings": [
+        "data",
+        "timestamp",
+        "[chatbot] Building admin data context...",
+        "[chatbot] Context ready: ",
+        "total_students",
+        " students"
+      ],
+      "subfuncs": []
+    },
+    {
+      "name": "_get_session_ctx",
+      "args": [
+        "session_id"
+      ],
+      "all_locals": [
+        "session_id"
+      ],
+      "strings": [],
+      "subfuncs": []
+    },
+    {
+      "name": "_update_session_ctx",
+      "args": [
+        "session_id"
+      ],
+      "all_locals": [
+        "session_id",
+        "kwargs",
+        "ctx",
+        "hist"
+      ],
+      "strings": [
+        "last_category",
+        "history",
+        "last_filter",
+        "last_students",
+        "last_offset"
+      ],
+      "subfuncs": []
+    },
+    {
+      "name": "_fmt_risk_overview",
+      "args": [
+        "ctx"
+      ],
+      "all_locals": [
+        "ctx",
+        "rd",
+        "t",
+        "lines"
+      ],
+      "strings": [
+        "risk_distribution",
+        "total_students",
+        "No students are currently being tracked.",
+        "**Institutional Risk Overview** (",
+        " students)\n",
+        "- ”´ **HIGH Risk**: ",
+        "HIGH",
+        " students (",
+        ".1f",
+        "%)",
+        "-  **MEDIUM Risk**: ",
+        "MEDIUM",
+        "- ”µ **LOW Risk**: ",
+        "LOW",
+        "- ¢ **SAFE**: ",
+        "SAFE",
+        "\n**Average Risk Probability**: ",
+        "avg_risk_probability",
+        ".0%",
+        "avg_attendance",
+        "**Average Attendance**: ",
+        "%",
+        "\n"
+      ],
+      "subfuncs": []
+    },
+    {
+      "name": "_fmt_branch_table",
+      "args": [
+        "branches"
+      ],
+      "all_locals": [
+        "branches",
+        "lines",
+        "b",
+        "att"
+      ],
+      "strings": [
+        "No branch/department data available.",
+        "**Branch-Wise Risk Breakdown:**\n",
+        "avg_attendance",
+        " | Avg Attendance: ",
+        "%",
+        "",
+        "- **",
+        "branch",
+        "** €” ",
+        "total",
+        " students: ”´ ",
+        "high",
+        " HIGH,  ",
+        "medium",
+        " MED, ”µ ",
+        "low",
+        " LOW, ¢ ",
+        "safe",
+        " SAFE (Risk Rate: ",
+        "high_risk_pct",
+        "%, Avg: ",
+        "avg_risk_probability",
+        ".0%",
+        ")",
+        "\n"
+      ],
+      "subfuncs": []
+    },
+    {
+      "name": "_fmt_year_table",
+      "args": [
+        "years"
+      ],
+      "all_locals": [
+        "years",
+        "lines",
+        "y"
+      ],
+      "strings": [
+        "No year-wise data available.",
+        "**Year-Wise Risk Breakdown:**\n",
+        "- **",
+        "year",
+        "** €” ",
+        "total",
+        " students: ”´ ",
+        "high",
+        " HIGH,  ",
+        "medium",
+        " MED, ”µ ",
+        "low",
+        " LOW, ¢ ",
+        "safe",
+        " SAFE (Avg Risk: ",
+        "avg_risk_probability",
+        ".0%",
+        ")",
+        "\n"
+      ],
+      "subfuncs": []
+    },
+    {
+      "name": "_detect_output_mode",
+      "args": [
+        "msg"
+      ],
+      "all_locals": [
+        "msg"
+      ],
+      "strings": [
+        "Detect what format the user wants the output in.",
+        "names_only",
+        "ids_only",
+        "count_only",
+        "full"
+      ],
+      "subfuncs": [
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        }
+      ]
+    },
+    {
+      "name": "_fmt_student_list",
+      "args": [
+        "students",
+        "limit",
+        "title",
+        "output_mode"
+      ],
+      "all_locals": [
+        "students",
+        "limit",
+        "title",
+        "output_mode",
+        "shown",
+        "lines",
+        "i",
+        "s",
+        "att",
+        "grade",
+        "cgpa",
+        "backlog"
+      ],
+      "strings": [
+        "No students found matching the criteria.",
+        "count_only",
+        "**",
+        ":** ",
+        " students",
+        "names_only",
+        "** (",
+        " total):\n",
+        ". ",
+        "name",
+        "\n*...and ",
+        " more.*",
+        "\n",
+        "ids_only",
+        "reg_id",
+        "** (showing ",
+        " of ",
+        "):\n",
+        "attendance",
+        ", Attendance: ",
+        "%",
+        "",
+        "grade",
+        ", Grade: ",
+        "cgpa",
+        ", CGPA: ",
+        "has_backlog",
+        "   Backlog",
+        ". **",
+        "** (ID: ",
+        ") €” ",
+        "risk_level",
+        " Risk (",
+        "probability",
+        ".0%",
+        "), ",
+        "branch",
+        ", ",
+        "year",
+        ", Counsellor: ",
+        "counsellor"
+      ],
+      "subfuncs": []
+    },
+    {
+      "name": "_extract_risk_filter",
+      "args": [
+        "msg"
+      ],
+      "all_locals": [
+        "msg"
+      ],
+      "strings": [
+        "Extract risk level from message text.",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "safe",
+        "risk",
+        "",
+        "SAFE"
+      ],
+      "subfuncs": [
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "w"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "w"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "w"
+          ],
+          "strings": [],
+          "subfuncs": []
+        }
+      ]
+    },
+    {
+      "name": "_extract_branch_filter",
+      "args": [
+        "msg",
+        "branches"
+      ],
+      "all_locals": [
+        "msg",
+        "branches",
+        "m",
+        "b",
+        "bname",
+        "abbrevs",
+        "abbr",
+        "full"
+      ],
+      "strings": [
+        "Extract branch name from message.",
+        "branch",
+        "_",
+        " ",
+        "CSE",
+        "ECE",
+        "EEE",
+        "MECH",
+        "CIVIL",
+        "IT",
+        "AIDS",
+        "AIML"
+      ],
+      "subfuncs": []
+    },
+    {
+      "name": "generate_deterministic_answer",
+      "args": [
+        "message",
+        "ctx",
+        "chat_history",
+        "session_id",
+        "repository"
+      ],
+      "all_locals": [
+        "message",
+        "ctx",
+        "chat_history",
+        "session_id",
+        "repository",
+        "sctx",
+        "llm_triggers",
+        "_is_who_are_they",
+        "_follow_up_triggers",
+        "_new_context_keywords",
+        "_pagination_keywords",
+        "lf",
+        "risk_level",
+        "counsellor_filter",
+        "year_filter",
+        "s",
+        "filtered",
+        "title",
+        "top_match",
+        "limit",
+        "omode",
+        "answer",
+        "_is_paginate",
+        "all_students",
+        "offset",
+        "n_match",
+        "batch",
+        "next_batch",
+        "new_offset",
+        "risk_filter",
+        "output_mode",
+        "is_followup_format",
+        "is_ref_prev",
+        "prev_students",
+        "is_counsellor_q",
+        "_counsellor_first_names",
+        "cname",
+        "parts",
+        "first",
+        "_words_in_msg",
+        "fname",
+        "w",
+        "diffs",
+        "_has_student_id",
+        "c",
+        "counsellor_names",
+        "target_counsellor",
+        "short",
+        "lines",
+        "st",
+        "i",
+        "email_str",
+        "ranked",
+        "top",
+        "cs",
+        "is_intervention_q",
+        "all_interventions",
+        "all_alerts",
+        "iv",
+        "actor",
+        "alert_by_sid",
+        "ae",
+        "c_alerts",
+        "sid",
+        "total_iv",
+        "by_status",
+        "status",
+        "count",
+        "total_alerts",
+        "pending",
+        "notes",
+        "created",
+        "created_str",
+        "ranked_actors",
+        "iv_count",
+        "alert_count",
+        "inactive",
+        "ivs",
+        "alerts",
+        "high_count",
+        "perf",
+        "high_students",
+        "e",
+        "contacted_sids",
+        "uncontacted",
+        "high_uncontacted",
+        "their_students",
+        "_is_intervention_standalone",
+        "is_fee_q",
+        "students_with_fee",
+        "students_paid",
+        "total_overdue_amt",
+        "sorted_fee",
+        "is_att_count",
+        "below75",
+        "below65",
+        "threshold",
+        "year_match",
+        "sorted_att",
+        "all_year",
+        "atts",
+        "avg",
+        "_year_analytics",
+        "_year_filter_match",
+        "year_num",
+        "year_label",
+        "year_students",
+        "rd",
+        "year_students_sorted",
+        "year_wise",
+        "yw_data",
+        "y",
+        "d",
+        "normalized_yw",
+        "yw",
+        "year_att",
+        "_is_lms_analytics",
+        "sorted_lms",
+        "days",
+        "sorted_late",
+        "sorted_sub",
+        "_is_risk_analytics",
+        "borderline",
+        "worsening",
+        "trend",
+        "label",
+        "volatile",
+        "stab",
+        "score",
+        "stable",
+        "sorted_prob",
+        "top1",
+        "_is_alert_q",
+        "guardian_alerts",
+        "alerted_sids",
+        "guardian_sids",
+        "notified",
+        "not_notified_high",
+        "alerted",
+        "_is_eligibility_q",
+        "not_eligible",
+        "i_risk",
+        "all_at_risk_eligibility",
+        "id_match",
+        "student",
+        "search_id",
+        "name_patterns",
+        "name_match",
+        "pat",
+        "search_name",
+        "matches",
+        "is_why",
+        "is_action",
+        "is_login",
+        "is_contact",
+        "is_fee",
+        "factors",
+        "att",
+        "f",
+        "insights",
+        "k",
+        "v",
+        "item",
+        "actions",
+        "a",
+        "action_num",
+        "day",
+        "atype",
+        "sent",
+        "sent_str",
+        "recipient",
+        "interventions",
+        "outcome",
+        "outcome_str",
+        "ga",
+        "gname",
+        "channel",
+        "dstatus",
+        "is_subj_att_guard",
+        "is_grades",
+        "trend_icon",
+        "records",
+        "r",
+        "subj",
+        "grade",
+        "internal",
+        "external",
+        "total",
+        "result",
+        "credits",
+        "marker",
+        "sg",
+        "marks_str",
+        "is_trend",
+        "direction",
+        "summary",
+        "display",
+        "prev",
+        "change",
+        "val",
+        "icon",
+        "semesters",
+        "sem",
+        "sem_num",
+        "year",
+        "r_risk",
+        "eligibility",
+        "att_str",
+        "flags",
+        "flags_str",
+        "elig_str",
+        "sa",
+        "trending_down",
+        "pct",
+        "conducted",
+        "attended",
+        "consequence",
+        "consec",
+        "elig",
+        "pct_str",
+        "class_str",
+        "status_str",
+        "consequence_str",
+        "trend_str",
+        "absences_str",
+        "absences",
+        "eligible",
+        "demo_parts",
+        "is_count_q",
+        "gd",
+        "g",
+        "mentioned_levels",
+        "lv",
+        "risk_kw",
+        "branch_kw",
+        "has_att_condition",
+        "is_superlative",
+        "is_branch_context",
+        "branches",
+        "target",
+        "is_grade_or_backlog",
+        "is_reasoning",
+        "is_specific_domain",
+        "wants_list",
+        "prev_filter",
+        "is_demo_query",
+        "backlog_list",
+        "i_count",
+        "r_count",
+        "is_reasoning_q",
+        "bd",
+        "students_with_fees",
+        "total_overdue",
+        "delay",
+        "students_with_lms",
+        "combined",
+        "low_att",
+        "subs",
+        "students_with_cgpa",
+        "avg_cgpa",
+        "low_cgpa",
+        "is_demo_group",
+        "group_key",
+        "group_label",
+        "groups",
+        "gval",
+        "avg_risk",
+        "avg_att",
+        "risk_rate"
+      ],
+      "strings": [
+        "\nTry to answer with data alone. Returns None only for questions that\ntruly need AI reasoning (why, strategy, complex analysis).\n",
+        "last_filter",
+        "\\b(show|list|give|get|details|top|first|next)\\b",
+        "risk_level",
+        "counsellor",
+        "year",
+        "students",
+        " Risk Students",
+        "Students under ",
+        "Students in ",
+        "last_students",
+        "Students",
+        "top\\s*(\\d+)",
+        "student_list",
+        "last_offset",
+        "(?:next|show)\\s*(\\d+)",
+        " No more students to show. Already displayed all ",
+        " students.",
+        "",
+        " ",
+        "Students (showing ",
+        " of ",
+        ")",
+        "student_list_paginated",
+        "last_category",
+        "count",
+        "branch_wise",
+        "HIGH",
+        "HIGH Risk Students Across Branches",
+        "Extended ",
+        " Risk Student List",
+        "student_list_extended",
+        "risk_overview",
+        "full",
+        "names_only",
+        "ids_only",
+        "Requested Data",
+        "student_list_formatted",
+        "\\b\\d{4,}\\b",
+        "Unknown",
+        "total",
+        "counsellor_email",
+        "email",
+        "Counsellor ",
+        "Counselor ",
+        "**Counsellor Overview** (",
+        " total)\n",
+        "- **",
+        "**: ",
+        " students (”´ ",
+        " HIGH,  ",
+        "MEDIUM",
+        " MED)",
+        "\n",
+        "counsellor_count",
+        "intervention",
+        "**All Counsellors** (",
+        "):\n",
+        " | ",
+        ". **",
+        "**",
+        "\n   - Students: **",
+        "** (”´ ",
+        " MED, ”µ ",
+        "LOW",
+        " LOW, ¢ ",
+        "SAFE",
+        " SAFE)",
+        "counsellor_list",
+        "high",
+        "risk",
+        "critical",
+        "** has the most HIGH risk students.\n",
+        "- HIGH risk students: **",
+        "- Total students: ",
+        " ([MED] ",
+        "\n**Full Ranking (by HIGH risk count):**",
+        ". ",
+        ": ",
+        " HIGH, ",
+        " MED (",
+        " total)",
+        "** has the most students (",
+        " assigned).\n",
+        "\n**Full Ranking (by student count):**",
+        " students ([HIGH] ",
+        "counsellor_rank",
+        "actor_name",
+        "id",
+        "completed",
+        "how many intervention",
+        "total intervention",
+        "action_status",
+        "unknown",
+        "**Intervention Actions Summary** (",
+        "- ",
+        ": **",
+        "-   No intervention actions recorded yet.",
+        "\n**Alert Events:** ",
+        " total",
+        "intervention_summary",
+        "pending",
+        "**Pending Interventions:** ",
+        "N/A",
+        "notes",
+        "created_at",
+        "%Y-%m-%d",
+        "?",
+        "student_id",
+        ". Student ",
+        " | Actor: ",
+        " | Date: ",
+        "   Notes: ",
+        "… No pending interventions found.",
+        "pending_interventions",
+        "**Counsellor Activity (by interventions taken)**\n",
+        " intervention(s), ",
+        " alert(s), ",
+        " students assigned",
+        "\n  No intervention actions have been recorded yet for any counsellor.",
+        "counsellor_activity",
+        "**Counsellors with No Recorded Actions:**\n",
+        " students assigned (”´ ",
+        " HIGH risk) €” 0 interventions, 0 alerts",
+        "\n  These counsellors have HIGH risk students but no recorded action.",
+        "… All counsellors have at least one recorded action.",
+        "counsellor_inactive",
+        "**Counsellor Performance Overview**\n",
+        "_(Based on recorded intervention actions and alerts)_\n",
+        "… No HIGH risk students assigned",
+        "… Active €” ",
+        " alert(s)",
+        "  No recorded actions €” ",
+        " HIGH risk student(s) need attention",
+        "  - Students: ",
+        " (”´ ",
+        "  - Status: ",
+        "name",
+        "  - — Unactioned HIGH students: ",
+        ", ",
+        "counsellor_performance",
+        "**Students With No Recorded Contact/Intervention**\n",
+        "- Total uncontacted: **",
+        "** out of ",
+        "total_students",
+        "- HIGH risk uncontacted: **",
+        "**  \n",
+        "**Priority €” HIGH Risk with No Contact:**",
+        "** (ID: ",
+        "reg_id",
+        ") €” ",
+        " Risk (",
+        "probability",
+        ".0%",
+        "), Counsellor: ",
+        "uncontacted_students",
+        "** has **",
+        " students** assigned.\n",
+        "- ”´ HIGH Risk: ",
+        "-  MEDIUM Risk: ",
+        "- ”µ LOW Risk: ",
+        "- ¢ SAFE: ",
+        "\n-  Email: ",
+        "counsellor_count_specific",
+        " Risk Students under ",
+        "counsellor_students",
+        " counsellors)\n",
+        "\n_Ask about a specific counsellor or 'intervention status' for more details._",
+        "counsellor_overview",
+        "guardian",
+        "parent",
+        "**Uncontacted Students (no HIGH risk):**",
+        " Risk, Counsellor: ",
+        "… All students have been contacted.",
+        "fee",
+        "fee_overdue",
+        "payment_status",
+        "**Fee Overdue Summary:**\n\n- Students with fee overdue: **",
+        "\n- Total outstanding amount: **‚¹",
+        ",.0f",
+        "**\n- HIGH risk among them: **",
+        "fee_count",
+        "**Fee Payment Status:**\n\n- Students who have paid: **",
+        "**\n- Students with overdue: **",
+        "**\n- Total outstanding: **‚¹",
+        "fee_paid",
+        "**Financial Overview:**\n",
+        "- Students with fee overdue: **",
+        "- Total overdue amount: **‚¹",
+        "**\n",
+        "**Top Students with Overdue Fees:**",
+        ") €” ‚¹",
+        " overdue, ",
+        "fee_list",
+        "attendance",
+        "65",
+        "year\\s*(\\d+)",
+        "Year ",
+        "**Students with Attendance Below ",
+        "%:** **",
+        "(filtered to ",
+        "\n- Out of ",
+        " total students",
+        "att_count",
+        "Students with Low Attendance (<",
+        "%)",
+        " in ",
+        " **No students in ",
+        " have attendance below ",
+        "%.**\n\n- **",
+        "** students\n- Average attendance: **",
+        ".1f",
+        "%** (all above ",
+        "% threshold)",
+        " No students found with attendance below ",
+        "%. All students are above the threshold.",
+        "att_list",
+        "<",
+        " Risk Students in ",
+        "No students found in **",
+        " with ",
+        " risk",
+        ".",
+        "** (",
+        "Risk: [HIGH] ",
+        ", [MED] ",
+        ", [LOW] ",
+        "year_filter",
+        "year_wise",
+        "medium",
+        "low",
+        "safe",
+        "worst attendance",
+        "worst att",
+        "sum",
+        "**Year-Wise Attendance Ranking (worst first):**\n",
+        "**: Avg Attendance **",
+        "%**",
+        "**Year-Wise HIGH Risk Ranking:**\n",
+        "**Year-Wise Risk Breakdown:**\n",
+        " students —  ",
+        " MED,  ",
+        " LOW",
+        "lms_last_activity_day",
+        "**Most Disengaged Students (by LMS inactivity):**\n",
+        ") €” Last LMS activity: **",
+        " days ago**, ",
+        "No LMS activity data available.",
+        "late_submissions",
+        "**Students with Most Late Submissions:**\n",
+        ") €” Late submissions: **",
+        "**, ",
+        "submission_rate",
+        "**Students with Lowest Submission Rates:**\n",
+        ") €” Submission rate: **",
+        "No submission rate data available.",
+        "lms_analytics",
+        "**Borderline Risk Students** (40-60% probability): ",
+        " risk, ",
+        ", Counsellor: ",
+        "risk_trend",
+        "trend_direction",
+        "**Students with Increasing Risk Trend:** ",
+        "trend_label",
+        "No students with upward risk trend found in current data.",
+        "stability",
+        "stability_label",
+        "**Most Volatile Predictions:** ",
+        "stability_score",
+        "), Stability Score: ",
+        "No volatile predictions found. Most students have stable predictions.",
+        "**Students with Stable Risk Predictions:** ",
+        "), Stable",
+        "who is the most",
+        "which student",
+        "**Most At-Risk Student:**\n\n**",
+        ")\n- Risk: **",
+        ")\n- Branch: ",
+        "branch",
+        "\n- Attendance: ",
+        "%\n- Counsellor: ",
+        "No student data available.",
+        "Students by Highest Risk Probability",
+        "risk_analytics",
+        "**Guardian/Parent Alert Summary:**\n",
+        "- Guardian alerts sent: **",
+        "- Students whose guardians were notified: **",
+        "\n  **HIGH risk students whose guardians were NOT notified: ",
+        "  - ",
+        " (ID: ",
+        "\n  No guardian alerts have been sent yet.",
+        "**Alert Events Summary:**\n",
+        "- Total alerts sent: **",
+        "- Students alerted: **",
+        "- Students NOT alerted: **",
+        "\n**Alerted Students (sample):**",
+        " Risk",
+        "alert_analytics",
+        "current_eligibility",
+        "has_i_grade_risk",
+        "has_r_grade_risk",
+        "**Exam Eligibility Risk:**\n\n- Marked ineligible (current_eligibility): **",
+        "**\n- I-grade/R-grade risk (may become ineligible): **",
+        "**\n- Total at eligibility risk: **",
+        "Students at Exam Eligibility Risk",
+        "… All students are currently eligible based on available data.\n\n_Note: Eligibility is derived from attendance and grade risk flags in the system._",
+        "eligibility",
+        "\\b(\\d{4,})\\b",
+        "\\b(stu\\d+)\\b",
+        "(?:student|about|find|search|lookup|look up|profile of)\\s+([A-Z][a-z]+(?:\\s+[A-Z][a-z]+)*)",
+        "(?:named?|called?)\\s+([A-Z][a-z]+(?:\\s+[A-Z][a-z]+)*)",
+        "**Multiple students found matching '",
+        "':**\n",
+        "\nPlease specify the **ID** to get detailed information.",
+        "student_disambig",
+        "**Why is ",
+        ") at risk?**\n",
+        "- **Risk Level:** ",
+        " (",
+        "  **Low attendance (",
+        "%)** €” below 75% threshold",
+        " Moderate attendance (",
+        "- Attendance: **",
+        "cgpa",
+        "- CGPA: **",
+        "  **Low CGPA (",
+        ")** €” academic weakness",
+        "has_backlog",
+        "  **Has backlogs** (",
+        "total_backlogs",
+        "  **I-Grade risk** €” incomplete grades detected",
+        "  **R-Grade risk** €” repeat grades detected",
+        "subjects_below_75",
+        "  **",
+        " subjects** below 75% attendance",
+        " **Fee overdue: ‚¹",
+        "fee_delay_days",
+        " days)",
+        " **",
+        " late submissions** €” engagement concern",
+        "score_trend",
+        " **Declining assessment scores** (trend: ",
+        "+.2f",
+        " **Low LMS engagement** €” last active on day ",
+        "\n**Contributing Risk Factors:**",
+        "\n*No individual red flags detected €” risk may be driven by combined model features.*",
+        "ai_insights",
+        "\n** ML Model Explanation:**",
+        "\n** ML Model Explanation:** ",
+        "student_why",
+        "**Recommended Actions for ",
+        ")\n",
+        "- Risk Level: ",
+        "- Counsellor: ",
+        "recommended_actions",
+        "** ML-Recommended Actions:**",
+        "** ML-Recommended Actions:** ",
+        "** Suggested Actions (based on data):**",
+        ". **Attendance counselling** €” currently at ",
+        "%, needs improvement above 75%",
+        ". **Financial aid review** €” ‚¹",
+        " overdue",
+        ". **Academic remediation** €” clear ",
+        " pending backlogs",
+        ". **Assignment support** €” ",
+        " late submissions flagged",
+        ". **Digital engagement check** €” last LMS activity on day ",
+        "1. Schedule a one-on-one counselling session to understand personal challenges",
+        "2. Monitor academic progress weekly for the next month",
+        "student_actions",
+        "**LMS Activity for ",
+        "- Last LMS Activity Day: **",
+        "- Status:   **Very low engagement** €” barely active on LMS",
+        "- Status:  **Moderate engagement**",
+        "- Status: … **Active on LMS**",
+        "- No LMS activity data available for this student.",
+        "assessments_completed",
+        "- Assessments Completed: **",
+        "- Submission Rate: **",
+        "student_lms",
+        "**Contact & Intervention History for ",
+        "** Alert Events:** ",
+        " alert(s) sent\n",
+        "email_status",
+        "alert_type",
+        "risk_alert",
+        "sent_at",
+        "%Y-%m-%d %H:%M",
+        "recipient",
+        "** † ",
+        " | Status: **",
+        "** | Sent: ",
+        "** Alert Events:** No alerts have been sent for this student.",
+        "** Alert Events:** Unable to fetch alert data.",
+        "\n** Intervention Actions:** ",
+        " action(s)\n",
+        "No notes",
+        "outcome_status",
+        " † Outcome: **",
+        "** by ",
+        "\n** Intervention Actions:** No interventions recorded for this student.",
+        "\n** Intervention Actions:** Unable to fetch intervention data.",
+        "\n** Guardian Notifications:** ",
+        " notification(s)\n",
+        "guardian_name",
+        "channel",
+        "delivery_status",
+        ". Guardian **",
+        "** via ",
+        "\n- **Counsellor:** ",
+        "student_contact",
+        "**Financial Status for ",
+        "- Payment Status: **",
+        "- Fee Overdue: **‚¹",
+        "- Delay: **",
+        " days**",
+        "No financial data available for this student.",
+        "\n- Risk Level: ",
+        "student_fee",
+        "**Academic Records for ",
+        "- **Branch:** ",
+        " | **Year:** ",
+        " | **Sem:** ",
+        "semester",
+        "- **CGPA:** ",
+        "- **CGPA:** N/A (not available)",
+        "- **Backlogs:** ",
+        "  ",
+        "- **Backlogs:** No …",
+        "- **Assessments Completed:** ",
+        "- **Submission Rate:** ",
+        "- **Late Submissions:** ",
+        "assessment_score",
+        "- **Weighted Assessment Score:** ",
+        "",
+        "- **Score Trend:** ",
+        "\n** Subject-Wise Results (Current Semester):**\n",
+        "subject_name",
+        "grade",
+        "internal_marks",
+        "external_marks",
+        "total_marks",
+        "marks",
+        "result_status",
+        "credits",
+        "Grade: **",
+        "Internal: ",
+        "External: ",
+        "Total: **",
+        "Credits: ",
+        " Œ FAIL",
+        "   BACKLOG",
+        "subjects_grades",
+        "\n** Subject-Wise Grades:**\n",
+        " | Marks: ",
+        "subject",
+        "**: Grade **",
+        "\nNo subject-level academic data available.",
+        "student_grades",
+        "**Performance Trend for ",
+        "- **Current Risk:** ",
+        "direction",
+        "trend",
+        "summary",
+        "- **Risk Trend:** ",
+        "- Trend Summary: ",
+        "previous_probability",
+        "- Previous Risk Probability: ",
+        "probability_change",
+        "- Change: ",
+        "label",
+        "- **Stability:** ",
+        " Improving",
+        " Declining",
+        " Stable",
+        "- **Assessment Score Trend:** ",
+        "\n** Semester-by-Semester Progress:**\n",
+        "overall_attendance_percent",
+        "overall_status",
+        "subjects_below_75_count",
+        "subjects_below_65_count",
+        "Att: **",
+        "Att: N/A",
+        " subjects <75%",
+        " subjects <65%",
+        "I-Grade risk",
+        "R-Grade risk",
+        " |   ",
+        " | Eligibility: ",
+        "- **Year ",
+        " / Sem ",
+        ":** ",
+        " | Status: ",
+        "subject_attendance",
+        "\n**  Subjects with Declining Attendance:**",
+        "attendance_pct",
+        "%",
+        " (Trend: ",
+        "student_trend",
+        "**Subject-Wise Attendance for ",
+        "- **Overall Attendance:** ",
+        "%\n",
+        "subject_attendance_percent",
+        "classes_conducted",
+        "classes_attended",
+        "subject_status",
+        "grade_consequence",
+        "consecutive_absences",
+        "end_sem_eligible",
+        "/",
+        " €” ",
+        "   ",
+        " [",
+        "]",
+        " consecutive absences",
+        " Œ NOT ELIGIBLE",
+        "status",
+        "No subject-level attendance data available.",
+        "Unable to fetch subject attendance data.",
+        "student_subject_att",
+        "**Student Profile: ",
+        "- **Year/Sem:** ",
+        " / ",
+        "- **Attendance:** ",
+        "- **Has Backlog:** ",
+        "Yes  ",
+        "No",
+        "- **Total Backlogs:** ",
+        "- **I-Grade Risk:** Yes  ",
+        "- **R-Grade Risk:** Yes  ",
+        "standing_label",
+        "- **Academic Standing:** ",
+        "academic_status",
+        "- **Academic Status:** ",
+        "- **Eligibility:** ",
+        "- **Subjects below 75%:** ",
+        "subjects_below_65",
+        "- **Subjects below 65%:** ",
+        "\n**Assessment Details:**",
+        "- Late Submissions: **",
+        "- Weighted Score: **",
+        "- Score Trend: ",
+        " **",
+        "\n**Subject-Wise Grades:**",
+        ", Marks: ",
+        "\n**Subject-Wise Attendance:**",
+        " Œ NOT ELIGIBLE FOR END-SEM",
+        "\n**LMS Engagement:**",
+        "- Last Activity Day: **",
+        "\n**Financial Status:**",
+        "gender",
+        "Gender: ",
+        "age_band",
+        "Age: ",
+        "disability_status",
+        "N",
+        "Disability: ",
+        "previous_attempts",
+        "Previous Attempts: ",
+        "\n**Demographics:** ",
+        "\n**[ML Insights]:**",
+        "\n**[ML Insights]:** ",
+        "\n**[Recommended Actions]:**",
+        "\n**[Risk Trend]:** ",
+        "student_detail",
+        "There are **",
+        "backlog_students",
+        " students with backlogs/arrears** in the system.",
+        "count_backlogs",
+        "grade_distribution",
+        "**Grade Distribution:**\n",
+        "** grade: ",
+        " students",
+        "Grade-specific data (I-grade, R-grade) is not directly stored in the current dataset. The system predicts dropout risk based on **17 features**: LMS engagement, assessment scores, submission rates, and attendance.\n\nStudents classified as **HIGH risk (50%)** are most likely to face academic failure. Currently **",
+        "risk_distribution",
+        " students** are at HIGH risk.",
+        "grades",
+        " risk students** out of ",
+        " total.",
+        " students** currently tracked in the retention system.",
+        " Risk + Low Attendance",
+        " Risk Students with Low Attendance (<75%):** ",
+        " students\n",
+        ") €” Attendance: **",
+        "%**, ",
+        "), ",
+        "No ",
+        " risk students currently have attendance below 75%.",
+        "Safest",
+        "Highest Risk",
+        "avg_attendance",
+        "\n- Average Attendance: **",
+        " Branch: ",
+        "**\n\n- Total Students: **",
+        "**\n- ”´ HIGH Risk: **",
+        "high_risk_pct",
+        "%)\n-  MEDIUM Risk: ",
+        "\n- ”µ LOW Risk: ",
+        "\n- ¢ SAFE: ",
+        "\n- Average Risk Probability: **",
+        "avg_risk_probability",
+        "\n\n**All Branches for Comparison:**\n",
+        "branch_superlative",
+        "Top ",
+        "Students by Highest Risk",
+        "\n\n",
+        "Grade/backlog data is **not available** in the current dataset.",
+        "backlogs",
+        "I",
+        "R",
+        "**Backlog Analysis** (I-grade & R-grade = Backlogs)\n",
+        "- Total students with backlogs: **",
+        "- **I-grade** (Incomplete): ",
+        "- **R-grade** (Repeat): ",
+        "\n**Backlog Students** (showing up to 10):\n",
+        ", Attendance: ",
+        "), Grade: ",
+        "Grade data is **not available** in the current dataset.",
+        "*(In this university, I-grade and R-grade = Backlogs)*\n",
+        "\n**Total Backlog Students (I + R):** ",
+        "\n- Average Attendance: ",
+        " Department Overview:**\n\n- Total Students: **",
+        "**\n- ”´ HIGH Risk: ",
+        "\n- Average Risk Probability: ",
+        "branch_detail",
+        "**Top Students with Overdue Fees:**\n",
+        " days late",
+        "No students currently have fee overdue in the dataset.",
+        "finance",
+        "**LMS Engagement Overview:**\n",
+        "- Students with LMS data: **",
+        "**Least Active Students (earliest last activity):**\n",
+        ") €” Last active: day ",
+        "LMS engagement data is **not available** in the current dataset.",
+        "lms",
+        "**I-Grade & R-Grade Risk Students:**\n",
+        "- Students at **I-Grade risk**: ",
+        "- Students at **R-Grade risk**: ",
+        "I-risk",
+        "R-risk",
+        ", Att: ",
+        "grade_risk",
+        "**Students with Low Attendance (<75%):** ",
+        " subjects below 75%",
+        " Risk, ",
+        "All students currently have attendance above 75%.",
+        "low_attendance",
+        "not",
+        "**Students Not Eligible for Exams:** ",
+        ") €” Eligibility: ",
+        "All students are currently eligible based on available data.",
+        "**CGPA Overview:**\n",
+        "- Students with CGPA data: **",
+        "- Average CGPA: **",
+        ".2f",
+        "**Lowest CGPA Students:**\n",
+        ") €” CGPA: **",
+        "CGPA data is **not available** in the current dataset.",
+        "Gender",
+        "Age Band",
+        "prob_sum",
+        "att_sum",
+        "**Risk Breakdown by ",
+        ":**\n",
+        ", Avg Att: ",
+        "** €” ",
+        " students: ”´ ",
+        " SAFE (Risk Rate: ",
+        "%, Avg Risk: ",
+        " data is **not available** in the current dataset.",
+        "demographics"
+      ],
+      "subfuncs": [
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "t"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "a",
+            "b"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [],
+          "all_locals": [],
+          "strings": [
+            ""
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "a",
+            "b"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "c"
+          ],
+          "all_locals": [
+            "c"
+          ],
+          "strings": [
+            "HIGH"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "c"
+          ],
+          "all_locals": [
+            "c"
+          ],
+          "strings": [
+            "total"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "c"
+          ],
+          "all_locals": [
+            "c"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "v"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "probability"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "s"
+          ],
+          "strings": [
+            "fee_overdue"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "s"
+          ],
+          "strings": [
+            "risk_level",
+            "HIGH"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "fee_overdue"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "attendance"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "probability"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [],
+          "all_locals": [],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [],
+          "all_locals": [],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "x"
+          ],
+          "all_locals": [
+            "x"
+          ],
+          "strings": [
+            "count",
+            "sum"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "y"
+          ],
+          "all_locals": [
+            "y"
+          ],
+          "strings": [
+            "high"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "lms_last_activity_day"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "late_submissions"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "submission_rate"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "probability"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "probability"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "stability",
+            "stability_score"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "probability"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "probability"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "ae"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "ga"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "probability"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "w"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "w"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "w"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "w"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "attendance"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "w"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "w"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "b"
+          ],
+          "strings": [
+            "branch"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "fee_overdue"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "s"
+          ],
+          "strings": [
+            "fee_overdue"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "lms_last_activity_day"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "probability"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "attendance"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "s"
+          ],
+          "strings": [
+            "cgpa"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "s"
+          ],
+          "all_locals": [
+            "s"
+          ],
+          "strings": [
+            "cgpa"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [],
+          "all_locals": [],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [
+            "Unknown"
+          ],
+          "subfuncs": []
+        },
+        {
+          "name": "<lambda>",
+          "args": [
+            "x"
+          ],
+          "all_locals": [
+            "x"
+          ],
+          "strings": [
+            "HIGH"
+          ],
+          "subfuncs": []
+        }
+      ]
+    },
+    {
+      "name": "_build_gemini_prompt",
+      "args": [
+        "message",
+        "ctx",
+        "chat_history"
+      ],
+      "all_locals": [
+        "message",
+        "ctx",
+        "chat_history",
+        "top_students",
+        "s",
+        "compact",
+        "k",
+        "v",
+        "branches_compact",
+        "b",
+        "data",
+        "recent",
+        "history"
+      ],
+      "strings": [
+        "students",
+        "id",
+        "reg_id",
+        "name",
+        "branch",
+        "risk",
+        "risk_level",
+        "prob",
+        "probability",
+        "att",
+        "attendance",
+        "cgpa",
+        "backlogs",
+        "total_backlogs",
+        "assess",
+        "assessments_completed",
+        "sub_rate",
+        "submission_rate",
+        "late",
+        "late_submissions",
+        "score",
+        "assessment_score",
+        "score_trend",
+        "lms_day",
+        "lms_last_activity_day",
+        "fee",
+        "fee_overdue",
+        "pay",
+        "payment_status",
+        "i_risk",
+        "has_i_grade_risk",
+        "has_r_grade_risk",
+        "subjects_below_75",
+        "standing_label",
+        "ai_insights",
+        "ml",
+        "recommended_actions",
+        "actions",
+        "branch_wise",
+        "total",
+        "high",
+        "medium",
+        "low",
+        "safe",
+        "avg_risk_probability",
+        "total_students",
+        "risk_distribution",
+        "avg_attendance",
+        "backlog_students",
+        "\n",
+        "\n\n## DATA:\n",
+        "\n\n## HISTORY:\n",
+        "(first message)",
+        "\n\n## USER: ",
+        "\n\nAnswer concisely with data."
+      ],
+      "subfuncs": [
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "m"
+          ],
+          "strings": [
+            "role",
+            "user",
+            ": ",
+            "content",
+            ""
+          ],
+          "subfuncs": []
+        }
+      ]
+    },
+    {
+      "name": "generate_llm_answer",
+      "args": [
+        "message",
+        "ctx",
+        "chat_history"
+      ],
+      "all_locals": [
+        "message",
+        "ctx",
+        "chat_history",
+        "prompt"
+      ],
+      "strings": [],
+      "subfuncs": []
+    },
+    {
+      "name": "_smart_fallback",
+      "args": [
+        "message",
+        "ctx",
+        "session_id"
+      ],
+      "all_locals": [
+        "message",
+        "ctx",
+        "session_id",
+        "sctx",
+        "worst",
+        "lines",
+        "best"
+      ],
+      "strings": [
+        "When Gemini fails, give a contextual answer rather than generic overview.",
+        "branch_wise",
+        "**Data-Driven Action Items:**\n",
+        "- ”´ **",
+        "risk_distribution",
+        "HIGH",
+        " HIGH risk students** need immediate intervention",
+        "- **",
+        "branch",
+        "** has the highest risk rate (",
+        "high_risk_pct",
+        "%) €” prioritize here",
+        "\n",
+        "**Key Risk Patterns in the Data:**\n",
+        "- Overall average risk probability is **",
+        "avg_risk_probability",
+        ".0%",
+        "**",
+        "avg_attendance",
+        "- Average attendance is **",
+        "%**",
+        "- Worst branch: **",
+        "** at ",
+        "% HIGH risk",
+        "- Best branch: **",
+        "\n*For deeper causal analysis, please try again when the AI reasoning service is available.*",
+        "\n\n*AI reasoning is temporarily unavailable. Showing data snapshot.*"
+      ],
+      "subfuncs": [
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        },
+        {
+          "name": "<genexpr>",
+          "args": [
+            ".0"
+          ],
+          "all_locals": [
+            ".0",
+            "k"
+          ],
+          "strings": [],
+          "subfuncs": []
+        }
+      ]
+    },
+    {
+      "name": "generate_chatbot_response",
+      "args": [
+        "role",
+        "message",
+        "repository",
+        "chat_history",
+        "session_id"
+      ],
+      "all_locals": [
+        "role",
+        "message",
+        "repository",
+        "chat_history",
+        "session_id",
+        "ctx",
+        "e",
+        "tier1",
+        "answer",
+        "fallback"
+      ],
+      "strings": [
+        "\nMain entry point. Returns {\"content\": str, \"source\": str}.\n",
+        "This chatbot currently supports admin queries. Student and counsellor support is coming soon.",
+        "unsupported_role",
+        "[chatbot] Data context error: ",
+        "I'm unable to access institutional data right now. Please try again in a moment.",
+        "error",
+        "[chatbot]  Tier 1 answered",
+        "deterministic",
+        "[chatbot]  Tier 2 (LLM) answered",
+        "llm",
+        "[chatbot] — LLM failed: ",
+        "[chatbot] † Smart fallback",
+        "fallback",
+        "deterministic_fallback"
+      ],
+      "subfuncs": []
+    }
+  ]
+}

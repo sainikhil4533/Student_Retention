@@ -145,7 +145,8 @@ def _build_case_state_from_rows(
     risk_level = None
     final_risk_probability = None
     if latest_prediction is not None:
-        risk_level = "HIGH" if int(latest_prediction.final_predicted_class) == 1 else "LOW"
+        from src.api.risk_classification import classify_risk_level
+        risk_level = classify_risk_level(float(latest_prediction.final_risk_probability))
         final_risk_probability = float(latest_prediction.final_risk_probability)
 
     latest_intervention_status = _intervention_status(latest_intervention)
