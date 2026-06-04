@@ -678,6 +678,39 @@ class EventRepository:
         values = [str(subject or "").strip(), str(display_name or "").strip()]
         if subject.endswith("_demo") and "counsellor" in subject.lower() and not display_name:
             values.append(subject.replace("_demo", "").replace("_", " "))
+
+        exact_names = {
+            value
+            for value in values
+            if value and "@" not in value and not value.lower().endswith(".counsellor")
+        }
+        if subject.endswith(".counsellor"):
+            local_name = subject.rsplit(".counsellor", 1)[0].replace(".", " ").strip()
+            if local_name:
+                exact_names.add(f"Counsellor {local_name.title()}")
+        exact_emails = {value.lower() for value in values if "@" in value}
+        if subject.endswith(".counsellor"):
+            exact_emails.add(f"{subject.lower()}@example.edu")
+
+        base_query = (
+            self.db.query(StudentProfile)
+            .filter(StudentProfile.external_student_ref.is_not(None))
+        )
+        exact_conditions = []
+        if exact_names:
+            exact_conditions.append(StudentProfile.counsellor_name.in_(sorted(exact_names)))
+        if exact_emails:
+            exact_conditions.append(func.lower(StudentProfile.counsellor_email).in_(sorted(exact_emails)))
+        if exact_conditions:
+            matched_profiles = (
+                base_query
+                .filter(or_(*exact_conditions))
+                .order_by(StudentProfile.student_id.asc())
+                .all()
+            )
+            if matched_profiles:
+                return matched_profiles
+
         scope_identifiers = self._normalized_identity_tokens(*values)
         if not scope_identifiers:
             return []
@@ -730,10 +763,6 @@ class EventRepository:
                 conditions.append(normalized_name_expr.in_(normalized_locals))
                 conditions.append(normalized_email_local_expr.in_(normalized_locals))
 
-        base_query = (
-            self.db.query(StudentProfile)
-            .filter(StudentProfile.external_student_ref.is_not(None))
-        )
         if conditions:
             matched_profiles = (
                 base_query

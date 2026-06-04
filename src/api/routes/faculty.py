@@ -28,7 +28,7 @@ from src.db.repository import EventRepository
 
 
 router = APIRouter(prefix="/faculty", tags=["faculty"])
-_FACULTY_RESPONSE_CACHE_TTL_SECONDS = 30.0
+_FACULTY_RESPONSE_CACHE_TTL_SECONDS = 300.0
 _FACULTY_SCOPE_CACHE_TTL_SECONDS = 300.0
 _FACULTY_CACHE_LOCK = Lock()
 _FACULTY_SCOPE_CACHE: dict[str, tuple[float, set[int] | None]] = {}
@@ -122,6 +122,20 @@ def _empty_faculty_summary(*, generated_at: datetime) -> FacultySummaryResponse:
     )
 
 
+def _empty_academic_burden_summary() -> dict:
+    return {
+        "has_active_burden": False,
+        "has_active_i_grade_burden": False,
+        "has_active_r_grade_burden": False,
+        "active_i_grade_subjects": [],
+        "active_r_grade_subjects": [],
+        "active_burden_count": 0,
+        "academic_risk_band": "clear",
+        "monitoring_cadence": "routine",
+        "summary": "No unresolved I-grade or R-grade subject burden is currently active.",
+    }
+
+
 @router.get("/dashboard-summary", response_model=FacultyDashboardSummaryResponse)
 def get_faculty_dashboard_summary(
     db: Session = Depends(get_db),
@@ -135,6 +149,42 @@ def get_faculty_dashboard_summary(
     repository = EventRepository(db)
     now_utc = datetime.now(UTC)
     try:
+        if auth.role == "counsellor":
+            queue = _build_faculty_priority_queue_items(repository, auth)
+            priority_cache_key = _faculty_cache_key("priority-queue", auth)
+            _cache_store(
+                _FACULTY_RESPONSE_CACHE,
+                priority_cache_key,
+                FacultyPriorityQueueResponse(total_students=len(queue), queue=queue),
+            )
+            response = FacultyDashboardSummaryResponse(
+                generated_at=to_ist(now_utc),
+                total_active_high_risk_students=sum(
+                    1 for item in queue if item.current_risk_level == "HIGH"
+                ),
+                total_critical_unattended_cases=sum(
+                    1 for item in queue if item.is_critical_unattended_case
+                ),
+                total_students_with_overall_shortage=sum(
+                    1 for item in queue if item.priority_label == "CURRENT_SHORTAGE"
+                ),
+                total_students_with_i_grade_risk=sum(
+                    1 for item in queue if item.priority_label == "CURRENT_I_SHORTAGE"
+                ),
+                total_students_with_r_grade_risk=sum(
+                    1 for item in queue if item.priority_label == "CURRENT_R_SHORTAGE"
+                ),
+                total_students_with_active_academic_burden=sum(
+                    1 for item in queue if item.has_active_academic_burden
+                ),
+                total_students_with_active_i_grade_burden=0,
+                total_students_with_active_r_grade_burden=0,
+                top_subject_pressure=[],
+                branch_pressure=[],
+                semester_pressure=[],
+            )
+            return _cache_store(_FACULTY_RESPONSE_CACHE, cache_key, response)  # type: ignore[return-value]
+
         scoped_student_ids = _scoped_student_ids(repository, auth)
         latest_predictions = repository.get_latest_predictions_for_students(scoped_student_ids)
         latest_prediction_map = {
@@ -164,10 +214,10 @@ def get_faculty_dashboard_summary(
                 critical_unattended_case_count += 1
 
         student_ids = scoped_student_ids or set(latest_prediction_map.keys())
-        academic_rows = repository.get_student_academic_records_for_students(student_ids or None)
-        attendance_rows = repository.get_current_student_subject_attendance_records_for_students(student_ids or None)
-        academic_progress_rows = repository.get_student_academic_progress_records_for_students(student_ids or None)
-        semester_rows = repository.get_latest_student_semester_progress_records_for_students(student_ids or None)
+        academic_rows = repository.get_student_academic_records_for_students(student_ids)
+        attendance_rows = repository.get_current_student_subject_attendance_records_for_students(student_ids)
+        academic_progress_rows = repository.get_student_academic_progress_records_for_students(student_ids)
+        semester_rows = repository.get_latest_student_semester_progress_records_for_students(student_ids)
         academic_rows_by_student: dict[int, list] = defaultdict(list)
         attendance_rows_by_student: dict[int, list] = defaultdict(list)
         for row in academic_rows:
@@ -584,28 +634,16 @@ def _build_faculty_priority_queue_items(
     alert_map = _latest_by_student(repository.get_latest_alert_events_for_students(student_ids))
     intervention_map = _latest_by_student(repository.get_latest_intervention_actions_for_students(student_ids))
     semester_progress_rows = repository.get_latest_student_semester_progress_records_for_students(student_ids)
-    academic_rows = repository.get_student_academic_records_for_students(student_ids)
-    attendance_rows = repository.get_current_student_subject_attendance_records_for_students(student_ids)
     semester_progress_by_student = {
         int(row.student_id): row for row in semester_progress_rows
     }
-
-    academic_rows_by_student: dict[int, list] = defaultdict(list)
-    attendance_rows_by_student: dict[int, list] = defaultdict(list)
-    for row in academic_rows:
-        academic_rows_by_student[int(row.student_id)].append(row)
-    for row in attendance_rows:
-        attendance_rows_by_student[int(row.student_id)].append(row)
 
     queue: list[FacultyPriorityQueueItem] = []
 
     for prediction in latest_predictions:
         student_id = int(prediction.student_id)
         semester_progress = semester_progress_by_student.get(student_id)
-        academic_burden = build_academic_burden_summary(
-            academic_rows=academic_rows_by_student.get(student_id, []),
-            attendance_rows=attendance_rows_by_student.get(student_id, []),
-        )
+        academic_burden = _empty_academic_burden_summary()
         has_active_burden = bool(academic_burden["has_active_burden"])
         has_current_r_grade_risk = bool(getattr(semester_progress, "has_r_grade_risk", False))
         has_current_i_grade_risk = bool(getattr(semester_progress, "has_i_grade_risk", False))
@@ -648,29 +686,12 @@ def _build_faculty_priority_queue_items(
             )
         else:
             # Compute subject-level counts for intelligent scoring
-            _att_rows = attendance_rows_by_student.get(student_id, [])
-            _cur_r_subjects = [
-                r for r in _att_rows
-                if str(getattr(r, "subject_status", "") or "").strip().upper() == "R_GRADE"
-            ]
-            _cur_i_subjects = [
-                r for r in _att_rows
-                if str(getattr(r, "subject_status", "") or "").strip().upper() == "I_GRADE"
-            ]
+            _cur_r_subjects = []
+            _cur_i_subjects = []
 
             # Detect same subject failing both this semester AND as carry-forward
             # (student repeating the same subject again → red flag)
-            _carry_r_names = {
-                str(s.get("subject_name") or "").strip().lower()
-                for s in academic_burden["active_r_grade_subjects"]
-                if s.get("subject_name")
-            }
-            _cur_r_names = {
-                str(getattr(r, "subject_name", "") or "").strip().lower()
-                for r in _cur_r_subjects
-                if getattr(r, "subject_name", None)
-            }
-            _has_repeated_subject = bool(_carry_r_names & _cur_r_names)
+            _has_repeated_subject = False
 
             if has_current_r_grade_risk:
                 # Current semester attendance < 65% → below R-grade threshold (recoverable)
@@ -861,17 +882,62 @@ def get_faculty_summary(
         try:
             dashboard = get_faculty_dashboard_summary(db=db, auth=auth)
             priority_queue = get_faculty_priority_queue(db=db, auth=auth)
-            academic_burden_monitoring_students = [
-                _build_summary_student_item(
-                    student_id=int(item.student_id),
-                    status="academic_burden_monitoring",
-                    prediction=None,
-                    event_time=item.latest_prediction_created_at,
-                    note=item.queue_reason,
+            repository = EventRepository(db)
+            scoped_student_ids = _scoped_student_ids(repository, auth) or set()
+            latest_predictions = repository.get_latest_predictions_for_students(scoped_student_ids)
+            latest_prediction_map = {
+                int(prediction.student_id): prediction for prediction in latest_predictions
+            }
+            academic_rows = repository.get_student_academic_records_for_students(scoped_student_ids)
+            attendance_rows = repository.get_current_student_subject_attendance_records_for_students(scoped_student_ids)
+            academic_progress_rows = repository.get_student_academic_progress_records_for_students(scoped_student_ids)
+            semester_rows = repository.get_latest_student_semester_progress_records_for_students(scoped_student_ids)
+
+            academic_rows_by_student: dict[int, list] = defaultdict(list)
+            attendance_rows_by_student: dict[int, list] = defaultdict(list)
+            for row in academic_rows:
+                academic_rows_by_student[int(row.student_id)].append(row)
+            for row in attendance_rows:
+                attendance_rows_by_student[int(row.student_id)].append(row)
+
+            academic_burden_monitoring_students: list[FacultySummaryStudentItem] = []
+            active_burden_count = 0
+            active_i_grade_burden_count = 0
+            active_r_grade_burden_count = 0
+            for student_id in scoped_student_ids:
+                academic_burden = build_academic_burden_summary(
+                    academic_rows=academic_rows_by_student.get(student_id, []),
+                    attendance_rows=attendance_rows_by_student.get(student_id, []),
                 )
-                for item in priority_queue.queue
-                if item.has_active_academic_burden
-            ]
+                if not bool(academic_burden["has_active_burden"]):
+                    continue
+                prediction = latest_prediction_map.get(student_id)
+                active_burden_count += 1
+                if bool(academic_burden["has_active_i_grade_burden"]):
+                    active_i_grade_burden_count += 1
+                if bool(academic_burden["has_active_r_grade_burden"]):
+                    active_r_grade_burden_count += 1
+                academic_burden_monitoring_students.append(
+                    _build_summary_student_item(
+                        student_id=student_id,
+                        status="academic_burden_monitoring",
+                        prediction=prediction,
+                        event_time=getattr(prediction, "created_at", now_utc),
+                        note=_academic_burden_note(academic_burden),
+                    )
+                )
+
+            academic_burden_monitoring_students.sort(
+                key=lambda item: (item.final_risk_probability or 0.0, item.event_time or now_utc),
+                reverse=True,
+            )
+            academic_pressure = _academic_pressure_summary(
+                repository,
+                student_ids=scoped_student_ids,
+                academic_progress_rows=academic_progress_rows,
+                semester_rows=semester_rows,
+                subject_rows=attendance_rows,
+            )
             response = FacultySummaryResponse(
                 generated_at=dashboard.generated_at,
                 total_active_high_risk_students=dashboard.total_active_high_risk_students,
@@ -884,15 +950,15 @@ def get_faculty_summary(
                 total_critical_unattended_cases=dashboard.total_critical_unattended_cases,
                 total_repeated_risk_students=0,
                 total_unhandled_escalations=0,
-                total_students_with_overall_shortage=dashboard.total_students_with_overall_shortage,
-                total_students_with_i_grade_risk=dashboard.total_students_with_i_grade_risk,
-                total_students_with_r_grade_risk=dashboard.total_students_with_r_grade_risk,
-                total_students_with_active_academic_burden=dashboard.total_students_with_active_academic_burden,
-                total_students_with_active_i_grade_burden=dashboard.total_students_with_active_i_grade_burden,
-                total_students_with_active_r_grade_burden=dashboard.total_students_with_active_r_grade_burden,
-                top_subject_pressure=dashboard.top_subject_pressure,
-                branch_pressure=dashboard.branch_pressure,
-                semester_pressure=dashboard.semester_pressure,
+                total_students_with_overall_shortage=int(academic_pressure["total_students_with_overall_shortage"]),
+                total_students_with_i_grade_risk=int(academic_pressure["total_students_with_i_grade_risk"]),
+                total_students_with_r_grade_risk=int(academic_pressure["total_students_with_r_grade_risk"]),
+                total_students_with_active_academic_burden=active_burden_count,
+                total_students_with_active_i_grade_burden=active_i_grade_burden_count,
+                total_students_with_active_r_grade_burden=active_r_grade_burden_count,
+                top_subject_pressure=list(academic_pressure["top_subject_pressure"]),
+                branch_pressure=list(academic_pressure["branch_pressure"]),
+                semester_pressure=list(academic_pressure["semester_pressure"]),
                 active_recovery_students=[],
                 expired_recovery_students=[],
                 escalated_students=[],
@@ -923,11 +989,11 @@ def get_faculty_summary(
     prediction_history = repository.get_prediction_history_for_students(scoped_student_ids)
     repeated_risk_map = _repeated_risk_summary(prediction_history, intervention_rows_by_student)
     student_ids = scoped_student_ids or set(latest_prediction_map.keys())
-    latest_erp_by_student = repository.get_latest_erp_events_for_students(student_ids or None)
-    academic_rows = repository.get_student_academic_records_for_students(student_ids or None)
-    attendance_rows = repository.get_current_student_subject_attendance_records_for_students(student_ids or None)
-    academic_progress_rows = repository.get_student_academic_progress_records_for_students(student_ids or None)
-    semester_rows = repository.get_latest_student_semester_progress_records_for_students(student_ids or None)
+    latest_erp_by_student = repository.get_latest_erp_events_for_students(student_ids)
+    academic_rows = repository.get_student_academic_records_for_students(student_ids)
+    attendance_rows = repository.get_current_student_subject_attendance_records_for_students(student_ids)
+    academic_progress_rows = repository.get_student_academic_progress_records_for_students(student_ids)
+    semester_rows = repository.get_latest_student_semester_progress_records_for_students(student_ids)
     academic_rows_by_student: dict[int, list] = defaultdict(list)
     attendance_rows_by_student: dict[int, list] = defaultdict(list)
     for row in academic_rows:

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import traceback
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -18,11 +20,14 @@ from src.api.schemas import (
     CopilotChatSessionListResponse,
     CopilotChatSessionResponse,
 )
-from src.db.database import get_db
+from src.db.database import db_session_scope, get_db
 from src.db.repository import EventRepository
 
 
 router = APIRouter(prefix="/copilot", tags=["copilot"])
+
+_CONTEXT_BUILD_TIMEOUT_SECONDS = 60  # max time to wait for data context build
+_context_executor = ThreadPoolExecutor(max_workers=3, thread_name_prefix="copilot-ctx")
 
 
 @router.post("/sessions", response_model=CopilotChatSessionResponse)
@@ -132,6 +137,171 @@ def list_copilot_audit_events(
 def send_copilot_message(
     session_id: int,
     payload: CopilotChatMessageRequest,
+    auth: AuthContext = Depends(require_roles("student", "counsellor", "admin", "system")),
+) -> CopilotChatReplyResponse:
+    content = str(payload.content or "").strip()
+    if not content:
+        raise HTTPException(status_code=400, detail="Message content cannot be empty.")
+
+    with db_session_scope() as db:
+        repository = EventRepository(db)
+        _get_authorized_session(repository, session_id, auth)
+        session_messages = repository.list_copilot_chat_messages(session_id)
+        chat_history = [
+            {"role": str(msg.role), "content": str(msg.content)}
+            for msg in session_messages
+        ]
+        user_message = repository.add_copilot_chat_message(
+            {
+                "session_id": session_id,
+                "role": "user",
+                "message_type": "text",
+                "content": content,
+                "metadata_json": {
+                    "owner_role": auth.role,
+                    "owner_student_id": auth.student_id,
+                },
+            },
+            commit=False,
+        )
+        now = datetime.now(UTC)
+        repository.update_copilot_chat_session(
+            session_id,
+            {"last_message_at": now, "updated_at": now},
+            commit=False,
+            refresh=False,
+        )
+        db.commit()
+        db.refresh(user_message)
+        serialized_user_message = _serialize_copilot_message(user_message)
+
+    from src.api.chatbot_engine import (
+        generate_chatbot_response,
+        get_admin_data_context,
+        get_counsellor_data_context,
+        get_student_data_context,
+    )
+
+    def _build_context_for_role():
+        with db_session_scope() as db2:
+            ctx_repo = EventRepository(db2)
+            if auth.role in {"admin", "system"}:
+                return get_admin_data_context(ctx_repo)
+            elif auth.role == "counsellor":
+                return get_counsellor_data_context(
+                    ctx_repo,
+                    auth.subject,
+                    auth.display_name,
+                )
+            elif auth.role == "student":
+                if auth.student_id is None:
+                    raise HTTPException(status_code=400, detail="Student ID not found in session.")
+                return get_student_data_context(ctx_repo, auth.student_id)
+            else:
+                raise HTTPException(status_code=400, detail=f"Role '{auth.role}' is not supported.")
+
+    try:
+        future = _context_executor.submit(_build_context_for_role)
+        prebuilt_context = future.result(timeout=_CONTEXT_BUILD_TIMEOUT_SECONDS)
+    except FuturesTimeoutError:
+        future.cancel()
+        print(f"[copilot] Context build timed out after {_CONTEXT_BUILD_TIMEOUT_SECONDS}s for {auth.role}", flush=True)
+        return CopilotChatReplyResponse(
+            session=CopilotChatSessionItem(
+                id=session_id, title="", status="active", owner_role=auth.role,
+                owner_student_id=auth.student_id, display_name=auth.display_name,
+                system_prompt_version="", created_at=None, updated_at=None, last_message_at=None,
+            ),
+            user_message=serialized_user_message,
+            assistant_message=_save_error_reply(
+                session_id,
+                "I'm taking too long to load your data. This usually resolves in a few seconds — please try again.",
+            ),
+        )
+    except Exception as exc:
+        print(f"[copilot] Context build failed for {auth.role}: {exc}", flush=True)
+        traceback.print_exc()
+        return CopilotChatReplyResponse(
+            session=CopilotChatSessionItem(
+                id=session_id, title="", status="active", owner_role=auth.role,
+                owner_student_id=auth.student_id, display_name=auth.display_name,
+                system_prompt_version="", created_at=None, updated_at=None, last_message_at=None,
+            ),
+            user_message=serialized_user_message,
+            assistant_message=_save_error_reply(
+                session_id,
+                "I'm unable to access institutional data right now. Please try again in a moment.",
+            ),
+        )
+
+    result = generate_chatbot_response(
+        role=auth.role,
+        message=content,
+        chat_history=chat_history,
+        session_id=session_id,
+        auth_subject=auth.subject,
+        auth_display_name=auth.display_name,
+        auth_student_id=auth.student_id,
+        prebuilt_context=prebuilt_context,
+    )
+    grounded_answer = result["content"]
+    answer_source = result["source"]
+
+    with db_session_scope() as db:
+        repository = EventRepository(db)
+        assistant_message = repository.add_copilot_chat_message(
+            {
+                "session_id": session_id,
+                "role": "assistant",
+                "message_type": "text",
+                "content": grounded_answer,
+                "metadata_json": {
+                    "phase": COPILOT_PHASE_LABEL,
+                    "response_mode": "grounded_tool_answer",
+                    "answer_source": answer_source,
+                },
+            },
+            commit=False,
+        )
+        db.flush()
+        repository.add_copilot_audit_event(
+            {
+                "session_id": session_id,
+                "message_id": int(assistant_message.id),
+                "owner_subject": auth.subject,
+                "owner_role": auth.role,
+                "owner_student_id": auth.student_id,
+                "detected_intent": "v2_engine",
+                "resolved_intent": answer_source,
+                "memory_applied": False,
+                "tool_summaries": [],
+                "refusal_reason": None,
+            },
+            commit=False,
+        )
+        response_time = assistant_message.created_at or datetime.now(UTC)
+        repository.update_copilot_chat_session(
+            session_id,
+            {"last_message_at": response_time, "updated_at": response_time},
+            commit=False,
+            refresh=False,
+        )
+        db.commit()
+        session = repository.get_copilot_chat_session(session_id)
+        db.refresh(assistant_message)
+        serialized_session = _serialize_copilot_session(session)
+        serialized_assistant_message = _serialize_copilot_message(assistant_message)
+
+    return CopilotChatReplyResponse(
+        session=serialized_session,
+        user_message=serialized_user_message,
+        assistant_message=serialized_assistant_message,
+    )
+
+
+def send_copilot_message_legacy(
+    session_id: int,
+    payload: CopilotChatMessageRequest,
     db: Session = Depends(get_db),
     auth: AuthContext = Depends(require_roles("student", "counsellor", "admin", "system")),
 ) -> CopilotChatReplyResponse:
@@ -148,6 +318,38 @@ def send_copilot_message(
         {"role": str(msg.role), "content": str(msg.content)}
         for msg in session_messages
     ]
+    try:
+        user_message = repository.add_copilot_chat_message(
+            {
+                "session_id": session_id,
+                "role": "user",
+                "message_type": "text",
+                "content": content,
+                "metadata_json": {
+                    "owner_role": auth.role,
+                    "owner_student_id": auth.student_id,
+                },
+            },
+            commit=False,
+        )
+        now = datetime.now(UTC)
+        repository.update_copilot_chat_session(
+            session_id,
+            {"last_message_at": now, "updated_at": now},
+            commit=False,
+            refresh=False,
+        )
+        db.commit()
+        db.refresh(user_message)
+        serialized_user_message = _serialize_copilot_message(user_message)
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        try:
+            db.rollback()
+        except Exception:
+            pass
 
     # ── New two-tier engine ──
     from src.api.chatbot_engine import generate_chatbot_response
@@ -166,19 +368,6 @@ def send_copilot_message(
     answer_source = result["source"]
 
     try:
-        user_message = repository.add_copilot_chat_message(
-            {
-                "session_id": session_id,
-                "role": "user",
-                "message_type": "text",
-                "content": content,
-                "metadata_json": {
-                    "owner_role": auth.role,
-                    "owner_student_id": auth.student_id,
-                },
-            },
-            commit=False,
-        )
         assistant_message = repository.add_copilot_chat_message(
             {
                 "session_id": session_id,
@@ -193,6 +382,7 @@ def send_copilot_message(
             },
             commit=False,
         )
+        db.flush()
         repository.add_copilot_audit_event(
             {
                 "session_id": session_id,
@@ -208,18 +398,22 @@ def send_copilot_message(
             },
             commit=False,
         )
-        session.last_message_at = assistant_message.created_at or datetime.now(UTC)
-        session.updated_at = assistant_message.created_at or datetime.now(UTC)
+        response_time = assistant_message.created_at or datetime.now(UTC)
+        repository.update_copilot_chat_session(
+            session_id,
+            {"last_message_at": response_time, "updated_at": response_time},
+            commit=False,
+            refresh=False,
+        )
         db.commit()
-        db.refresh(session)
-        db.refresh(user_message)
+        session = repository.get_copilot_chat_session(session_id)
         db.refresh(assistant_message)
     except Exception:
         db.rollback()
         raise
     return CopilotChatReplyResponse(
         session=_serialize_copilot_session(session),
-        user_message=_serialize_copilot_message(user_message),
+        user_message=serialized_user_message,
         assistant_message=_serialize_copilot_message(assistant_message),
     )
 
@@ -332,3 +526,34 @@ def _resolve_copilot_refusal_reason(resolved_intent: str, limitations: list[str]
     if any("not authorized" in item for item in limitations):
         return "role_scope_violation"
     return None
+
+
+def _save_error_reply(session_id: int, content: str) -> CopilotChatMessageItem:
+    """Persist a graceful error message to the DB so the user sees it in the chat."""
+    try:
+        with db_session_scope() as db:
+            repository = EventRepository(db)
+            msg = repository.add_copilot_chat_message(
+                {
+                    "session_id": session_id,
+                    "role": "assistant",
+                    "message_type": "text",
+                    "content": content,
+                    "metadata_json": {"response_mode": "error_fallback"},
+                },
+                commit=True,
+            )
+            return _serialize_copilot_message(msg)
+    except Exception as save_err:
+        print(f"[copilot] Failed to save error reply: {save_err}", flush=True)
+        # Return a transient message that won't be persisted
+        return CopilotChatMessageItem(
+            id=0,
+            session_id=session_id,
+            role="assistant",
+            message_type="text",
+            content=content,
+            metadata_json={"response_mode": "error_fallback"},
+            created_at=datetime.now(UTC),
+        )
+

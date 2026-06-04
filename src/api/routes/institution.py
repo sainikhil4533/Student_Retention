@@ -1,3 +1,6 @@
+from threading import Lock
+from time import monotonic
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -14,6 +17,7 @@ from src.api.schemas import (
     AcademicSubjectPressureItem,
     CounsellorAccountabilityItem,
     CounsellorAccountabilityResponse,
+    InstitutionAcademicPressureResponse,
     InstitutionBucketSummary,
     InstitutionHeatmapCell,
     InstitutionRiskOverviewResponse,
@@ -22,13 +26,129 @@ from src.api.schemas import (
     StudentDirectoryItem,
     StudentDirectoryResponse,
 )
-from src.api.student_intelligence import build_current_student_intelligence
 from src.api.time_utils import to_ist
 from src.db.database import get_db
 from src.db.repository import EventRepository
 
 
 router = APIRouter(prefix="/institution", tags=["institution"])
+_INSTITUTION_OVERVIEW_CACHE_TTL_SECONDS = 300.0
+_INSTITUTION_OVERVIEW_CACHE_LOCK = Lock()
+_INSTITUTION_OVERVIEW_CACHE: dict[str, tuple[float, InstitutionRiskOverviewResponse]] = {}
+_INSTITUTION_ACADEMIC_PRESSURE_CACHE_LOCK = Lock()
+_INSTITUTION_ACADEMIC_PRESSURE_CACHE: dict[
+    str, tuple[float, InstitutionAcademicPressureResponse]
+] = {}
+
+
+def _overview_cache_key(*, imported_only: bool, include_academic_pressure: bool) -> str:
+    return f"risk-overview:{int(imported_only)}:{int(include_academic_pressure)}"
+
+
+def _academic_pressure_cache_key(*, imported_only: bool) -> str:
+    return f"academic-pressure:{int(imported_only)}"
+
+
+def _overview_cache_lookup(key: str) -> InstitutionRiskOverviewResponse | None:
+    with _INSTITUTION_OVERVIEW_CACHE_LOCK:
+        entry = _INSTITUTION_OVERVIEW_CACHE.get(key)
+        if entry is None:
+            return None
+        created_at, value = entry
+        if monotonic() - created_at > _INSTITUTION_OVERVIEW_CACHE_TTL_SECONDS:
+            return None
+        return value
+
+
+def _overview_cache_store(
+    key: str,
+    value: InstitutionRiskOverviewResponse,
+) -> InstitutionRiskOverviewResponse:
+    with _INSTITUTION_OVERVIEW_CACHE_LOCK:
+        _INSTITUTION_OVERVIEW_CACHE[key] = (monotonic(), value)
+    return value
+
+
+def _academic_pressure_cache_lookup(
+    key: str,
+) -> InstitutionAcademicPressureResponse | None:
+    with _INSTITUTION_ACADEMIC_PRESSURE_CACHE_LOCK:
+        entry = _INSTITUTION_ACADEMIC_PRESSURE_CACHE.get(key)
+        if entry is None:
+            return None
+        created_at, value = entry
+        if monotonic() - created_at > _INSTITUTION_OVERVIEW_CACHE_TTL_SECONDS:
+            return None
+        return value
+
+
+def _academic_pressure_cache_store(
+    key: str,
+    value: InstitutionAcademicPressureResponse,
+) -> InstitutionAcademicPressureResponse:
+    with _INSTITUTION_ACADEMIC_PRESSURE_CACHE_LOCK:
+        _INSTITUTION_ACADEMIC_PRESSURE_CACHE[key] = (monotonic(), value)
+    return value
+
+
+def _latest_by_student(rows: list[object]) -> dict[int, object]:
+    latest: dict[int, object] = {}
+    for row in rows:
+        latest.setdefault(int(row.student_id), row)
+    return latest
+
+
+def _rows_by_student(rows: list[object]) -> dict[int, list[object]]:
+    grouped: dict[int, list[object]] = {}
+    for row in rows:
+        grouped.setdefault(int(row.student_id), []).append(row)
+    return grouped
+
+
+def _prediction_primary_risk_type(prediction) -> str:
+    payload = getattr(prediction, "risk_type", None) or {}
+    if not isinstance(payload, dict):
+        return "unavailable"
+    value = payload.get("primary_type")
+    if value in (None, ""):
+        return "unavailable"
+    return str(value)
+
+
+def _prediction_has_critical_trigger(prediction) -> bool:
+    payload = getattr(prediction, "trigger_alerts", None) or {}
+    if not isinstance(payload, dict):
+        return False
+    return bool(payload.get("has_critical_trigger"))
+
+
+def _resolve_latest_prediction_scope(
+    repository: EventRepository,
+    *,
+    imported_only: bool,
+) -> list[object]:
+    latest_predictions = repository.get_latest_predictions_for_all_students()
+    if not imported_only:
+        return latest_predictions
+    imported_student_ids = {
+        int(profile.student_id) for profile in repository.get_imported_student_profiles()
+    }
+    return [
+        prediction
+        for prediction in latest_predictions
+        if int(prediction.student_id) in imported_student_ids
+    ]
+
+
+def _empty_academic_pressure_summary() -> dict:
+    return {
+        "total_students_with_overall_shortage": 0,
+        "total_students_with_i_grade_risk": 0,
+        "total_students_with_r_grade_risk": 0,
+        "top_subject_pressure": [],
+        "branch_pressure": [],
+        "semester_pressure": [],
+    }
 
 
 def _academic_pressure_summary(repository: EventRepository, *, student_ids: set[int] | None = None) -> dict:
@@ -58,50 +178,60 @@ def _academic_pressure_summary(repository: EventRepository, *, student_ids: set[
 @router.get("/risk-overview", response_model=InstitutionRiskOverviewResponse)
 def get_institution_risk_overview(
     imported_only: bool = False,
+    include_academic_pressure: bool = True,
     db: Session = Depends(get_db),
     auth: AuthContext = Depends(require_roles("admin", "system")),
 ) -> InstitutionRiskOverviewResponse:
+    cache_key = _overview_cache_key(
+        imported_only=imported_only,
+        include_academic_pressure=include_academic_pressure,
+    )
+    cached = _overview_cache_lookup(cache_key)
+    if cached is not None:
+        return cached
+
     repository = EventRepository(db)
-    latest_predictions = repository.get_latest_predictions_for_all_students()
-    if imported_only:
-        imported_student_ids = {
-            int(profile.student_id) for profile in repository.get_imported_student_profiles()
-        }
-        latest_predictions = [
-            prediction
-            for prediction in latest_predictions
-            if int(prediction.student_id) in imported_student_ids
-        ]
+    latest_predictions = _resolve_latest_prediction_scope(
+        repository,
+        imported_only=imported_only,
+    )
+
+    student_ids = {int(prediction.student_id) for prediction in latest_predictions}
+    profiles_by_student = (
+        repository.get_student_profiles_for_students(student_ids)
+        if include_academic_pressure
+        else {}
+    )
+    latest_erp_by_student = repository.get_latest_erp_events_for_students(student_ids)
+    latest_intervention_by_student = {
+        int(row.student_id): row
+        for row in repository.get_latest_intervention_actions_for_students(student_ids)
+    }
+    latest_alert_by_student = {
+        int(row.student_id): row
+        for row in repository.get_latest_alert_events_for_students(student_ids)
+    }
+    latest_guardian_alert_by_student = _latest_by_student(
+        repository.get_guardian_alert_events_for_students(student_ids)
+    )
+    repeated_high_risk_count_by_student: dict[int, int] = {}
+    if include_academic_pressure:
+        for row in repository.get_prediction_history_for_students(student_ids):
+            if int(row.final_predicted_class) != 1:
+                continue
+            student_id = int(row.student_id)
+            repeated_high_risk_count_by_student[student_id] = (
+                repeated_high_risk_count_by_student.get(student_id, 0) + 1
+            )
 
     student_rows: list[dict] = []
     for prediction in latest_predictions:
         student_id = int(prediction.student_id)
-        profile = repository.get_student_profile(student_id)
-        latest_erp_event = repository.get_latest_erp_event(student_id)
-        latest_finance_event = repository.get_latest_finance_event(student_id)
-        intervention_history = repository.get_intervention_history_for_student(student_id)
-        latest_intervention = intervention_history[0] if intervention_history else None
-        alert_history = repository.get_alert_history_for_student(student_id)
-        latest_alert = alert_history[0] if alert_history else None
-        guardian_alert_history = repository.get_guardian_alert_history_for_student(student_id)
-        latest_guardian_alert = guardian_alert_history[0] if guardian_alert_history else None
-        lms_events = repository.get_lms_events_for_student(student_id)
-        prediction_rows = repository.get_prediction_history_for_student(student_id)
-
-        intelligence = None
-        if lms_events and latest_erp_event is not None:
-            intelligence = build_current_student_intelligence(
-                prediction_rows=prediction_rows,
-                latest_prediction=prediction,
-                lms_events=lms_events,
-                erp_event=latest_erp_event,
-                erp_history=repository.get_erp_event_history_for_student(student_id),
-                finance_event=latest_finance_event,
-                finance_history=repository.get_finance_event_history_for_student(student_id),
-                previous_prediction=prediction_rows[1]
-                if len(prediction_rows) >= 2
-                else None,
-            )
+        profile = profiles_by_student.get(student_id)
+        latest_erp_event = latest_erp_by_student.get(student_id)
+        latest_intervention = latest_intervention_by_student.get(student_id)
+        latest_alert = latest_alert_by_student.get(student_id)
+        latest_guardian_alert = latest_guardian_alert_by_student.get(student_id)
 
         latest_intervention_status = (
             str(latest_intervention.action_status).strip().lower()
@@ -125,16 +255,8 @@ def get_institution_risk_overview(
                 "income_label": _resolve_profile_context_label(profile, "income", "unknown_income"),
                 "risk_level": classify_risk_level(float(prediction.final_risk_probability)),
                 "final_risk_probability": float(prediction.final_risk_probability),
-                "risk_type": (
-                    str(intelligence["risk_type"]["primary_type"])
-                    if intelligence is not None
-                    else "unavailable"
-                ),
-                "has_critical_trigger": (
-                    bool(intelligence["trigger_alerts"]["has_critical_trigger"])
-                    if intelligence is not None
-                    else False
-                ),
+                "risk_type": _prediction_primary_risk_type(prediction),
+                "has_critical_trigger": _prediction_has_critical_trigger(prediction),
                 "followup_overdue": followup_overdue,
                 "has_guardian_escalation": latest_guardian_alert is not None,
                 "is_reopened_case": bool(
@@ -143,21 +265,22 @@ def get_institution_risk_overview(
                     and int(prediction.final_predicted_class) == 1
                     and latest_intervention_status == "resolved"
                 ),
-                "is_repeated_risk_case": len(
-                    [row for row in prediction_rows if int(row.final_predicted_class) == 1]
-                )
-                >= 2,
+                "is_repeated_risk_case": repeated_high_risk_count_by_student.get(student_id, 0) >= 2,
                 "outcome_status": _resolve_outcome_status(profile),
             }
         )
 
     summary = build_institution_risk_overview(student_rows=student_rows)
-    academic_pressure = _academic_pressure_summary(
-        repository,
-        student_ids={int(row["student_id"]) for row in student_rows},
+    academic_pressure = (
+        _academic_pressure_summary(
+            repository,
+            student_ids={int(row["student_id"]) for row in student_rows},
+        )
+        if include_academic_pressure
+        else _empty_academic_pressure_summary()
     )
 
-    return InstitutionRiskOverviewResponse(
+    response = InstitutionRiskOverviewResponse(
         generated_at=to_ist(summary["generated_at"]),
         total_students=int(summary["total_students"]),
         total_high_risk_students=int(summary["total_high_risk_students"]),
@@ -204,6 +327,45 @@ def get_institution_risk_overview(
         ],
         summary=str(summary["summary"]),
     )
+    return _overview_cache_store(cache_key, response)
+
+
+@router.get("/academic-pressure", response_model=InstitutionAcademicPressureResponse)
+def get_institution_academic_pressure(
+    imported_only: bool = False,
+    db: Session = Depends(get_db),
+    auth: AuthContext = Depends(require_roles("admin", "system")),
+) -> InstitutionAcademicPressureResponse:
+    cache_key = _academic_pressure_cache_key(imported_only=imported_only)
+    cached = _academic_pressure_cache_lookup(cache_key)
+    if cached is not None:
+        return cached
+
+    repository = EventRepository(db)
+    latest_predictions = _resolve_latest_prediction_scope(
+        repository,
+        imported_only=imported_only,
+    )
+    student_ids = {int(prediction.student_id) for prediction in latest_predictions}
+    academic_pressure = _academic_pressure_summary(
+        repository,
+        student_ids=student_ids,
+    )
+    response = InstitutionAcademicPressureResponse(
+        total_students_with_overall_shortage=int(
+            academic_pressure["total_students_with_overall_shortage"]
+        ),
+        total_students_with_i_grade_risk=int(
+            academic_pressure["total_students_with_i_grade_risk"]
+        ),
+        total_students_with_r_grade_risk=int(
+            academic_pressure["total_students_with_r_grade_risk"]
+        ),
+        top_subject_pressure=list(academic_pressure["top_subject_pressure"]),
+        branch_pressure=list(academic_pressure["branch_pressure"]),
+        semester_pressure=list(academic_pressure["semester_pressure"]),
+    )
+    return _academic_pressure_cache_store(cache_key, response)
 
 
 def _resolve_outcome_status(profile) -> str:
@@ -274,10 +436,11 @@ def list_students_by_risk(
     from src.api.routes.cases import _build_case_state_from_rows
 
     repository = EventRepository(db)
-    all_predictions = repository.get_latest_predictions_for_all_students()
-    imported_student_ids = {
-        int(profile.student_id) for profile in repository.get_imported_student_profiles()
-    }
+    imported_profiles = repository.get_imported_student_profiles()
+    profiles_by_student = {int(profile.student_id): profile for profile in imported_profiles}
+    imported_student_ids = set(profiles_by_student)
+    all_predictions = repository.get_latest_predictions_for_students(imported_student_ids)
+    latest_erp_by_student = repository.get_latest_erp_events_for_students(imported_student_ids)
 
     filtered_students = []
     for prediction in all_predictions:
@@ -289,8 +452,8 @@ def list_students_by_risk(
         if risk_level and risk_level.upper() != "ALL" and current_risk_level != risk_level.upper():
             continue
             
-        profile = repository.get_student_profile(student_id)
-        latest_erp = repository.get_latest_erp_event(student_id)
+        profile = profiles_by_student.get(student_id)
+        latest_erp = latest_erp_by_student.get(student_id)
         
         student_branch = resolve_department_label(profile, latest_erp)
         if branch and branch.lower() != student_branch.lower():
@@ -315,6 +478,26 @@ def list_students_by_risk(
     start_idx = (page - 1) * page_size
     end_idx = start_idx + page_size
     paginated_batch = filtered_students[start_idx:end_idx]
+    paginated_student_ids = {student_id for student_id, _, _, _ in paginated_batch}
+    latest_intervention_by_student = _latest_by_student(
+        repository.get_latest_intervention_actions_for_students(paginated_student_ids)
+    )
+    intervention_history_by_student = _rows_by_student(
+        repository.get_intervention_actions_for_students(paginated_student_ids)
+    )
+    latest_finance_by_student = repository.get_latest_finance_events_for_students(paginated_student_ids)
+    prediction_history_by_student = _rows_by_student(
+        repository.get_prediction_history_for_students(paginated_student_ids)
+    )
+    latest_warning_by_student = _latest_by_student(
+        repository.get_latest_student_warning_events_for_students(paginated_student_ids)
+    )
+    latest_alert_by_student = _latest_by_student(
+        repository.get_latest_alert_events_for_students(paginated_student_ids)
+    )
+    latest_guardian_alert_by_student = _latest_by_student(
+        repository.get_guardian_alert_events_for_students(paginated_student_ids)
+    )
 
     students_out = []
     for student_id, prediction, profile, latest_erp in paginated_batch:
@@ -324,22 +507,19 @@ def list_students_by_risk(
         if overall_attendance is not None:
             overall_attendance = float(overall_attendance) * 100
 
-        intervention_history = repository.get_intervention_history_for_student(student_id)
-        latest_intervention = intervention_history[0] if intervention_history else None
+        intervention_history = intervention_history_by_student.get(student_id, [])
+        latest_intervention = latest_intervention_by_student.get(student_id)
         latest_intervention_status = (
             str(latest_intervention.action_status).strip().lower()
             if latest_intervention is not None else None
         )
 
-        lms_events = repository.get_lms_events_for_student(student_id)
-        latest_finance = repository.get_latest_finance_event(student_id)
-        prediction_history = repository.get_prediction_history_for_student(student_id)
-        warning_history = repository.get_student_warning_history_for_student(student_id)
-        latest_warning = warning_history[0] if warning_history else None
-        alert_history = repository.get_alert_history_for_student(student_id)
-        latest_alert = alert_history[0] if alert_history else None
-        guardian_alert_history = repository.get_guardian_alert_history_for_student(student_id)
-        latest_guardian_alert = guardian_alert_history[0] if guardian_alert_history else None
+        lms_events = []
+        latest_finance = latest_finance_by_student.get(student_id)
+        prediction_history = prediction_history_by_student.get(student_id, [prediction])
+        latest_warning = latest_warning_by_student.get(student_id)
+        latest_alert = latest_alert_by_student.get(student_id)
+        latest_guardian_alert = latest_guardian_alert_by_student.get(student_id)
 
         case_state_obj = _build_case_state_from_rows(
             student_id=student_id,
@@ -397,9 +577,15 @@ def get_counsellor_accountability(
 
     repository = EventRepository(db)
     all_predictions = repository.get_latest_predictions_for_all_students()
-    imported_ids = {
-        int(p.student_id) for p in repository.get_imported_student_profiles()
-    }
+    imported_profiles = repository.get_imported_student_profiles()
+    profiles_by_student = {int(p.student_id): p for p in imported_profiles}
+    imported_ids = set(profiles_by_student)
+    latest_intervention_by_student = _latest_by_student(
+        repository.get_latest_intervention_actions_for_students(imported_ids)
+    )
+    latest_alert_by_student = _latest_by_student(
+        repository.get_latest_alert_events_for_students(imported_ids)
+    )
 
     # Group students by counsellor
     counsellor_groups: dict[str, list[dict]] = defaultdict(list)
@@ -409,20 +595,18 @@ def get_counsellor_accountability(
         if student_id not in imported_ids:
             continue
 
-        profile = repository.get_student_profile(student_id)
+        profile = profiles_by_student.get(student_id)
         counsellor_name = getattr(profile, "counsellor_name", None) or "Unassigned"
         counsellor_email = getattr(profile, "counsellor_email", None)
         risk_level = classify_risk_level(float(prediction.final_risk_probability))
 
-        intervention_history = repository.get_intervention_history_for_student(student_id)
-        latest_intervention = intervention_history[0] if intervention_history else None
+        latest_intervention = latest_intervention_by_student.get(student_id)
         latest_status = (
             str(latest_intervention.action_status).strip().lower()
             if latest_intervention else None
         )
 
-        alert_history = repository.get_alert_history_for_student(student_id)
-        latest_alert = alert_history[0] if alert_history else None
+        latest_alert = latest_alert_by_student.get(student_id)
 
         followup_overdue = bool(
             latest_alert is not None

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 from src.alerts.email_service import send_guardian_email
 from src.alerts.guardian_messaging_service import send_guardian_mobile_message
-from src.db.database import SessionLocal
+from src.db.database import db_session_scope
 from src.db.repository import EventRepository
 
 
@@ -17,10 +17,18 @@ EMAIL_MAX_RETRIES = max(1, int(os.getenv("EMAIL_MAX_RETRIES", "3")))
 EMAIL_RETRY_DELAY_SECONDS = float(os.getenv("EMAIL_RETRY_DELAY_SECONDS", "2"))
 
 
-def dispatch_guardian_alert(guardian_alert_event_id: int) -> None:
-    db = SessionLocal()
+def dispatch_guardian_alert(
+    guardian_alert_event_id: int,
+    repository: EventRepository | None = None,
+) -> None:
+    db = None
     try:
-        repository = EventRepository(db)
+        if repository is None:
+            with db_session_scope() as db:
+                return dispatch_guardian_alert(
+                    guardian_alert_event_id=guardian_alert_event_id,
+                    repository=EventRepository(db),
+                )
         alert_event = repository.get_guardian_alert_event(guardian_alert_event_id)
         if alert_event is None:
             return
@@ -93,4 +101,5 @@ def dispatch_guardian_alert(guardian_alert_event_id: int) -> None:
             f"status={result['status']} retries={updated_event.retry_count if updated_event else 'n/a'}"
         )
     finally:
-        db.close()
+        if db is not None:
+            db.close()

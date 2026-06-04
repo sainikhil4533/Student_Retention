@@ -6,7 +6,7 @@ import time
 from dotenv import load_dotenv
 
 from src.alerts.email_service import send_alert_email
-from src.db.database import SessionLocal
+from src.db.database import db_session_scope
 from src.db.repository import EventRepository
 
 
@@ -16,10 +16,24 @@ EMAIL_MAX_RETRIES = max(1, int(os.getenv("EMAIL_MAX_RETRIES", "3")))
 EMAIL_RETRY_DELAY_SECONDS = float(os.getenv("EMAIL_RETRY_DELAY_SECONDS", "2"))
 
 
-def dispatch_alert_email(alert_event_id: int, student_id: int, prediction_history_id: int, alert_type: str) -> None:
-    db = SessionLocal()
+def dispatch_alert_email(
+    alert_event_id: int,
+    student_id: int,
+    prediction_history_id: int,
+    alert_type: str,
+    repository: EventRepository | None = None,
+) -> None:
+    db = None
     try:
-        repository = EventRepository(db)
+        if repository is None:
+            with db_session_scope() as db:
+                return dispatch_alert_email(
+                    alert_event_id=alert_event_id,
+                    student_id=student_id,
+                    prediction_history_id=prediction_history_id,
+                    alert_type=alert_type,
+                    repository=EventRepository(db),
+                )
         prediction_record = repository.get_prediction_history_by_id(prediction_history_id)
         alert_event = repository.get_alert_event(alert_event_id)
         if prediction_record is None:
@@ -81,4 +95,5 @@ def dispatch_alert_email(alert_event_id: int, student_id: int, prediction_histor
             f"status={email_result['status']} retries={updated_alert.retry_count if updated_alert else 'n/a'}"
         )
     finally:
-        db.close()
+        if db is not None:
+            db.close()

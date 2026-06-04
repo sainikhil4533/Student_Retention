@@ -1,6 +1,8 @@
 from datetime import UTC, datetime
 import csv
 from io import StringIO
+from threading import Lock
+from time import monotonic
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import PlainTextResponse
@@ -29,6 +31,26 @@ from src.reporting.faculty_summary_snapshot_service import (
 
 router = APIRouter(prefix="/reports", tags=["reports"])
 _SYSTEM_AUTH = AuthContext(role="system", subject="system")
+_REPORT_CACHE_TTL_SECONDS = 300.0
+_REPORT_CACHE_LOCK = Lock()
+_REPORT_CACHE: dict[str, tuple[float, object]] = {}
+
+
+def _report_cache_lookup(key: str) -> object | None:
+    with _REPORT_CACHE_LOCK:
+        entry = _REPORT_CACHE.get(key)
+        if entry is None:
+            return None
+        created_at, value = entry
+        if monotonic() - created_at > _REPORT_CACHE_TTL_SECONDS:
+            return None
+        return value
+
+
+def _report_cache_store(key: str, value: object) -> object:
+    with _REPORT_CACHE_LOCK:
+        _REPORT_CACHE[key] = (monotonic(), value)
+    return value
 
 
 def _csv_response(filename: str, fieldnames: list[str], rows: list[dict]) -> PlainTextResponse:
@@ -48,12 +70,23 @@ def get_operational_report_overview(
     db: Session = Depends(get_db),
     auth: AuthContext = Depends(require_roles("admin", "system")),
 ) -> OperationalReportOverviewResponse:
-    return OperationalReportOverviewResponse(
+    cache_key = f"operations-overview:{int(imported_only)}"
+    cached = _report_cache_lookup(cache_key)
+    if cached is not None:
+        return cached  # type: ignore[return-value]
+
+    response = OperationalReportOverviewResponse(
         generated_at=to_ist(datetime.now(UTC)),
         summary=get_faculty_summary(db=db, auth=_SYSTEM_AUTH),
-        institution_overview=get_institution_risk_overview(db=db, imported_only=imported_only, auth=_SYSTEM_AUTH),
+        institution_overview=get_institution_risk_overview(
+            db=db,
+            imported_only=imported_only,
+            include_academic_pressure=False,
+            auth=_SYSTEM_AUTH,
+        ),
         intervention_effectiveness=get_intervention_effectiveness_analytics(db=db, auth=_SYSTEM_AUTH),
     )
+    return _report_cache_store(cache_key, response)  # type: ignore[return-value]
 
 
 @router.post("/faculty-summary/generate", response_model=FacultySummarySnapshotItem)
@@ -248,12 +281,25 @@ def get_import_coverage_report(
     db: Session = Depends(get_db),
     auth: AuthContext = Depends(require_roles("admin", "system")),
 ) -> ImportCoverageResponse:
+    cache_key = f"import-coverage:{int(imported_only)}:{limit}"
+    cached = _report_cache_lookup(cache_key)
+    if cached is not None:
+        return cached  # type: ignore[return-value]
+
     repository = EventRepository(db)
     profiles = (
         repository.get_imported_student_profiles()
         if imported_only
         else repository.get_all_student_profiles()
     )
+    student_ids = {int(profile.student_id) for profile in profiles}
+    lms_latest_days = repository.get_latest_lms_event_days_for_students(student_ids)
+    erp_by_student = repository.get_latest_erp_events_for_students(student_ids)
+    finance_by_student = repository.get_latest_finance_events_for_students(student_ids)
+    prediction_ids = {
+        int(row.student_id)
+        for row in repository.get_latest_predictions_for_students(student_ids)
+    }
 
     students: list[ImportCoverageStudentItem] = []
     students_missing_lms = 0
@@ -266,10 +312,10 @@ def get_import_coverage_report(
 
     for profile in profiles:
         student_id = int(profile.student_id)
-        has_lms_data = bool(repository.get_lms_events_for_student(student_id))
-        has_erp_data = repository.get_latest_erp_event(student_id) is not None
-        has_finance_data = repository.get_latest_finance_event(student_id) is not None
-        has_prediction = repository.get_latest_prediction_for_student(student_id) is not None
+        has_lms_data = student_id in lms_latest_days
+        has_erp_data = student_id in erp_by_student
+        has_finance_data = student_id in finance_by_student
+        has_prediction = student_id in prediction_ids
         if has_prediction:
             scored_students += 1
 
@@ -312,7 +358,7 @@ def get_import_coverage_report(
         )
 
     total_students = len(profiles)
-    return ImportCoverageResponse(
+    response = ImportCoverageResponse(
         total_imported_students=total_students,
         scored_students=scored_students,
         unscored_students=max(total_students - scored_students, 0),
@@ -324,3 +370,4 @@ def get_import_coverage_report(
         students_missing_counsellor_email=students_missing_counsellor_email,
         students=students[:limit],
     )
+    return _report_cache_store(cache_key, response)  # type: ignore[return-value]

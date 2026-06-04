@@ -12,25 +12,56 @@ export default defineConfig({
     port: 4173,
   },
   build: {
+    // Reduce initial bundle size
+    target: "ES2020",
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+      },
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Core vendor chunks
+          if (id.includes("node_modules/react")) {
+            return "vendor-react";
+          }
           if (id.includes("node_modules/react-router-dom")) {
-            return "router";
+            return "vendor-router";
           }
           if (id.includes("node_modules/@tanstack/react-query")) {
-            return "query";
+            return "vendor-query";
           }
+          // UI & visualization
           if (id.includes("node_modules/recharts")) {
-            return "charts";
+            return "vendor-charts";
           }
           if (id.includes("node_modules/lucide-react")) {
-            return "icons";
+            return "vendor-icons";
           }
-          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
-            return "react";
+          if (id.includes("node_modules/framer-motion")) {
+            return "vendor-motion";
           }
-          return undefined;
+          // Page-specific chunks
+          if (id.includes("/pages/admin")) {
+            return "pages-admin";
+          }
+          if (id.includes("/pages/counsellor")) {
+            return "pages-counsellor";
+          }
+          if (id.includes("/pages/student")) {
+            return "pages-student";
+          }
+          if (id.includes("/pages/login")) {
+            return "pages-auth";
+          }
+          if (id.includes("/pages/chat")) {
+            return "pages-chat";
+          }
+          if (id.includes("/components")) {
+            return "components";
+          }
         },
       },
     },

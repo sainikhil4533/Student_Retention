@@ -50,6 +50,7 @@ def score_student(
                 prediction_history_id=int(result["prediction_history_id"]),
                 warning_type=str(result["student_warning_type"]),
                 recipient=str(payload.demographics.student_email or "unconfigured"),
+                repository=repository,
             )
         if (
             result.get("alert_triggered")
@@ -61,6 +62,7 @@ def score_student(
                 student_id=payload.demographics.student_id,
                 prediction_history_id=int(result["prediction_history_id"]),
                 alert_type=str(result["alert_type"]),
+                repository=repository,
             )
         result["recovery_deadline"] = to_ist(result.get("recovery_deadline"))
         return ScoreStudentResponse(**result)

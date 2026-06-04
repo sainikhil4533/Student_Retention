@@ -10,13 +10,13 @@ from dotenv import load_dotenv
 from src.alerts.alert_dispatcher import dispatch_alert_email
 from src.alerts.guardian_alert_dispatcher import dispatch_guardian_alert
 from src.alerts.student_warning_dispatcher import dispatch_student_warning_email
-from src.db.database import SessionLocal, run_with_retry
+from src.db.database import db_session_scope, run_with_retry
 from src.db.repository import EventRepository
 
 
 load_dotenv()
 
-JOB_QUEUE_POLL_SECONDS = float(os.getenv("JOB_QUEUE_POLL_SECONDS", "5"))
+JOB_QUEUE_POLL_SECONDS = max(10.0, float(os.getenv("JOB_QUEUE_POLL_SECONDS", "10")))
 ENABLE_BACKGROUND_JOB_WORKER = (
     os.getenv("ENABLE_BACKGROUND_JOB_WORKER", "true").strip().lower()
     not in {"0", "false", "no", "off"}
@@ -34,10 +34,9 @@ def enqueue_student_warning_email_job(
     prediction_history_id: int,
     warning_type: str,
     recipient: str,
+    repository: EventRepository | None = None,
 ) -> int:
-    db = SessionLocal()
-    try:
-        repository = EventRepository(db)
+    if repository is not None:
         job = repository.enqueue_background_job(
             job_type=JOB_TYPE_STUDENT_WARNING_EMAIL,
             dedupe_key=f"{JOB_TYPE_STUDENT_WARNING_EMAIL}:{warning_event_id}",
@@ -50,8 +49,21 @@ def enqueue_student_warning_email_job(
             },
         )
         return int(job.id)
-    finally:
-        db.close()
+
+    with db_session_scope() as db:
+        local_repository = EventRepository(db)
+        job = local_repository.enqueue_background_job(
+            job_type=JOB_TYPE_STUDENT_WARNING_EMAIL,
+            dedupe_key=f"{JOB_TYPE_STUDENT_WARNING_EMAIL}:{warning_event_id}",
+            payload={
+                "warning_event_id": warning_event_id,
+                "student_id": student_id,
+                "prediction_history_id": prediction_history_id,
+                "warning_type": warning_type,
+                "recipient": recipient,
+            },
+        )
+        return int(job.id)
 
 
 def enqueue_faculty_alert_email_job(
@@ -60,10 +72,9 @@ def enqueue_faculty_alert_email_job(
     student_id: int,
     prediction_history_id: int,
     alert_type: str,
+    repository: EventRepository | None = None,
 ) -> int:
-    db = SessionLocal()
-    try:
-        repository = EventRepository(db)
+    if repository is not None:
         job = repository.enqueue_background_job(
             job_type=JOB_TYPE_FACULTY_ALERT_EMAIL,
             dedupe_key=f"{JOB_TYPE_FACULTY_ALERT_EMAIL}:{alert_event_id}",
@@ -75,17 +86,28 @@ def enqueue_faculty_alert_email_job(
             },
         )
         return int(job.id)
-    finally:
-        db.close()
+
+    with db_session_scope() as db:
+        local_repository = EventRepository(db)
+        job = local_repository.enqueue_background_job(
+            job_type=JOB_TYPE_FACULTY_ALERT_EMAIL,
+            dedupe_key=f"{JOB_TYPE_FACULTY_ALERT_EMAIL}:{alert_event_id}",
+            payload={
+                "alert_event_id": alert_event_id,
+                "student_id": student_id,
+                "prediction_history_id": prediction_history_id,
+                "alert_type": alert_type,
+            },
+        )
+        return int(job.id)
 
 
 def enqueue_guardian_alert_delivery_job(
     *,
     guardian_alert_event_id: int,
+    repository: EventRepository | None = None,
 ) -> int:
-    db = SessionLocal()
-    try:
-        repository = EventRepository(db)
+    if repository is not None:
         job = repository.enqueue_background_job(
             job_type=JOB_TYPE_GUARDIAN_ALERT_DELIVERY,
             dedupe_key=f"{JOB_TYPE_GUARDIAN_ALERT_DELIVERY}:{guardian_alert_event_id}",
@@ -94,8 +116,17 @@ def enqueue_guardian_alert_delivery_job(
             },
         )
         return int(job.id)
-    finally:
-        db.close()
+
+    with db_session_scope() as db:
+        local_repository = EventRepository(db)
+        job = local_repository.enqueue_background_job(
+            job_type=JOB_TYPE_GUARDIAN_ALERT_DELIVERY,
+            dedupe_key=f"{JOB_TYPE_GUARDIAN_ALERT_DELIVERY}:{guardian_alert_event_id}",
+            payload={
+                "guardian_alert_event_id": guardian_alert_event_id,
+            },
+        )
+        return int(job.id)
 
 
 
@@ -116,6 +147,7 @@ def _do_job_pass(db) -> dict[str, int]:
                 prediction_history_id=int(payload["prediction_history_id"]),
                 warning_type=str(payload["warning_type"]),
                 recipient=str(payload["recipient"]),
+                repository=repository,
             )
         elif job.job_type == JOB_TYPE_FACULTY_ALERT_EMAIL:
             dispatch_alert_email(
@@ -123,10 +155,12 @@ def _do_job_pass(db) -> dict[str, int]:
                 student_id=int(payload["student_id"]),
                 prediction_history_id=int(payload["prediction_history_id"]),
                 alert_type=str(payload["alert_type"]),
+                repository=repository,
             )
         elif job.job_type == JOB_TYPE_GUARDIAN_ALERT_DELIVERY:
             dispatch_guardian_alert(
                 guardian_alert_event_id=int(payload["guardian_alert_event_id"]),
+                repository=repository,
             )
         else:
             raise ValueError(f"Unknown background job type: {job.job_type}")

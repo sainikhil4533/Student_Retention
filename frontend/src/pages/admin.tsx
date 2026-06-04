@@ -8,7 +8,14 @@ import { BarChartCard, PieChartCard } from "../components/charts";
 import { Button, Card, EmptyState, LoadingCard, SectionTitle, StatCard } from "../components/ui";
 import { API_BASE_URL, apiRequest } from "../lib/api";
 import { useAuth } from "../lib/auth";
-import { CounsellorAccountabilityResponse, ImportCoverage, InstitutionOverview, OperationalOverview, StudentDirectoryResponse } from "../types";
+import {
+  CounsellorAccountabilityResponse,
+  ImportCoverage,
+  InstitutionAcademicPressure,
+  InstitutionOverview,
+  OperationalOverview,
+  StudentDirectoryResponse,
+} from "../types";
 
 /* ─────────────────────── helpers ─────────────────────── */
 
@@ -47,23 +54,55 @@ export function AdminDashboardPage() {
   const navigate = useNavigate();
 
   const institutionQuery = useQuery({
-    queryKey: ["institution-overview", auth?.accessToken],
-    queryFn: () => apiRequest<InstitutionOverview>("/institution/risk-overview", { token: auth?.accessToken }),
+    queryKey: ["institution-overview-core", auth?.accessToken],
+    queryFn: () =>
+      apiRequest<InstitutionOverview>("/institution/risk-overview?include_academic_pressure=false", {
+        token: auth?.accessToken,
+        timeoutMs: 20000,
+      }),
+    retry: 1,
+  });
+  const academicPressureQuery = useQuery({
+    queryKey: ["institution-academic-pressure", auth?.accessToken],
+    queryFn: () =>
+      apiRequest<InstitutionAcademicPressure>("/institution/academic-pressure", {
+        token: auth?.accessToken,
+        timeoutMs: 45000,
+      }),
+    retry: 1,
+    enabled: Boolean(institutionQuery.data),
   });
   const importQuery = useQuery({
     queryKey: ["import-coverage", auth?.accessToken],
-    queryFn: () => apiRequest<ImportCoverage>("/reports/import-coverage", { token: auth?.accessToken }),
+    queryFn: () => apiRequest<ImportCoverage>("/reports/import-coverage", { token: auth?.accessToken, timeoutMs: 15000 }),
+    retry: 1,
+    enabled: Boolean(institutionQuery.data),
   });
 
-  if (institutionQuery.isLoading || importQuery.isLoading) {
+  if (institutionQuery.isLoading) {
     return <DashboardSkeleton />;
   }
-  if (institutionQuery.isError || importQuery.isError || !institutionQuery.data || !importQuery.data) {
-    return <EmptyState title="Admin dashboard unavailable" description="The institution overview or import coverage endpoints are not currently returning data." />;
+  if (institutionQuery.isError || !institutionQuery.data) {
+    const description =
+      institutionQuery.error instanceof Error
+        ? institutionQuery.error.message
+        : "The institution overview endpoint is not currently returning data.";
+    return <EmptyState title="Admin dashboard unavailable" description={description} />;
   }
 
   const overview = institutionQuery.data;
-  const coverage = importQuery.data;
+  const academicPressure = academicPressureQuery.data;
+  const coverage = importQuery.data ?? {
+    total_imported_students: 0,
+    scored_students: 0,
+    unscored_students: 0,
+    students_missing_lms: 0,
+    students_missing_erp: 0,
+    students_missing_finance: 0,
+    students_missing_student_email: 0,
+    students_missing_faculty_email: 0,
+    students_missing_counsellor_email: 0,
+  };
 
   return (
     <div className="space-y-6">
@@ -122,8 +161,18 @@ export function AdminDashboardPage() {
       {/* ── Quick stats row ── */}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Total students" value={String(overview.total_students)} note="Current institution-wide live student count." />
-        <StatCard label="I-grade risk" value={String(overview.total_students_with_i_grade_risk)} note="Students below safe subject-wise attendance." accent="teal" />
-        <StatCard label="R-grade risk" value={String(overview.total_students_with_r_grade_risk)} note="Students in repeat-grade attendance territory." accent="gold" />
+        <StatCard
+          label="I-grade risk"
+          value={academicPressure ? String(academicPressure.total_students_with_i_grade_risk) : "..."}
+          note={academicPressure ? "Students below safe subject-wise attendance." : "Loading attendance pressure in the background."}
+          accent="teal"
+        />
+        <StatCard
+          label="R-grade risk"
+          value={academicPressure ? String(academicPressure.total_students_with_r_grade_risk) : "..."}
+          note={academicPressure ? "Students in repeat-grade attendance territory." : "Loading attendance pressure in the background."}
+          accent="gold"
+        />
         <StatCard label="Overdue follow-ups" value={String(overview.total_followup_overdue_students)} note="Students with pending counsellor action." accent="rose" />
       </div>
 
@@ -154,16 +203,20 @@ export function AdminDashboardPage() {
       </div>
 
       {/* ── Subject pressure bar ── */}
-      <BarChartCard
-        title="Subject pressure hotspots"
-        description="Subjects currently pulling the most students below the institutional attendance policy."
-        data={overview.top_subject_pressure.map((item) => ({
-          label: item.subject_name,
-          value: item.students_below_threshold,
-        }))}
-        xKey="label"
-        dataKey="value"
-      />
+      {academicPressure ? (
+        <BarChartCard
+          title="Subject pressure hotspots"
+          description="Subjects currently pulling the most students below the institutional attendance policy."
+          data={academicPressure.top_subject_pressure.map((item) => ({
+            label: item.subject_name,
+            value: item.students_below_threshold,
+          }))}
+          xKey="label"
+          dataKey="value"
+        />
+      ) : (
+        <LoadingCard label="Loading subject hotspots" />
+      )}
 
       {/* ── Executive summary ── */}
       <Card className="bg-slate-950 text-white">
@@ -191,8 +244,9 @@ export function AdminStudentsPage() {
     queryFn: () =>
       apiRequest<StudentDirectoryResponse>(
         `/institution/students?risk_level=${selectedTier}&page=${currentPage}&page_size=${pageSize}`,
-        { token: auth?.accessToken }
+        { token: auth?.accessToken, timeoutMs: 30000 }
       ),
+    retry: 1,
   });
 
   function handleTierChange(tier: string) {
@@ -365,7 +419,22 @@ export function AdminReportsPage() {
   const { auth } = useAuth();
   const institutionQuery = useQuery({
     queryKey: ["institution-overview", auth?.accessToken],
-    queryFn: () => apiRequest<InstitutionOverview>("/institution/risk-overview", { token: auth?.accessToken }),
+    queryFn: () =>
+      apiRequest<InstitutionOverview>(
+        "/institution/risk-overview?include_academic_pressure=false",
+        { token: auth?.accessToken, timeoutMs: 20000 },
+      ),
+    retry: 1,
+  });
+  const academicPressureQuery = useQuery({
+    queryKey: ["institution-reports-academic-pressure", auth?.accessToken],
+    queryFn: () =>
+      apiRequest<InstitutionAcademicPressure>(
+        "/institution/academic-pressure",
+        { token: auth?.accessToken, timeoutMs: 45000 },
+      ),
+    enabled: Boolean(institutionQuery.data),
+    retry: 1,
   });
 
   if (institutionQuery.isLoading) {
@@ -376,6 +445,7 @@ export function AdminReportsPage() {
   }
 
   const overview = institutionQuery.data;
+  const academicPressure = academicPressureQuery.data;
 
   return (
     <div className="space-y-6">
@@ -409,9 +479,9 @@ export function AdminReportsPage() {
           title="Attendance policy posture"
           description="Institution-wide split of overall shortage, I-grade, and R-grade pressure."
           data={[
-            { label: "Overall shortage", value: overview.total_students_with_overall_shortage },
-            { label: "I-grade", value: overview.total_students_with_i_grade_risk },
-            { label: "R-grade", value: overview.total_students_with_r_grade_risk },
+            { label: "Overall shortage", value: academicPressure?.total_students_with_overall_shortage ?? 0 },
+            { label: "I-grade", value: academicPressure?.total_students_with_i_grade_risk ?? 0 },
+            { label: "R-grade", value: academicPressure?.total_students_with_r_grade_risk ?? 0 },
           ]}
           xKey="label"
           dataKey="value"
@@ -423,7 +493,7 @@ export function AdminReportsPage() {
         <BarChartCard
           title="Top subject hotspots"
           description="Subjects with the highest number of students below attendance policy."
-          data={overview.top_subject_pressure.map((item) => ({
+          data={(academicPressure?.top_subject_pressure ?? []).map((item) => ({
             label: item.subject_name,
             value: item.students_below_threshold,
           }))}
@@ -433,7 +503,7 @@ export function AdminReportsPage() {
         <BarChartCard
           title="Branch attendance pressure"
           description="Which branches carry the strongest overall-shortage and repeat-grade pressure."
-          data={overview.branch_pressure.map((item) => ({
+          data={(academicPressure?.branch_pressure ?? []).map((item) => ({
             label: item.bucket_label,
             value: item.students_with_r_grade_risk + item.students_with_overall_shortage,
           }))}
@@ -447,7 +517,7 @@ export function AdminReportsPage() {
         <BarChartCard
           title="Semester attendance pressure"
           description="Which semester slices currently need the most institution-wide recovery attention."
-          data={overview.semester_pressure.map((item) => ({
+          data={(academicPressure?.semester_pressure ?? []).map((item) => ({
             label: item.bucket_label,
             value: item.students_with_r_grade_risk + item.students_with_overall_shortage,
           }))}
@@ -501,7 +571,7 @@ export function AdminImportsPage() {
           token: auth?.accessToken,
           body: form,
           isFormData: true,
-          timeoutMs: 600000,
+          timeoutMs: 120000,
         },
       );
       setResult(response);
@@ -577,16 +647,21 @@ export function AdminOperationsPage() {
   const { auth } = useAuth();
   const operationsQuery = useQuery({
     queryKey: ["operations-overview", auth?.accessToken],
-    queryFn: () => apiRequest<OperationalOverview>("/reports/operations-overview", { token: auth?.accessToken }),
+    queryFn: () => apiRequest<OperationalOverview>("/reports/operations-overview", { token: auth?.accessToken, timeoutMs: 30000 }),
+    retry: 1,
   });
   const importCoverageQuery = useQuery({
     queryKey: ["import-coverage", auth?.accessToken],
-    queryFn: () => apiRequest<ImportCoverage>("/reports/import-coverage", { token: auth?.accessToken }),
+    queryFn: () => apiRequest<ImportCoverage>("/reports/import-coverage", { token: auth?.accessToken, timeoutMs: 30000 }),
+    enabled: Boolean(operationsQuery.data),
+    retry: 1,
   });
 
   const counsellorQuery = useQuery({
     queryKey: ["counsellor-accountability", auth?.accessToken],
-    queryFn: () => apiRequest<CounsellorAccountabilityResponse>("/institution/counsellor-accountability", { token: auth?.accessToken }),
+    queryFn: () => apiRequest<CounsellorAccountabilityResponse>("/institution/counsellor-accountability", { token: auth?.accessToken, timeoutMs: 30000 }),
+    enabled: Boolean(importCoverageQuery.data),
+    retry: 1,
   });
 
   if (operationsQuery.isLoading || importCoverageQuery.isLoading) {

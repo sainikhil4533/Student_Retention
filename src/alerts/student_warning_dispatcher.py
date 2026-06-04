@@ -6,7 +6,7 @@ import time
 from dotenv import load_dotenv
 
 from src.alerts.student_warning_service import send_student_warning_email
-from src.db.database import SessionLocal
+from src.db.database import db_session_scope
 from src.db.repository import EventRepository
 
 
@@ -22,10 +22,20 @@ def dispatch_student_warning_email(
     prediction_history_id: int,
     warning_type: str,
     recipient: str,
+    repository: EventRepository | None = None,
 ) -> None:
-    db = SessionLocal()
+    db = None
     try:
-        repository = EventRepository(db)
+        if repository is None:
+            with db_session_scope() as db:
+                return dispatch_student_warning_email(
+                    warning_event_id=warning_event_id,
+                    student_id=student_id,
+                    prediction_history_id=prediction_history_id,
+                    warning_type=warning_type,
+                    recipient=recipient,
+                    repository=EventRepository(db),
+                )
         prediction_record = repository.get_prediction_history_by_id(prediction_history_id)
         warning_event = repository.get_student_warning_event(warning_event_id)
         if prediction_record is None:
@@ -87,4 +97,5 @@ def dispatch_student_warning_email(
             f"status={result['status']} retries={updated_warning.retry_count if updated_warning else 'n/a'}"
         )
     finally:
-        db.close()
+        if db is not None:
+            db.close()

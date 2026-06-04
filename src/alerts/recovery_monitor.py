@@ -147,6 +147,7 @@ def _maybe_create_followup_reminder(repository: EventRepository, reference_time:
                 student_id=student_id,
                 prediction_history_id=prediction.id,
                 alert_type="faculty_followup_reminder",
+                repository=repository,
             )
 
         reminder_count += 1
@@ -270,6 +271,7 @@ def _do_recovery_pass(db) -> dict[str, int]:
                 student_id=warning.student_id,
                 prediction_history_id=latest_prediction.id,
                 alert_type="post_warning_escalation",
+                repository=repository,
             )
 
         escalated_count += 1

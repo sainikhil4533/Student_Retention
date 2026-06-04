@@ -64,9 +64,11 @@ export type StudentOverview = {
     }>;
   };
   recovery_plan: {
-    summary: string;
-    key_points: string[];
-    recommended_followup: string[];
+    source: string;
+    plan_summary: string;
+    weekly_priorities: string[];
+    support_actions: string[];
+    success_signals: string[];
   };
   academic_progress: {
     institution_name?: string | null;
@@ -459,6 +461,39 @@ export type InstitutionOverview = {
   }>;
   outcome_distribution: Array<{ outcome_status: string; student_count: number }>;
   summary: string;
+};
+
+export type InstitutionAcademicPressure = {
+  total_students_with_overall_shortage: number;
+  total_students_with_i_grade_risk: number;
+  total_students_with_r_grade_risk: number;
+  top_subject_pressure: Array<{
+    subject_name: string;
+    total_students: number;
+    students_below_threshold: number;
+    i_grade_students: number;
+    r_grade_students: number;
+    average_attendance_percent?: number | null;
+    summary: string;
+  }>;
+  branch_pressure: Array<{
+    bucket_label: string;
+    total_students: number;
+    students_with_overall_shortage: number;
+    students_with_i_grade_risk: number;
+    students_with_r_grade_risk: number;
+    average_overall_attendance_percent?: number | null;
+    summary: string;
+  }>;
+  semester_pressure: Array<{
+    bucket_label: string;
+    total_students: number;
+    students_with_overall_shortage: number;
+    students_with_i_grade_risk: number;
+    students_with_r_grade_risk: number;
+    average_overall_attendance_percent?: number | null;
+    summary: string;
+  }>;
 };
 
 export type StudentDirectoryItem = {

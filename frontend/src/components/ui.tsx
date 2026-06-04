@@ -1,14 +1,15 @@
 import { CSSProperties, HTMLAttributes, PropsWithChildren, ReactNode } from "react";
 import clsx from "clsx";
-import { motion } from "framer-motion";
+import { HTMLMotionProps, motion } from "framer-motion";
 
 export function Button({
   children,
   className,
   variant = "primary",
   ...props
+  
 }: PropsWithChildren<
-  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  HTMLMotionProps<"button"> & {
     variant?: "primary" | "secondary" | "ghost";
   }
 >) {

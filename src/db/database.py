@@ -1,10 +1,13 @@
 from pathlib import Path
+from contextlib import contextmanager
 import os
 import time
+from urllib.parse import urlparse, urlunparse
 
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.pool import QueuePool
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -17,43 +20,62 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is not set. Please update the .env file.")
 
+_IS_SUPABASE_POOLER = ".pooler.supabase.com" in DATABASE_URL
+
+if _IS_SUPABASE_POOLER:
+    pooler_mode = os.getenv("RETENTIONOS_SUPABASE_POOLER_MODE", "session").strip().lower()
+    if pooler_mode == "session":
+        parsed_url = urlparse(DATABASE_URL)
+        if parsed_url.hostname and parsed_url.port == 6543:
+            netloc = parsed_url.netloc.rsplit(":", 1)[0] + ":5432"
+            DATABASE_URL = urlunparse(parsed_url._replace(netloc=netloc))
+
 if DATABASE_URL.startswith("postgresql://"):
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 
+
+def _env_int(name: str, default: int) -> int:
+    raw_value = os.getenv(name)
+    if raw_value in (None, ""):
+        return default
+    try:
+        return int(str(raw_value).strip())
+    except ValueError:
+        return default
+
+
 engine_kwargs: dict = {"future": True}
 
-# Disable prepared statements — pgBouncer (Supabase pooler) does not support them.
+# Disable prepared statements; pgBouncer (Supabase pooler) does not support them.
 if DATABASE_URL.startswith("postgresql+psycopg://"):
     engine_kwargs["connect_args"] = {
         "prepare_threshold": None,
-        "connect_timeout": 30,
+        "connect_timeout": _env_int("RETENTIONOS_DB_CONNECT_TIMEOUT_SECONDS", 5),
+        "options": (
+            f"-c statement_timeout={_env_int('RETENTIONOS_DB_STATEMENT_TIMEOUT_MS', 15000)} "
+            f"-c idle_in_transaction_session_timeout={_env_int('RETENTIONOS_DB_IDLE_TX_TIMEOUT_MS', 15000)}"
+        ),
     }
 
-# Connection strategy:
-# Background workers are DISABLED on Free Tier, so only the API process connects.
-# QueuePool(3+2) keeps up to 5 warm connections — eliminating the 500ms TCP+SSL
-# overhead on EVERY query that NullPool incurs.
-#
-# pool_recycle=90   — recycle before Supabase's ~120s idle timeout kills connections
-# pool_pre_ping=True — test connection before use to survive any transient kills
-# pool_timeout=20   — wait up to 20s for a free connection before raising
-#
-# 5 connections << 15 (Supabase Free Tier limit) — safe margin.
-if ".pooler.supabase.com" in DATABASE_URL:
-    from sqlalchemy.pool import QueuePool
-    engine_kwargs["poolclass"] = QueuePool
-    engine_kwargs["pool_size"] = 5
-    engine_kwargs["max_overflow"] = 5
-    engine_kwargs["pool_recycle"] = 90
-    engine_kwargs["pool_pre_ping"] = True
-    engine_kwargs["pool_timeout"] = 30
+# Use QueuePool to allow concurrent DB access across all modules.
+# Supabase Free Tier allows ~15 concurrent connections.
+# pool_size=8 keeps 8 idle connections ready; max_overflow=7 allows bursting to 15.
+# pool_recycle=180 prevents stale connections (Supabase idles out at ~300s;
+#   use a shorter recycle to recover faster after project pause/resume).
+# pool_pre_ping=True validates connections before use (avoids "connection closed" errors).
+# pool_reset_on_return="rollback" ensures connections are clean when returned to pool.
+engine_kwargs["poolclass"] = QueuePool
+engine_kwargs["pool_size"] = _env_int("RETENTIONOS_DB_POOL_SIZE", 8)
+engine_kwargs["max_overflow"] = _env_int("RETENTIONOS_DB_MAX_OVERFLOW", 7)
+engine_kwargs["pool_recycle"] = 180
+engine_kwargs["pool_pre_ping"] = True
+engine_kwargs["pool_timeout"] = 10
+engine_kwargs["pool_reset_on_return"] = "rollback"
 
 engine = create_engine(DATABASE_URL, **engine_kwargs)
 
 # Mark Supabase-specific transient errors as disconnects so the pool
 # discards broken connections and opens fresh ones automatically.
-from sqlalchemy import event
-
 @event.listens_for(engine, "handle_error")
 def handle_supabase_errors(exception_context):
     if exception_context.original_exception:
@@ -68,6 +90,7 @@ def handle_supabase_errors(exception_context):
             "broken pipe",
             "ssl connection has been closed",
             "connection refused",
+            "maxclientsinsessionmode",
         )
         if any(marker in err_msg for marker in disconnect_markers):
             exception_context.is_disconnect = True
@@ -76,12 +99,28 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, futu
 Base = declarative_base()
 
 
-def get_db():
+@contextmanager
+def db_session_scope():
+    """Open a short-lived DB session. No serialization lock — QueuePool handles concurrency."""
     db = SessionLocal()
     try:
         yield db
+    except Exception:
+        try:
+            db.rollback()
+        except Exception:
+            pass
+        raise
     finally:
-        db.close()
+        try:
+            db.close()
+        except Exception:
+            pass
+
+
+def get_db():
+    with db_session_scope() as db:
+        yield db
 
 
 def run_with_retry(fn, max_retries=3, label="db_operation"):
@@ -90,16 +129,11 @@ def run_with_retry(fn, max_retries=3, label="db_operation"):
     """
     last_error = None
     for attempt in range(1, max_retries + 1):
-        db = SessionLocal()
         try:
-            result = fn(db)
-            return result
+            with db_session_scope() as db:
+                return fn(db)
         except Exception as e:
             last_error = e
-            try:
-                db.rollback()
-            except Exception:
-                pass
             err_text = str(e).lower()
             transient_markers = (
                 "dbhandler exited",
@@ -110,10 +144,12 @@ def run_with_retry(fn, max_retries=3, label="db_operation"):
                 "connection was reset",
                 "broken pipe",
                 "operational",
+                "maxclientsinsessionmode",
+                "max client connections reached",
             )
             is_transient = any(m in err_text for m in transient_markers)
             if is_transient and attempt < max_retries:
-                wait = 3.0 * attempt
+                wait = 2.0 * attempt
                 print(
                     f"[{label}] transient DB error (attempt {attempt}/{max_retries}), "
                     f"retrying in {wait}s: {type(e).__name__}",
@@ -122,9 +158,4 @@ def run_with_retry(fn, max_retries=3, label="db_operation"):
                 time.sleep(wait)
                 continue
             raise
-        finally:
-            try:
-                db.close()
-            except Exception:
-                pass
     raise last_error  # type: ignore[misc]

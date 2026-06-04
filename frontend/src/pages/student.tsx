@@ -23,11 +23,11 @@ export function StudentDashboardPage() {
   const { auth } = useAuth();
   const overviewQuery = useQuery({
     queryKey: ["student-overview", auth?.accessToken],
-    queryFn: () => apiRequest<StudentOverview>("/student/me/overview", { token: auth?.accessToken }),
+    queryFn: () => apiRequest<StudentOverview>("/student/me/overview", { token: auth?.accessToken, timeoutMs: 20000 }),
   });
   const timelineQuery = useQuery({
     queryKey: ["student-timeline", auth?.studentId, auth?.accessToken],
-    queryFn: () => apiRequest<StudentTimeline>(`/timeline/${auth?.studentId}`, { token: auth?.accessToken }),
+    queryFn: () => apiRequest<StudentTimeline>(`/timeline/${auth?.studentId}`, { token: auth?.accessToken, timeoutMs: 20000 }),
     enabled: Boolean(auth?.studentId),
   });
 
@@ -43,6 +43,7 @@ export function StudentDashboardPage() {
   const academic = overview.academic_progress;
   const warningCount = overview.warning_history.warnings.length;
   const criticalTrigger = latestPrediction.trigger_alerts?.has_critical_trigger;
+  const recoveryPlan = overview.recovery_plan;
 
   return (
     <div className="space-y-6">
@@ -78,7 +79,7 @@ export function StudentDashboardPage() {
             <div className="grid gap-4">
               <div className="rounded-[28px] border border-white/10 bg-white/10 p-5 backdrop-blur-sm">
                 <p className="text-xs uppercase tracking-[0.18em] text-indigo-200">Recovery guidance</p>
-                <p className="mt-3 text-lg font-bold text-white">{overview.recovery_plan.summary}</p>
+                <p className="mt-3 text-lg font-bold text-white">{recoveryPlan.plan_summary}</p>
                 <p className="mt-3 text-sm leading-7 text-slate-300">
                   {latestPrediction.ai_insights?.student_guidance?.motivation ||
                     "Keep showing up consistently. Each logged action helps the system reflect your progress more accurately."}

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 import { BarChartCard, PieChartCard } from "../components/charts";
@@ -20,25 +20,28 @@ function DashboardSkeleton() {
 
 export function CounsellorDashboardPage() {
   const { auth } = useAuth();
+  // Load the summary first so sign-in reaches a visible dashboard before the heavier queue starts.
   const summaryQuery = useQuery({
     queryKey: ["faculty-dashboard-summary", auth?.accessToken],
-    queryFn: () => apiRequest<FacultyDashboardSummary>("/faculty/dashboard-summary", { token: auth?.accessToken, timeoutMs: 45000 }),
-    retry: 0,
+    queryFn: () => apiRequest<FacultyDashboardSummary>("/faculty/dashboard-summary", { token: auth?.accessToken, timeoutMs: 20000 }),
+    retry: 1,
   });
   const summaryFallbackQuery = useQuery({
     queryKey: ["faculty-dashboard-summary-fallback", auth?.accessToken],
-    queryFn: () => apiRequest<FacultySummary>("/faculty/summary", { token: auth?.accessToken, timeoutMs: 45000 }),
+    queryFn: () => apiRequest<FacultySummary>("/faculty/summary", { token: auth?.accessToken, timeoutMs: 20000 }),
     enabled: Boolean(auth?.accessToken && summaryQuery.isError),
-    retry: 0,
+    retry: 1,
   });
+  const queueEnabled = Boolean(auth?.accessToken) && !summaryQuery.isLoading && !summaryFallbackQuery.isLoading && Boolean(summaryQuery.data || summaryFallbackQuery.data);
   const queueQuery = useQuery({
     queryKey: ["faculty-priority-queue", auth?.accessToken],
-    queryFn: () => apiRequest<FacultyPriorityQueue>("/faculty/priority-queue", { token: auth?.accessToken, timeoutMs: 45000 }),
-    enabled: Boolean(auth?.accessToken && (summaryQuery.data || summaryFallbackQuery.data)),
-    retry: 0,
+    queryFn: () => apiRequest<FacultyPriorityQueue>("/faculty/priority-queue", { token: auth?.accessToken, timeoutMs: 20000 }),
+    enabled: queueEnabled,
+    retry: 1,
   });
 
-  if (summaryQuery.isLoading || (summaryQuery.isError && summaryFallbackQuery.isLoading)) {
+  const isLoadingSummary = summaryQuery.isLoading || (summaryQuery.isError && summaryFallbackQuery.isLoading);
+  if (isLoadingSummary) {
     return <DashboardSkeleton />;
   }
   const summary = summaryQuery.data || (summaryFallbackQuery.data ? buildDashboardSummaryFallback(summaryFallbackQuery.data) : null);
@@ -157,19 +160,21 @@ export function CounsellorDashboardPage() {
 
 export function CounsellorReportsPage() {
   const { auth } = useAuth();
+  // Load summaries in parallel - both endpoints for better performance
   const summaryQuery = useQuery({
     queryKey: ["faculty-reports-summary", auth?.accessToken],
-    queryFn: () => apiRequest<FacultySummary>("/faculty/summary", { token: auth?.accessToken, timeoutMs: 45000 }),
-    retry: 0,
+    queryFn: () => apiRequest<FacultySummary>("/faculty/summary", { token: auth?.accessToken, timeoutMs: 20000 }),
+    retry: 1,
   });
   const dashboardFallbackQuery = useQuery({
     queryKey: ["faculty-reports-summary-fallback", auth?.accessToken],
-    queryFn: () => apiRequest<FacultyDashboardSummary>("/faculty/dashboard-summary", { token: auth?.accessToken, timeoutMs: 45000 }),
+    queryFn: () => apiRequest<FacultyDashboardSummary>("/faculty/dashboard-summary", { token: auth?.accessToken, timeoutMs: 20000 }),
     enabled: Boolean(auth?.accessToken && summaryQuery.isError),
-    retry: 0,
+    retry: 1,
   });
 
-  if (summaryQuery.isLoading || (summaryQuery.isError && dashboardFallbackQuery.isLoading)) {
+  const isLoading = summaryQuery.isLoading || (summaryQuery.isError && dashboardFallbackQuery.isLoading);
+  if (isLoading) {
     return <DashboardSkeleton />;
   }
   const summary = summaryQuery.data || (dashboardFallbackQuery.data ? buildFacultySummaryFallback(dashboardFallbackQuery.data) : null);
@@ -273,14 +278,14 @@ export function CounsellorCasesPage() {
 
   const casesQuery = useQuery({
     queryKey: ["active-cases", auth?.accessToken],
-    queryFn: () => apiRequest<ActiveCasesResponse>("/cases/active", { token: auth?.accessToken, timeoutMs: 45000 }),
-    retry: 0,
+    queryFn: () => apiRequest<ActiveCasesResponse>("/cases/active", { token: auth?.accessToken, timeoutMs: 20000 }),
+    retry: 1,
   });
   const queueFallbackQuery = useQuery({
     queryKey: ["active-cases-fallback-queue", auth?.accessToken],
-    queryFn: () => apiRequest<FacultyPriorityQueue>("/faculty/priority-queue", { token: auth?.accessToken, timeoutMs: 45000 }),
+    queryFn: () => apiRequest<FacultyPriorityQueue>("/faculty/priority-queue", { token: auth?.accessToken, timeoutMs: 20000 }),
     enabled: Boolean(auth?.accessToken && casesQuery.isError),
-    retry: 0,
+    retry: 1,
   });
   const activeCases = casesQuery.data || (queueFallbackQuery.data ? buildActiveCasesFallback(queueFallbackQuery.data) : null);
 
@@ -297,19 +302,22 @@ export function CounsellorCasesPage() {
 
   const studentId = selectedCase?.student_id;
 
+  // Load both queries in parallel (no dependency chains)
   const contextQuery = useQuery({
     queryKey: ["student-operational-context", studentId, auth?.accessToken],
-    queryFn: () => apiRequest<StudentOperationalContext>(`/operations/context/${studentId}`, { token: auth?.accessToken, timeoutMs: 45000 }),
+    queryFn: () => apiRequest<StudentOperationalContext>(`/operations/context/${studentId}`, { token: auth?.accessToken, timeoutMs: 15000 }),
     enabled: Boolean(studentId),
-    retry: 0,
+    retry: 1,
   });
 
   const historyQuery = useQuery({
     queryKey: ["student-interventions", studentId, auth?.accessToken],
-    queryFn: () => apiRequest<InterventionHistory>(`/interventions/history/${studentId}`, { token: auth?.accessToken, timeoutMs: 45000 }),
+    queryFn: () => apiRequest<InterventionHistory>(`/interventions/history/${studentId}`, { token: auth?.accessToken, timeoutMs: 15000 }),
     enabled: Boolean(studentId),
-    retry: 0,
+    retry: 1,
   });
+
+  const queryClient = useQueryClient();
 
   async function handleCreateAction() {
     if (!studentId) {
@@ -328,8 +336,9 @@ export function CounsellorCasesPage() {
           notes,
         },
       });
-      await historyQuery.refetch();
-      await casesQuery.refetch();
+      // Invalidate queries to refetch with single batch instead of sequential refetches
+      await queryClient.invalidateQueries({ queryKey: ["student-interventions", studentId] });
+      await queryClient.invalidateQueries({ queryKey: ["active-cases"] });
       setNotes("");
       setSubmitState("done");
     } catch (error) {

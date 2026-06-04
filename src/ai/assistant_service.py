@@ -397,7 +397,7 @@ def generate_guardian_communication_draft(
         return fallback
 
 
-def generate_recovery_plan(case_context: dict) -> dict:
+def generate_recovery_plan(case_context: dict, *, allow_llm: bool = True) -> dict:
     fallback = _fallback_recovery_plan(case_context)
     prompt = (
         "You are generating a one-week recovery support plan for a student in a university retention workflow. "
@@ -406,7 +406,7 @@ def generate_recovery_plan(case_context: dict) -> dict:
         f"Case context: {_safe_case_context(case_context)}\n\n"
         "Return valid JSON only."
     )
-    if not _is_gemini_available():
+    if not allow_llm or not _is_gemini_available():
         return fallback
     try:
         parsed = _call_gemini_with_retries(

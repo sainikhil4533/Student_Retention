@@ -45,7 +45,9 @@ def get_ai_case_summary(
 ) -> AICaseSummaryResponse:
     repository = EventRepository(db)
     ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
-    result = generate_case_summary(_get_required_case_context(student_id, repository))
+    case_context = _get_required_case_context(student_id, repository)
+    db.rollback()
+    result = generate_case_summary(case_context)
     return AICaseSummaryResponse(**result)
 
 
@@ -58,8 +60,10 @@ def get_ai_communication_draft(
 ) -> AICommunicationDraftResponse:
     repository = EventRepository(db)
     ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
+    case_context = _get_required_case_context(student_id, repository)
+    db.rollback()
     result = generate_communication_draft(
-        _get_required_case_context(student_id, repository),
+        case_context,
         audience=audience,
     )
     return AICommunicationDraftResponse(**result)
@@ -74,8 +78,10 @@ def get_ai_guardian_communication_draft(
 ) -> AIGuardianCommunicationDraftResponse:
     repository = EventRepository(db)
     ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
+    case_context = _get_required_case_context(student_id, repository)
+    db.rollback()
     result = generate_guardian_communication_draft(
-        _get_required_case_context(student_id, repository),
+        case_context,
         channel=channel,
     )
     return AIGuardianCommunicationDraftResponse(**result)
@@ -89,5 +95,7 @@ def get_ai_recovery_plan(
 ) -> AIRecoveryPlanResponse:
     repository = EventRepository(db)
     ensure_student_scope_access(auth=auth, repository=repository, student_id=student_id)
-    result = generate_recovery_plan(_get_required_case_context(student_id, repository))
+    case_context = _get_required_case_context(student_id, repository)
+    db.rollback()
+    result = generate_recovery_plan(case_context)
     return AIRecoveryPlanResponse(**result)

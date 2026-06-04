@@ -763,6 +763,15 @@ class InstitutionRiskOverviewResponse(BaseModel):
     summary: str
 
 
+class InstitutionAcademicPressureResponse(BaseModel):
+    total_students_with_overall_shortage: int = 0
+    total_students_with_i_grade_risk: int = 0
+    total_students_with_r_grade_risk: int = 0
+    top_subject_pressure: list[AcademicSubjectPressureItem] = []
+    branch_pressure: list[AcademicPressureBucketItem] = []
+    semester_pressure: list[AcademicPressureBucketItem] = []
+
+
 class StudentDirectoryItem(BaseModel):
     student_id: int
     risk_level: str

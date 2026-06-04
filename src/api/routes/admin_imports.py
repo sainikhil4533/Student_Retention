@@ -284,6 +284,7 @@ async def import_vignan(
                         prediction_history_id=int(score_result["prediction_history_id"]),
                         warning_type=str(score_result["student_warning_type"]),
                         recipient=str(profile_payload.get("student_email") or "unconfigured"),
+                        repository=repository,
                     )
                 if (
                     score_result.get("alert_triggered")
@@ -295,6 +296,7 @@ async def import_vignan(
                         student_id=student_id,
                         prediction_history_id=int(score_result["prediction_history_id"]),
                         alert_type=str(score_result["alert_type"]),
+                        repository=repository,
                     )
                 counters.scoring_triggered += 1
         except Exception as exc:  # noqa: BLE001
@@ -607,6 +609,7 @@ async def import_institution(
                         prediction_history_id=int(score_result["prediction_history_id"]),
                         warning_type=str(score_result["student_warning_type"]),
                         recipient=str(profile_payload.get("student_email") or "unconfigured"),
+                        repository=repository,
                     )
                 if (
                     score_result.get("alert_triggered")
@@ -618,6 +621,7 @@ async def import_institution(
                         student_id=student_id,
                         prediction_history_id=int(score_result["prediction_history_id"]),
                         alert_type=str(score_result["alert_type"]),
+                        repository=repository,
                     )
                 counters.scoring_triggered += 1
             elif not dry_run and student_has_pending_writes:

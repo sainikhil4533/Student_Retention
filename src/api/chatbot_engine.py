@@ -96,9 +96,11 @@ def build_admin_data_context(repository) -> dict:
     from src.api.institutional_analytics import resolve_department_label
     from src.api.attendance_engine import build_attendance_summary
 
-    all_predictions = repository.get_latest_predictions_for_all_students()
     imported_profiles = repository.get_imported_student_profiles()
     imported_ids = {int(p.student_id) for p in imported_profiles}
+    profile_lookup = {int(p.student_id): p for p in imported_profiles}
+    all_predictions = repository.get_latest_predictions_for_students(imported_ids)
+    erp_lookup = repository.get_latest_erp_events_for_students(imported_ids)
 
     risk_counts = {"HIGH": 0, "MEDIUM": 0, "LOW": 0, "SAFE": 0}
     branch_data: dict[str, dict] = defaultdict(lambda: {
@@ -127,8 +129,8 @@ def build_admin_data_context(repository) -> dict:
         level = classify_risk_level(prob)
         risk_counts[level] += 1
 
-        profile = repository.get_student_profile(sid)
-        erp = repository.get_latest_erp_event(sid)
+        profile = profile_lookup.get(sid)
+        erp = erp_lookup.get(sid)
         branch = resolve_department_label(profile, erp)
         context = getattr(erp, "context_fields", None) or {}
 
@@ -273,8 +275,16 @@ def build_counsellor_data_context(repository, subject: str, display_name: str | 
         subject=subject, display_name=display_name,
     )
     imported_ids = {int(p.student_id) for p in imported_profiles}
-    all_predictions = repository.get_latest_predictions_for_all_students()
+    all_predictions = repository.get_latest_predictions_for_students(imported_ids)
     profile_lookup = {int(p.student_id): p for p in imported_profiles}
+    erp_lookup = repository.get_latest_erp_events_for_students(imported_ids)
+    attendance_by_student: dict[int, list] = defaultdict(list)
+    for row in repository.get_current_student_subject_attendance_records_for_students(imported_ids):
+        attendance_by_student[int(row.student_id)].append(row)
+    interventions_by_student: dict[int, list] = defaultdict(list)
+    for row in repository.get_intervention_actions_for_students(imported_ids):
+        interventions_by_student[int(row.student_id)].append(row)
+    finance_lookup = repository.get_latest_finance_events_for_students(imported_ids)
 
     risk_counts = {"HIGH": 0, "MEDIUM": 0, "LOW": 0, "SAFE": 0}
     students_detail: list[dict] = []
@@ -296,7 +306,7 @@ def build_counsellor_data_context(repository, subject: str, display_name: str | 
         risk_counts[level] += 1
 
         profile = profile_lookup.get(sid)
-        erp = repository.get_latest_erp_event(sid)
+        erp = erp_lookup.get(sid)
         branch = resolve_department_label(profile, erp)
         context = getattr(erp, "context_fields", None) or {}
 
@@ -322,24 +332,25 @@ def build_counsellor_data_context(repository, subject: str, display_name: str | 
             except (TypeError, ValueError):
                 pass
 
-        # Subject-wise attendance deficits (subjects below 75%)
+        # Subject-wise attendance deficits — store all below 80% so we can filter dynamically
         subjects_at_risk = []
         try:
-            subj_records = repository.get_current_student_subject_attendance_records(sid)
-            for rec in subj_records:
-                if rec.subject_attendance_percent is not None and rec.subject_attendance_percent < 75:
+            for rec in attendance_by_student.get(sid, []):
+                pct = rec.subject_attendance_percent
+                if pct is not None and pct < 80:
                     subjects_at_risk.append({
                         "subject": rec.subject_name,
-                        "attendance_pct": rec.subject_attendance_percent,
+                        "attendance_pct": round(float(pct), 1),
                         "grade_consequence": rec.grade_consequence,
                     })
+            subjects_at_risk.sort(key=lambda x: x["attendance_pct"])
         except Exception:
             pass
 
         # Intervention history
         interventions = []
         try:
-            intv_list = repository.get_intervention_history_for_student(sid)
+            intv_list = interventions_by_student.get(sid, [])
             for intv in intv_list[:3]:  # last 3 interventions
                 total_interventions += 1
                 interventions.append({
@@ -355,7 +366,7 @@ def build_counsellor_data_context(repository, subject: str, display_name: str | 
         # Financial status
         fee_overdue = None
         try:
-            fin = repository.get_latest_finance_event(sid)
+            fin = finance_lookup.get(sid)
             if fin and fin.fee_overdue_amount:
                 fee_overdue = round(float(fin.fee_overdue_amount), 2)
         except Exception:
@@ -366,6 +377,31 @@ def build_counsellor_data_context(repository, subject: str, display_name: str | 
         recommended_actions = getattr(prediction, "recommended_actions", None)
 
         reg_id = getattr(profile, "external_student_ref", None) or str(sid)
+
+        # Assessment / submission data from ERP event model columns
+        submission_rate = None
+        weighted_score = None
+        late_submissions = None
+        if erp:
+            raw_sr = getattr(erp, "assessment_submission_rate", None)
+            if raw_sr is not None:
+                try:
+                    submission_rate = round(float(raw_sr) * 100, 1)
+                except (TypeError, ValueError):
+                    pass
+            raw_ws = getattr(erp, "weighted_assessment_score", None)
+            if raw_ws is not None:
+                try:
+                    weighted_score = round(float(raw_ws), 1)
+                except (TypeError, ValueError):
+                    pass
+            raw_lsc = getattr(erp, "late_submission_count", None)
+            if raw_lsc is not None:
+                try:
+                    late_submissions = int(raw_lsc)
+                except (TypeError, ValueError):
+                    pass
+
         students_detail.append({
             "id": sid,
             "reg_id": str(reg_id),
@@ -377,6 +413,9 @@ def build_counsellor_data_context(repository, subject: str, display_name: str | 
             "grade": grade,
             "cgpa": cgpa,
             "backlogs": backlogs,
+            "submission_rate": submission_rate,
+            "weighted_score": weighted_score,
+            "late_submissions": late_submissions,
             "subjects_at_risk": subjects_at_risk,
             "interventions": interventions,
             "fee_overdue": fee_overdue,
@@ -442,14 +481,8 @@ def build_student_data_context(repository, student_id: int) -> dict:
         pass
 
     # ── LMS engagement ──
+    # Avoid scanning full LMS history during a chat turn; persisted prediction fields still carry AI signals.
     lms_summary = {}
-    try:
-        from src.api.feature_summaries import build_lms_summary_from_events
-        lms_events = repository.get_lms_events_for_student(student_id)
-        if lms_events:
-            lms_summary = build_lms_summary_from_events(lms_events)
-    except Exception:
-        pass
 
     # ── Assessment / ERP details ──
     assessment = {}
@@ -555,6 +588,7 @@ _context_cache: dict[str, Any] = {"data": None, "timestamp": 0.0}
 _counsellor_cache: dict[str, Any] = {}   # keyed by subject
 _student_cache: dict[str, Any] = {}      # keyed by student_id
 _CACHE_TTL = 300
+_COUNSELLOR_CACHE_TTL = 120  # shorter TTL for faster recovery after restarts
 
 
 def get_admin_data_context(repository) -> dict:
@@ -562,22 +596,26 @@ def get_admin_data_context(repository) -> dict:
     if _context_cache["data"] and (now - _context_cache["timestamp"]) < _CACHE_TTL:
         return _context_cache["data"]
     print("[chatbot] Building admin data context...", flush=True)
+    t0 = time.time()
     ctx = build_admin_data_context(repository)
+    elapsed = time.time() - t0
     _context_cache["data"] = ctx
-    _context_cache["timestamp"] = now
-    print(f"[chatbot] Context ready: {ctx['total_students']} students", flush=True)
+    _context_cache["timestamp"] = time.time()
+    print(f"[chatbot] Context ready: {ctx['total_students']} students ({elapsed:.1f}s)", flush=True)
     return ctx
 
 
 def get_counsellor_data_context(repository, subject: str, display_name: str | None) -> dict:
     now = time.time()
     cached = _counsellor_cache.get(subject)
-    if cached and (now - cached["timestamp"]) < _CACHE_TTL:
+    if cached and (now - cached["timestamp"]) < _COUNSELLOR_CACHE_TTL:
         return cached["data"]
     print("[chatbot] Building counsellor data context...", flush=True)
+    t0 = time.time()
     ctx = build_counsellor_data_context(repository, subject, display_name)
-    _counsellor_cache[subject] = {"data": ctx, "timestamp": now}
-    print(f"[chatbot] Counsellor context ready: {ctx['total_students']} students", flush=True)
+    elapsed = time.time() - t0
+    _counsellor_cache[subject] = {"data": ctx, "timestamp": time.time()}
+    print(f"[chatbot] Counsellor context ready: {ctx['total_students']} students ({elapsed:.1f}s)", flush=True)
     return ctx
 
 
@@ -587,8 +625,11 @@ def get_student_data_context(repository, student_id: int) -> dict:
     if cached and (now - cached["timestamp"]) < _CACHE_TTL:
         return cached["data"]
     print(f"[chatbot] Building student data context for {student_id}...", flush=True)
+    t0 = time.time()
     ctx = build_student_data_context(repository, student_id)
-    _student_cache[student_id] = {"data": ctx, "timestamp": now}
+    elapsed = time.time() - t0
+    _student_cache[student_id] = {"data": ctx, "timestamp": time.time()}
+    print(f"[chatbot] Student context ready ({elapsed:.1f}s)", flush=True)
     return ctx
 
 
@@ -753,6 +794,13 @@ def generate_deterministic_answer(message: str, ctx: dict, chat_history: list[di
     sctx = _get_session_ctx(session_id)
     output_mode = _detect_output_mode(msg)
 
+    # Restore last_answer from DB chat_history if in-memory session was lost (e.g. server restart)
+    if sctx.get("last_answer") is None and chat_history:
+        for m in reversed(chat_history):
+            if m.get("role") == "assistant" and m.get("content"):
+                sctx["last_answer"] = m["content"]
+                break
+
     # ──────────── FOLLOW-UP HANDLING ────────────
     if msg in ("ok", "okay", "yes", "continue", "go on", "more", "next", "and", "then", "show more", "next page"):
         def _page_fmt(page, offset=0, total=0):
@@ -776,6 +824,23 @@ def generate_deterministic_answer(message: str, ctx: dict, chat_history: list[di
     ))
 
     if is_count_q:
+        # PRIORITY 0: Counsellor count
+        if any(k in msg for k in ("counsellor", "counselor", "advisor", "mentor")):
+            workload = ctx.get("counsellor_workload", [])
+            # Filter out 'Unassigned'
+            real_counsellors = [c for c in workload if c["name"].lower() not in ("unassigned", "none", "")]
+            if not real_counsellors:
+                answer = "No counsellors are currently assigned in the system."
+            else:
+                answer = f"There are **{len(real_counsellors)} counsellor(s)** currently in the system."
+                if any(k in msg for k in ("each", "per", "assigned", "workload", "breakdown")):
+                    lines = [f"**Counsellor Workload** ({len(real_counsellors)} counsellors):\n"]
+                    for c in real_counsellors:
+                        lines.append(f"- **{c['name']}**: {c['total']} students ({c['high']} HIGH risk)")
+                    answer = "\n".join(lines)
+            _update_session_ctx(session_id, last_category="counsellor_workload", last_answer=answer)
+            return answer
+
         # PRIORITY 1: Attendance-related counts
         if any(k in msg for k in ("attendance", "absent", "low attendance")):
             flagged = [s for s in ctx["students"] if s.get("attendance_flag") or (s.get("attendance") is not None and s["attendance"] < 75)]
@@ -827,8 +892,9 @@ def generate_deterministic_answer(message: str, ctx: dict, chat_history: list[di
                                 last_filter={"risk_level": risk_filter}, last_answer=answer)
             return answer
 
-        # PRIORITY 6: Generic student count
-        if any(w in msg for w in ("student", "active", "total", "all")):
+        # PRIORITY 6: Generic student count — skip if asking about counsellors/assignment
+        if any(w in msg for w in ("student", "active", "total", "all")) and \
+           not any(k in msg for k in ("each", "per", "assigned", "counsellor", "counselor")):
             answer = f"There are **{ctx['total_students']} students** currently tracked in the retention system."
             _update_session_ctx(session_id, last_category="count", last_filter=None, last_answer=answer)
             return answer
@@ -965,6 +1031,107 @@ def generate_deterministic_answer(message: str, ctx: dict, chat_history: list[di
                                 last_filter={"branch": branch_filter}, last_answer=answer)
             return answer
 
+    # ──────────── COUNSELLOR WORKLOAD / ASSIGNMENT ────────────
+    if any(k in msg for k in (
+        "counsellor", "counselor", "advisor", "mentor",
+        "assigned to", "per counsellor", "each counsellor",
+        "counsellor workload", "counselor workload",
+    )):
+        workload = ctx.get("counsellor_workload", [])
+        real_counsellors = [c for c in workload if c["name"].lower() not in ("unassigned", "none", "")]
+        unassigned = next((c for c in workload if c["name"].lower() == "unassigned"), None)
+
+        # Check if asking about a specific counsellor by name
+        specific_name = None
+        for c in real_counsellors:
+            if c["name"].lower() in msg:
+                specific_name = c["name"]
+                break
+
+        if specific_name:
+            c_data = next((c for c in real_counsellors if c["name"] == specific_name), None)
+            if c_data:
+                counsellor_students = [s for s in ctx["students"] if s.get("counsellor") == specific_name]
+                answer = (
+                    f"**{specific_name}** is assigned **{c_data['total']} students** "
+                    f"({c_data['high']} HIGH risk, "
+                    f"{c_data.get('medium', len([s for s in counsellor_students if s['risk_level']=='MEDIUM']))} MEDIUM risk)."
+                )
+                if any(k in msg for k in ("list", "show", "who", "names", "details")):
+                    answer += "\n\n" + _fmt_student_list(counsellor_students, limit=10, title=f"{specific_name}'s Students")
+                _update_session_ctx(session_id, last_category="counsellor_detail",
+                                    last_filter={"counsellor": specific_name}, last_answer=answer,
+                                    last_result_set=counsellor_students, last_offset=0)
+                return answer
+        elif any(k in msg for k in ("how many counsellor", "how many counselor", "number of counsellor",
+                                    "count counsellor", "total counsellor")):
+            answer = f"There are **{len(real_counsellors)} counsellor(s)** in the system."
+            if unassigned:
+                answer += f" Additionally, **{unassigned['total']} students** are currently unassigned."
+            _update_session_ctx(session_id, last_category="counsellor_count", last_answer=answer)
+            return answer
+        else:
+            # Show full workload breakdown
+            if not real_counsellors:
+                answer = "No counsellors are currently assigned in the system."
+            else:
+                lines = [f"**Counsellor Workload Breakdown** ({len(real_counsellors)} counsellors):\n"]
+                for c in real_counsellors:
+                    med = len([s for s in ctx["students"]
+                               if s.get("counsellor") == c["name"] and s["risk_level"] == "MEDIUM"])
+                    lines.append(
+                        f"- **{c['name']}**: {c['total']} students "
+                        f"| HIGH: {c['high']} | MEDIUM: {med} | "
+                        f"LOW/SAFE: {c['total'] - c['high'] - med}"
+                    )
+                if unassigned and unassigned["total"] > 0:
+                    lines.append(f"- **Unassigned**: {unassigned['total']} students")
+                answer = "\n".join(lines)
+            _update_session_ctx(session_id, last_category="counsellor_workload", last_answer=answer)
+            return answer
+
+    # ──────────── ATTENDANCE THRESHOLD QUERIES (Admin) ────────────
+    _att_below_admin = re.search(
+        r"(less than|below|under|at most)\s*(\d+(?:\.\d+)?)\s*%|"
+        r"(\d+(?:\.\d+)?)\s*%\s*(or less|and below|and under)",
+        msg,
+    )
+    _att_above_admin = re.search(
+        r"(more than|above|greater than|over|at least)\s*(\d+(?:\.\d+)?)\s*%|"
+        r"(\d+(?:\.\d+)?)\s*%\s*(or more|and above|plus)",
+        msg,
+    )
+    is_att_admin = any(k in msg for k in ("attendance", "absent", "low attendance", "attendance issue"))
+
+    if is_att_admin and _att_below_admin:
+        grps = _att_below_admin.groups()
+        threshold = float(grps[1] if grps[1] is not None else grps[2])
+        filtered = [s for s in ctx["students"] if s.get("attendance") is not None and s["attendance"] < threshold]
+        filtered.sort(key=lambda s: s.get("attendance", 100))
+        if not filtered:
+            answer = f"No students have overall attendance below {threshold}%."
+        else:
+            answer = _fmt_student_list(filtered, limit=10,
+                                       title=f"Students with Attendance < {threshold}% ({len(filtered)} total)")
+            if len(filtered) > 10:
+                answer += f"\n\n_Showing 1-10 of {len(filtered)}. Say **\"more\"** to see next page._"
+        _update_session_ctx(session_id, last_category="attendance", last_answer=answer,
+                            last_result_set=filtered, last_offset=0)
+        return answer
+
+    if is_att_admin and _att_above_admin:
+        grps = _att_above_admin.groups()
+        threshold = float(grps[1] if grps[1] is not None else grps[2])
+        filtered = [s for s in ctx["students"] if s.get("attendance") is not None and s["attendance"] > threshold]
+        filtered.sort(key=lambda s: s.get("attendance", 0), reverse=True)
+        answer = _fmt_student_list(filtered, limit=10,
+                                   title=f"Students with Attendance > {threshold}% ({len(filtered)} total)")
+        if len(filtered) > 10:
+            answer += f"\n\n_Showing 1-10 of {len(filtered)}. Say **\"more\"** to see next page._"
+        _update_session_ctx(session_id, last_category="attendance", last_answer=answer,
+                            last_result_set=filtered, last_offset=0)
+        return answer
+
     # ──────────── NEEDS LLM (reasoning/strategy/comparison/explanation) ────────────
     return None
 
@@ -975,6 +1142,13 @@ def generate_counsellor_deterministic_answer(message: str, ctx: dict, chat_histo
     """Deterministic answers for counsellor role."""
     msg = message.lower().strip()
     sctx = _get_session_ctx(session_id)
+
+    # Restore last_answer from DB chat_history if in-memory session was lost
+    if sctx.get("last_answer") is None and chat_history:
+        for m in reversed(chat_history):
+            if m.get("role") == "assistant" and m.get("content"):
+                sctx["last_answer"] = m["content"]
+                break
 
     students = ctx.get("students", [])
     rd = ctx.get("risk_distribution", {})
@@ -994,6 +1168,18 @@ def generate_counsellor_deterministic_answer(message: str, ctx: dict, chat_histo
         prev = sctx.get("last_answer")
         if prev:
             return prev
+
+    # Count questions — handle BEFORE generic show/list
+    if any(k in msg for k in ("how many", "count", "total", "number")):
+        risk_filter = _extract_risk_filter(msg)
+        if risk_filter:
+            count = rd.get(risk_filter, 0)
+            answer = f"You have **{count} {risk_filter} risk students** in your cohort (out of {total} total)."
+            _update_session_ctx(session_id, last_category="count", last_filter={"risk_level": risk_filter}, last_answer=answer)
+            return answer
+        answer = f"You have **{total} students** assigned to your cohort."
+        _update_session_ctx(session_id, last_category="count", last_answer=answer)
+        return answer
 
     # "among them" / "of those" follow-up
     if any(w in msg for w in ("among them", "of them", "from them", "of those", "among those")):
@@ -1043,7 +1229,9 @@ def generate_counsellor_deterministic_answer(message: str, ctx: dict, chat_histo
                 return answer
 
     # Risk overview for counsellor's cohort
-    if msg in ("stats", "overview", "summary", "report", "risk", "status", "dashboard"):
+    if any(msg.strip() == k for k in ("stats", "overview", "summary", "report", "risk", "status", "dashboard")) or \
+       any(k in msg for k in ("risk overview", "cohort summary", "my cohort", "overall summary",
+                              "risk report", "risk status", "student summary")):
         lines = [
             f"**Your Student Cohort Overview** ({total} students)\n",
             f"- HIGH Risk: {rd.get('HIGH', 0)}",
@@ -1161,11 +1349,32 @@ def generate_counsellor_deterministic_answer(message: str, ctx: dict, chat_histo
         filtered = [s for s in students if s.get("attendance") is not None and s["attendance"] < threshold]
         filtered.sort(key=lambda s: s.get("attendance", 100))
         if not filtered:
-            answer = f"All your students have attendance at or above {threshold}%."
+            # No one has overall attendance below threshold — check subject-level
+            subj_deficits = [
+                s for s in students
+                if any(sr.get("attendance_pct", 100) < threshold for sr in s.get("subjects_at_risk", []))
+            ]
+            if subj_deficits:
+                lines = [
+                    f"All your students have **overall** attendance at or above {threshold}%.",
+                    f"However, **{len(subj_deficits)} students** have individual subjects below {threshold}%:\n",
+                ]
+                for s in subj_deficits[:10]:
+                    low_subjs = [sr for sr in s.get("subjects_at_risk", []) if sr.get("attendance_pct", 100) < threshold]
+                    subj_str = ", ".join(f"{sr['subject']} ({sr['attendance_pct']}%)" for sr in low_subjs[:3])
+                    lines.append(f"- **{s['name']}** (ID: {s.get('reg_id', s['id'])}): {subj_str}")
+                answer = "\n".join(lines)
+            else:
+                answer = f"All your students have attendance at or above {threshold}% — both overall and per subject."
         else:
-            lines = [f"**Students with Attendance < {threshold}%** ({len(filtered)} total):\n"]
+            lines = [f"**Students with Overall Attendance < {threshold}%** ({len(filtered)} total):\n"]
             for i, s in enumerate(filtered[:10], 1):
-                lines.append(f"{i}. **{s['name']}** (ID: {s.get('reg_id', s['id'])}) - {s['attendance']}% (Risk: {s['probability']:.0%})")
+                subj_info = ""
+                if s.get("subjects_at_risk"):
+                    low_s = [sr for sr in s["subjects_at_risk"] if sr.get("attendance_pct", 100) < threshold]
+                    if low_s:
+                        subj_info = f" | Low subjects: {', '.join(sr['subject'] for sr in low_s[:2])}"
+                lines.append(f"{i}. **{s['name']}** (ID: {s.get('reg_id', s['id'])}) - {s['attendance']}%{subj_info} (Risk: {s['probability']:.0%})")
             answer = "\n".join(lines)
             if len(filtered) > 10:
                 answer += f"\n\n_Showing 1-10 of {len(filtered)}. Say **\"more\"** to see the next page._"
@@ -1177,7 +1386,19 @@ def generate_counsellor_deterministic_answer(message: str, ctx: dict, chat_histo
     if is_att_query:
         low_att = [s for s in students if s.get("attendance") is not None and s["attendance"] < 75]
         if not low_att:
-            answer = "All your students currently have attendance above 75%."
+            # Check subject-level shortages
+            subj_deficits = [s for s in students if s.get("subjects_at_risk")]
+            if subj_deficits:
+                lines = [
+                    "All your students have overall attendance above **75%**.",
+                    f"However, **{len(subj_deficits)} students** have subject-level attendance concerns:\n",
+                ]
+                for s in subj_deficits[:8]:
+                    subjs = ", ".join(f"{sr['subject']} ({sr['attendance_pct']}%)" for sr in s["subjects_at_risk"][:2])
+                    lines.append(f"- **{s['name']}**: {subjs}")
+                answer = "\n".join(lines)
+            else:
+                answer = "All your students currently have attendance above 75% — no attendance concerns."
         else:
             low_att.sort(key=lambda s: s.get("attendance", 100))
             lines = [f"**Students with Low Attendance (<75%)** ({len(low_att)} total):\n"]
@@ -1197,10 +1418,98 @@ def generate_counsellor_deterministic_answer(message: str, ctx: dict, chat_histo
             lines = [f"**Students with Subject-Level Attendance Shortages** ({len(students_with_deficits)} total):\n"]
             for s in students_with_deficits[:8]:
                 subjs = ", ".join(f"{sr['subject']} ({sr['attendance_pct']}%)" for sr in s["subjects_at_risk"][:3])
-                lines.append(f"- **{s['name']}**: {subjs}")
-            lines.append("\n_Note: These are current-semester attendance warnings. Students can still recover by attending remaining classes._")
+                lines.append(f"- **{s['name']}** (ID: {s.get('reg_id', s['id'])}): {subjs}")
+            lines.append("\n_Note: These are current-semester subject-level warnings. Students can still recover by attending remaining classes._")
             answer = "\n".join(lines)
         _update_session_ctx(session_id, last_category="subject_deficits", last_answer=answer)
+        return answer
+
+    # Submission rate / assessment engagement
+    if any(k in msg for k in ("submission", "submit", "assignment", "homework",
+                               "submission rate", "low submission", "not submitting",
+                               "assessment", "completed", "late submission")):
+        # Check for "low submission rate" query
+        _sub_below = re.search(
+            r"(less than|below|under)\s*(\d+(?:\.\d+)?)\s*%|"
+            r"low submission|not submit",
+            msg,
+        )
+        threshold_sub = None
+        if _sub_below and _sub_below.group(2):
+            threshold_sub = float(_sub_below.group(2))
+        elif "low submission" in msg or "not submit" in msg:
+            threshold_sub = 70.0  # default threshold
+
+        students_with_submission = [s for s in students if s.get("submission_rate") is not None]
+        if not students_with_submission:
+            # No submission data in ERP — tell user clearly
+            answer = (
+                "Submission rate data is not available in your ERP records for this cohort. "
+                "This field requires assessment_submission_rate to be populated in ERP data. "
+                "You can check subject-level attendance as a proxy for engagement."
+            )
+        elif threshold_sub is not None:
+            filtered_sub = [s for s in students_with_submission if s["submission_rate"] < threshold_sub]
+            filtered_sub.sort(key=lambda s: s.get("submission_rate", 100))
+            if not filtered_sub:
+                answer = f"All students with submission data have a submission rate at or above {threshold_sub}%."
+            else:
+                lines = [f"**Students with Submission Rate < {threshold_sub}%** ({len(filtered_sub)} total):\n"]
+                for i, s in enumerate(filtered_sub[:10], 1):
+                    late = f" | Late: {s['late_submissions']}" if s.get("late_submissions") else ""
+                    score = f" | Score: {s['weighted_score']}" if s.get("weighted_score") is not None else ""
+                    lines.append(
+                        f"{i}. **{s['name']}** (ID: {s.get('reg_id', s['id'])}) - "
+                        f"{s['submission_rate']}% submission{late}{score} (Risk: {s['probability']:.0%})"
+                    )
+                answer = "\n".join(lines)
+                if len(filtered_sub) > 10:
+                    answer += f"\n\n_Showing 1-10 of {len(filtered_sub)}. Say **\"more\"** to see the next page._"
+        else:
+            # General submission overview — sort by lowest rate
+            students_with_submission.sort(key=lambda s: s.get("submission_rate", 100))
+            avg_rate = sum(s["submission_rate"] for s in students_with_submission) / len(students_with_submission)
+            lines = [f"**Assessment Submission Overview** ({len(students_with_submission)} students with data):\n"]
+            lines.append(f"Average submission rate: **{avg_rate:.1f}%**\n")
+            low_sub = [s for s in students_with_submission if s["submission_rate"] < 70]
+            if low_sub:
+                lines.append(f"**{len(low_sub)} students below 70% submission rate:**")
+                for i, s in enumerate(low_sub[:8], 1):
+                    late = f" | {s['late_submissions']} late" if s.get("late_submissions") else ""
+                    lines.append(f"{i}. **{s['name']}** - {s['submission_rate']}%{late} (Risk: {s['probability']:.0%})")
+            else:
+                lines.append("All students are at or above 70% submission rate.")
+            answer = "\n".join(lines)
+        _update_session_ctx(session_id, last_category="submission", last_answer=answer)
+        return answer
+
+    # CGPA / Score / Grades
+    if any(k in msg for k in ("cgpa", "gpa", "score", "grade", "marks", "performance",
+                               "low score", "low cgpa", "academic score", "weighted score")):
+        students_with_cgpa = [s for s in students if s.get("cgpa") is not None]
+        students_with_score = [s for s in students if s.get("weighted_score") is not None]
+        if not students_with_cgpa and not students_with_score:
+            answer = "CGPA/score data is not available in the ERP records for this cohort."
+        else:
+            lines = ["**Academic Score Overview:**\n"]
+            if students_with_cgpa:
+                students_with_cgpa.sort(key=lambda s: (s.get("cgpa") or 10))
+                avg_cgpa = sum(s["cgpa"] for s in students_with_cgpa) / len(students_with_cgpa)
+                lines.append(f"Average CGPA: **{avg_cgpa:.2f}** ({len(students_with_cgpa)} students)")
+                low_cgpa = [s for s in students_with_cgpa if (s.get("cgpa") or 10) < 6.0]
+                if low_cgpa:
+                    lines.append(f"\n**{len(low_cgpa)} students with CGPA < 6.0 (needs intervention):**")
+                    for i, s in enumerate(low_cgpa[:8], 1):
+                        lines.append(f"{i}. **{s['name']}** - CGPA {s['cgpa']} (Risk: {s['probability']:.0%})")
+            if students_with_score:
+                students_with_score.sort(key=lambda s: (s.get("weighted_score") or 100))
+                low_score = [s for s in students_with_score if (s.get("weighted_score") or 100) < 50]
+                if low_score:
+                    lines.append(f"\n**{len(low_score)} students with weighted score < 50:**")
+                    for i, s in enumerate(low_score[:8], 1):
+                        lines.append(f"{i}. **{s['name']}** - Score: {s['weighted_score']} (Risk: {s['probability']:.0%})")
+            answer = "\n".join(lines)
+        _update_session_ctx(session_id, last_category="grades", last_answer=answer)
         return answer
 
     # AI Insights / Recommendations
@@ -1228,7 +1537,8 @@ def generate_counsellor_deterministic_answer(message: str, ctx: dict, chat_histo
     # Who needs attention / top risk
     if any(k in msg for k in ("who is failing", "top risk", "who needs attention",
                                "who should i", "give list", "priority", "urgent",
-                               "at risk", "failing", "danger")):
+                               "at risk", "failing", "danger", "needs follow",
+                               "follow up", "follow-up", "immediate", "critical")):
         if not students:
             return "No students are currently assigned to you."
         lines = ["**Students Needing Your Attention:**\n"]
@@ -1240,20 +1550,14 @@ def generate_counsellor_deterministic_answer(message: str, ctx: dict, chat_histo
         _update_session_ctx(session_id, last_category="student_list", last_answer=answer)
         return answer
 
-    # Count questions
-    if any(k in msg for k in ("how many", "count", "total", "number")):
-        risk_filter = _extract_risk_filter(msg)
-        if risk_filter:
-            count = rd.get(risk_filter, 0)
-            answer = f"You have **{count} {risk_filter} risk students** in your cohort (out of {total} total)."
-            _update_session_ctx(session_id, last_category="count", last_filter={"risk_level": risk_filter}, last_answer=answer)
-            return answer
-        answer = f"You have **{total} students** assigned to your cohort."
-        _update_session_ctx(session_id, last_category="count", last_answer=answer)
-        return answer
 
-    # Show / list
-    if any(k in msg for k in ("show", "list", "details", "names", "who are")):
+
+    # Show / list — broad triggers so "give me the list", "my students", "all students" all work
+    if any(k in msg for k in (
+        "show", "list", "details", "names", "who are",
+        "give me", "my students", "all students", "students list",
+        "display", "enumerate", "fetch", "get students",
+    )):
         risk_filter = _extract_risk_filter(msg)
         if risk_filter:
             filtered = [s for s in students if s["risk_level"] == risk_filter]
@@ -1279,6 +1583,13 @@ def generate_student_deterministic_answer(message: str, ctx: dict, chat_history:
     """Deterministic answers for student role."""
     msg = message.lower().strip()
     sctx = _get_session_ctx(session_id)
+
+    # Restore last_answer from DB chat_history if in-memory session was lost
+    if sctx.get("last_answer") is None and chat_history:
+        for m in reversed(chat_history):
+            if m.get("role") == "assistant" and m.get("content"):
+                sctx["last_answer"] = m["content"]
+                break
 
     # Follow-up: pagination or repeat
     if msg in ("ok", "okay", "yes", "continue", "go on", "more", "next", "show more", "next page"):
@@ -1616,7 +1927,10 @@ def _build_gemini_prompt(role: str, message: str, ctx: dict, chat_history: list[
             "backlog_student_count": ctx.get("backlog_student_count", 0),
             "total_interventions": ctx.get("total_interventions", 0),
             "top_risk_students": [
-                {k: v for k, v in s.items() if k not in ("ai_insights", "recommended_actions")}
+                {
+                    k: v for k, v in s.items()
+                    if k not in ("ai_insights", "recommended_actions")
+                }
                 for s in ctx.get("students", [])[:20]
             ],
         }
@@ -1740,35 +2054,48 @@ def generate_chatbot_response(
     *,
     role: str,
     message: str,
-    repository,
+    repository=None,
     chat_history: list[dict],
     session_id: int = 0,
     auth_subject: str = "",
     auth_display_name: str | None = None,
     auth_student_id: int | None = None,
+    prebuilt_context: dict | None = None,
 ) -> dict:
     """
     Main entry point. Returns {"content": str, "source": str}.
     """
     # 1. Build role-specific data context
-    try:
-        if role in ("admin", "system"):
-            ctx = get_admin_data_context(repository)
-        elif role == "counsellor":
-            ctx = get_counsellor_data_context(repository, auth_subject, auth_display_name)
-        elif role == "student":
-            if auth_student_id is None:
-                return {"content": "Student ID not found in your session.", "source": "error"}
-            ctx = get_student_data_context(repository, auth_student_id)
-        else:
-            return {"content": f"Role '{role}' is not supported.", "source": "error"}
-    except Exception as e:
-        print(f"[chatbot] Data context error: {e}", flush=True)
-        traceback.print_exc()
-        return {
-            "content": "I'm unable to access institutional data right now. Please try again in a moment.",
-            "source": "error",
-        }
+    if prebuilt_context is not None:
+        ctx = prebuilt_context
+    else:
+        try:
+            if repository is None:
+                return {
+                    "content": "I'm unable to access institutional data right now. Please try again in a moment.",
+                    "source": "error",
+                }
+            if role in ("admin", "system"):
+                ctx = get_admin_data_context(repository)
+            elif role == "counsellor":
+                ctx = get_counsellor_data_context(repository, auth_subject, auth_display_name)
+            elif role == "student":
+                if auth_student_id is None:
+                    return {"content": "Student ID not found in your session.", "source": "error"}
+                ctx = get_student_data_context(repository, auth_student_id)
+            else:
+                return {"content": f"Role '{role}' is not supported.", "source": "error"}
+        except Exception as e:
+            print(f"[chatbot] Data context error: {e}", flush=True)
+            traceback.print_exc()
+            return {
+                "content": "I'm unable to access institutional data right now. Please try again in a moment.",
+                "source": "error",
+            }
+        try:
+            repository.db.rollback()
+        except Exception:
+            pass
 
     # 2. Tier 1: Deterministic
     tier1 = None

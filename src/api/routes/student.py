@@ -1,3 +1,6 @@
+from threading import Lock
+from time import monotonic
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -16,7 +19,6 @@ from src.api.schemas import (
     StudentWarningEventItem,
     StudentWarningHistoryResponse,
 )
-from src.api.student_intelligence import build_current_student_intelligence
 from src.api.time_utils import to_ist
 from src.db.database import get_db
 from src.db.repository import EventRepository
@@ -24,25 +26,103 @@ from src.db.repository import EventRepository
 
 router = APIRouter(prefix="/student", tags=["student"])
 
+_STUDENT_OVERVIEW_CACHE_TTL_SECONDS = 300.0
+_STUDENT_OVERVIEW_CACHE: dict[int, tuple[float, StudentSelfOverviewResponse]] = {}
+_STUDENT_OVERVIEW_CACHE_LOCK = Lock()
+
+
+def _require_student_id(auth: AuthContext) -> int:
+    if auth.student_id is None:
+        raise HTTPException(status_code=400, detail="Student token is missing student binding.")
+    return auth.student_id
+
+
+def _build_recovery_plan_response(
+    *,
+    case_context: dict,
+    allow_llm: bool,
+) -> AIRecoveryPlanResponse:
+    return AIRecoveryPlanResponse(
+        **generate_recovery_plan(
+            case_context,
+            allow_llm=allow_llm,
+        )
+    )
+
+
+def _build_fast_recovery_plan_response(
+    *,
+    latest_prediction,
+    academic_burden: dict,
+) -> AIRecoveryPlanResponse:
+    intelligence = {
+        "recommended_actions": getattr(latest_prediction, "recommended_actions", None) or []
+    }
+    weekly_priorities = [
+        str(item.get("title") or item.get("description") or "").strip()
+        for item in intelligence["recommended_actions"][:3]
+        if str(item.get("title") or item.get("description") or "").strip()
+    ]
+    if not weekly_priorities:
+        weekly_priorities = ["Review attendance, submissions, and academic progress this week."]
+
+    support_actions = [
+        "Check the subjects or activities marked as weakest before the next review.",
+        "Ask your counsellor or faculty mentor for help if the same issue repeats.",
+    ]
+    if bool(academic_burden.get("has_active_burden")):
+        support_actions.insert(0, "Prioritize the active academic backlog items shown on this dashboard.")
+
+    return AIRecoveryPlanResponse(
+        source="fast_overview",
+        plan_summary="This quick plan is generated from your latest saved risk signals so the dashboard can load immediately.",
+        weekly_priorities=weekly_priorities,
+        support_actions=support_actions,
+        success_signals=[
+            "Attendance improves or remains safely above the required threshold.",
+            "Pending academic burden count comes down.",
+            "The next risk score is stable or lower.",
+        ],
+    )
+
+
+def _overview_cache_get(student_id: int) -> StudentSelfOverviewResponse | None:
+    now = monotonic()
+    with _STUDENT_OVERVIEW_CACHE_LOCK:
+        cached = _STUDENT_OVERVIEW_CACHE.get(student_id)
+        if cached is None:
+            return None
+        cached_at, response = cached
+        if now - cached_at > _STUDENT_OVERVIEW_CACHE_TTL_SECONDS:
+            _STUDENT_OVERVIEW_CACHE.pop(student_id, None)
+            return None
+        return response
+
+
+def _overview_cache_store(
+    student_id: int,
+    response: StudentSelfOverviewResponse,
+) -> StudentSelfOverviewResponse:
+    with _STUDENT_OVERVIEW_CACHE_LOCK:
+        _STUDENT_OVERVIEW_CACHE[student_id] = (monotonic(), response)
+    return response
+
 
 @router.get("/me/overview", response_model=StudentSelfOverviewResponse)
 def get_student_self_overview(
     auth: AuthContext = Depends(require_roles("student")),
     db: Session = Depends(get_db),
 ) -> StudentSelfOverviewResponse:
-    if auth.student_id is None:
-        raise HTTPException(status_code=400, detail="Student token is missing student binding.")
+    student_id = _require_student_id(auth)
+    cached = _overview_cache_get(student_id)
+    if cached is not None:
+        return cached
 
-    student_id = auth.student_id
     repository = EventRepository(db)
     profile = repository.get_student_profile(student_id)
     latest_prediction = repository.get_latest_prediction_for_student(student_id)
-    prediction_rows = repository.get_prediction_history_for_student(student_id)
     warning_rows = repository.get_student_warning_history_for_student(student_id)
-    lms_events = repository.get_lms_events_for_student(student_id)
-    erp_event = repository.get_latest_erp_event(student_id)
     academic_progress_row = repository.get_student_academic_progress_record(student_id)
-    current_subject_attendance = repository.get_current_student_subject_attendance_records(student_id)
     semester_progress_rows = repository.get_student_semester_progress_records(student_id)
     all_academic_rows = repository.get_student_academic_records(student_id)
     all_attendance_rows = repository.get_student_subject_attendance_records(student_id)
@@ -52,22 +132,6 @@ def get_student_self_overview(
     if latest_prediction is None:
         raise HTTPException(status_code=404, detail="No prediction history found for student.")
 
-    intelligence = None
-    if lms_events and erp_event is not None:
-        intelligence = build_current_student_intelligence(
-            prediction_rows=prediction_rows,
-            latest_prediction=latest_prediction,
-            lms_events=lms_events,
-            erp_event=erp_event,
-            erp_history=repository.get_erp_event_history_for_student(student_id),
-            finance_event=repository.get_latest_finance_event(student_id),
-            finance_history=repository.get_finance_event_history_for_student(student_id),
-            previous_prediction=prediction_rows[1] if len(prediction_rows) >= 2 else None,
-        )
-
-    recovery_plan = AIRecoveryPlanResponse(
-        **generate_recovery_plan(build_live_case_context(repository=repository, student_id=student_id))
-    )
     current_semester_progress = next(
         (
             row
@@ -77,6 +141,20 @@ def get_student_self_overview(
             and row.semester == academic_progress_row.current_semester
         ),
         semester_progress_rows[-1] if semester_progress_rows else None,
+    )
+    current_semester = getattr(academic_progress_row, "current_semester", None)
+    current_subject_attendance = [
+        row
+        for row in all_attendance_rows
+        if current_semester is None or row.semester == current_semester
+    ]
+    current_subject_attendance.sort(
+        key=lambda row: (
+            row.subject_attendance_percent is None,
+            float(row.subject_attendance_percent or 0.0),
+            str(row.subject_name or ""),
+            int(row.id or 0),
+        )
     )
     weakest_subject = next(
         (
@@ -95,8 +173,12 @@ def get_student_self_overview(
         academic_rows=all_academic_rows,
         attendance_rows=all_attendance_rows,
     )
+    recovery_plan = _build_fast_recovery_plan_response(
+        latest_prediction=latest_prediction,
+        academic_burden=academic_burden,
+    )
 
-    return StudentSelfOverviewResponse(
+    response = StudentSelfOverviewResponse(
         student_id=student_id,
         profile=StudentProfileResponse(
             student_id=profile.student_id,
@@ -121,7 +203,7 @@ def get_student_self_overview(
         ),
         latest_prediction=build_prediction_history_item_from_row(
             latest_prediction,
-            intelligence,
+            None,
         ),
         warning_history=StudentWarningHistoryResponse(
             student_id=student_id,
@@ -214,6 +296,26 @@ def get_student_self_overview(
                 for row in semester_progress_rows
             ],
         ),
+    )
+    return _overview_cache_store(student_id, response)
+
+
+@router.get("/me/recovery-plan", response_model=AIRecoveryPlanResponse)
+def get_student_recovery_plan(
+    use_llm: bool = False,
+    auth: AuthContext = Depends(require_roles("student")),
+    db: Session = Depends(get_db),
+) -> AIRecoveryPlanResponse:
+    student_id = _require_student_id(auth)
+    repository = EventRepository(db)
+    case_context = build_live_case_context(repository=repository, student_id=student_id)
+    try:
+        db.rollback()
+    except Exception:
+        pass
+    return _build_recovery_plan_response(
+        case_context=case_context,
+        allow_llm=use_llm,
     )
 
 

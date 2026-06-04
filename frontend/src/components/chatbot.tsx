@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 
-import { apiRequest } from "../lib/api";
+import { ApiError, apiRequest } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import { CopilotMessage, CopilotSession } from "../types";
 import { CampusCopilotMark } from "./brand";
@@ -24,6 +24,7 @@ import { CampusCopilotMark } from "./brand";
 type SessionResponse = { session: CopilotSession; messages: CopilotMessage[] };
 type SessionListResponse = { sessions: CopilotSession[] };
 type ChatSurfaceMode = "dock" | "page";
+const COPILOT_SEND_TIMEOUT_MS = 120000;
 
 /* ─────────────────── Starter prompts per role ─────────────────── */
 const STARTER_PROMPTS: Record<string, { icon: string; text: string }[]> = {
@@ -203,10 +204,18 @@ function CopilotWorkspace({ mode, onClose }: { mode: ChatSurfaceMode; onClose?: 
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const timeoutRefreshTimers = useRef<number[]>([]);
+
+  useEffect(() => {
+    return () => {
+      timeoutRefreshTimers.current.forEach((timerId) => window.clearTimeout(timerId));
+      timeoutRefreshTimers.current = [];
+    };
+  }, []);
 
   const sessionsQuery = useQuery({
     queryKey: ["copilot-sessions", auth?.accessToken],
-    queryFn: () => apiRequest<SessionListResponse>("/copilot/sessions", { token: auth?.accessToken }),
+    queryFn: () => apiRequest<SessionListResponse>("/copilot/sessions", { token: auth?.accessToken, timeoutMs: 15000 }),
     enabled: Boolean(auth?.accessToken),
   });
 
@@ -216,6 +225,7 @@ function CopilotWorkspace({ mode, onClose }: { mode: ChatSurfaceMode; onClose?: 
         method: "POST",
         token: auth?.accessToken,
         body: { title: "New conversation" },
+        timeoutMs: 15000,
       }),
     onSuccess: (payload) => {
       queryClient.invalidateQueries({ queryKey: ["copilot-sessions", auth?.accessToken] });
@@ -234,7 +244,7 @@ function CopilotWorkspace({ mode, onClose }: { mode: ChatSurfaceMode; onClose?: 
   const sessionQuery = useQuery({
     queryKey: ["copilot-session", selectedSessionId, auth?.accessToken],
     queryFn: () =>
-      apiRequest<SessionResponse>(`/copilot/sessions/${selectedSessionId}`, { token: auth?.accessToken }),
+      apiRequest<SessionResponse>(`/copilot/sessions/${selectedSessionId}`, { token: auth?.accessToken, timeoutMs: 15000 }),
     enabled: Boolean(auth?.accessToken && selectedSessionId),
   });
 
@@ -248,20 +258,56 @@ function CopilotWorkspace({ mode, onClose }: { mode: ChatSurfaceMode; onClose?: 
         method: "POST",
         token: auth?.accessToken,
         body: { content },
-        timeoutMs: 60000,
+        timeoutMs: COPILOT_SEND_TIMEOUT_MS,
       }),
-    onSuccess: () => {
+    onSuccess: (payload) => {
+      queryClient.setQueryData<SessionResponse>(
+        ["copilot-session", payload.session.id, auth?.accessToken],
+        (existing) => {
+          const previousMessages = existing?.messages ?? [];
+          const mergedMessages = [
+            ...previousMessages.filter(
+              (message) =>
+                message.id !== payload.user_message.id &&
+                message.id !== payload.assistant_message.id,
+            ),
+            payload.user_message,
+            payload.assistant_message,
+          ].sort(
+            (a, b) =>
+              new Date(a.created_at ?? 0).getTime() -
+              new Date(b.created_at ?? 0).getTime(),
+          );
+          return {
+            session: payload.session,
+            messages: mergedMessages,
+          };
+        },
+      );
       if (selectedSessionId) {
         queryClient.invalidateQueries({ queryKey: ["copilot-session", selectedSessionId, auth?.accessToken] });
       }
       queryClient.invalidateQueries({ queryKey: ["copilot-sessions", auth?.accessToken] });
       setDraft("");
     },
+    onError: (error) => {
+      if (!(error instanceof ApiError) || error.status !== 408 || !selectedSessionId) {
+        return;
+      }
+      timeoutRefreshTimers.current.forEach((timerId) => window.clearTimeout(timerId));
+      timeoutRefreshTimers.current = [5000, 15000, 30000, 60000].map((delayMs) =>
+        window.setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ["copilot-session", selectedSessionId, auth?.accessToken] });
+          queryClient.invalidateQueries({ queryKey: ["copilot-sessions", auth?.accessToken] });
+        }, delayMs),
+      );
+    },
   });
 
   const messages = useMemo(() => sessionQuery.data?.messages ?? [], [sessionQuery.data?.messages]);
   const starterPrompts = STARTER_PROMPTS[auth?.role ?? "student"] ?? STARTER_PROMPTS.student;
   const hasMessages = messages.length > 1; // First message is system greeting
+  const isSendTimeout = sendMessage.error instanceof ApiError && sendMessage.error.status === 408;
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
@@ -332,7 +378,9 @@ function CopilotWorkspace({ mode, onClose }: { mode: ChatSurfaceMode; onClose?: 
                   <MessageSquare className="h-3.5 w-3.5 shrink-0 opacity-50" />
                   <p className="line-clamp-1 text-[13px] font-medium">{session.title}</p>
                 </div>
-                <p className="mt-1 pl-5.5 text-[11px] text-slate-400">{relativeTime(session.created_at)}</p>
+                <p className="mt-1 pl-5.5 text-[11px] text-slate-400">
+                  {session.created_at ? relativeTime(session.created_at) : ""}
+                </p>
               </button>
             ))}
           </div>
@@ -467,11 +515,18 @@ function CopilotWorkspace({ mode, onClose }: { mode: ChatSurfaceMode; onClose?: 
           {/* Error */}
           {sendMessage.isError && (
             <motion.div
-              className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+              className={clsx(
+                "mt-4 rounded-2xl border px-4 py-3 text-sm",
+                isSendTimeout
+                  ? "border-amber-200 bg-amber-50 text-amber-800"
+                  : "border-red-200 bg-red-50 text-red-700",
+              )}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              {sendMessage.error instanceof Error ? sendMessage.error.message : "Something went wrong. Please try again."}
+              {isSendTimeout
+                ? "Copilot is still working on this answer. This chat will refresh automatically when the backend saves the response."
+                : sendMessage.error instanceof Error ? sendMessage.error.message : "Something went wrong. Please try again."}
             </motion.div>
           )}
 

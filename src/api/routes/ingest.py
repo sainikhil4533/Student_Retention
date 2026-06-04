@@ -111,6 +111,7 @@ def ingest_erp_event(
                 prediction_history_id=int(score_result["prediction_history_id"]),
                 warning_type=str(score_result["student_warning_type"]),
                 recipient=str(profile.student_email or "unconfigured"),
+                repository=repository,
             )
         if (
             alert_triggered
@@ -122,6 +123,7 @@ def ingest_erp_event(
                 student_id=payload.student_id,
                 prediction_history_id=int(score_result["prediction_history_id"]),
                 alert_type=str(alert_type),
+                repository=repository,
             )
         print(f"[ingest.erp] auto_score_triggered student_id={payload.student_id}")
     else:

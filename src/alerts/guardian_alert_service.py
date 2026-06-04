@@ -255,7 +255,10 @@ def queue_guardian_escalation_if_eligible(
             "context_snapshot": context_snapshot,
         }
     )
-    enqueue_guardian_alert_delivery_job(guardian_alert_event_id=int(alert_event.id))
+    enqueue_guardian_alert_delivery_job(
+        guardian_alert_event_id=int(alert_event.id),
+        repository=repository,
+    )
 
     return GuardianEscalationQueueResult(
         queued=True,
